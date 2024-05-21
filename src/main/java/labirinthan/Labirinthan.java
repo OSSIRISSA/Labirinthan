@@ -27,12 +27,12 @@ public class Labirinthan extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         //Spatial m = assetManager.loadModel("src/1.obj");
-        Box b = new Box(1, 1, 1);
+        /*Box b = new Box(1, 1, 1);
         Geometry geom = new Geometry("Box", b);
 
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         mat.setColor("Color", ColorRGBA.Blue);
-        geom.setMaterial(mat);
+        geom.setMaterial(mat);*/
 
         assetManager.registerLocator("assets/Models/", FileLocator.class);
         Spatial model = assetManager.loadModel("1.obj");
@@ -44,6 +44,7 @@ public class Labirinthan extends SimpleApplication {
         AmbientLight al = new AmbientLight();
         al.setColor(ColorRGBA.White.mult(10f));
         rootNode.addLight(al);
+        startLevel0();
 
         //rootNode.attachChild(geom);
     }
@@ -56,5 +57,9 @@ public class Labirinthan extends SimpleApplication {
     @Override
     public void simpleRender(RenderManager rm) {
         //add render code here (if any)
+    }
+
+    public void startLevel0(){
+        stateManager.attach(new Level0(this));
     }
 }
