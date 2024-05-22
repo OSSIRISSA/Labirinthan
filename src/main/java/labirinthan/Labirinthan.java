@@ -34,8 +34,8 @@ public class Labirinthan extends SimpleApplication {
         mat.setColor("Color", ColorRGBA.Blue);
         geom.setMaterial(mat);*/
 
-        assetManager.registerLocator("assets/Models/", FileLocator.class);
-        Spatial model = assetManager.loadModel("1.obj");
+        assetManager.registerLocator("assets/", FileLocator.class);
+        Spatial model = assetManager.loadModel("Models/1.obj");
         model.setLocalScale(0.5F, 0.5F, 0.5F);
         rootNode.attachChild(model);
         flyCam.setMoveSpeed(100);
