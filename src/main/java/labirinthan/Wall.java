@@ -1,37 +1,76 @@
 package labirinthan;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.asset.plugins.FileLocator;
+import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector2f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
+import com.jme3.util.BufferUtils;
+import com.jme3.util.TangentBinormalGenerator;
+import com.jme3.scene.VertexBuffer;
+
+import java.nio.FloatBuffer;
 
 public class Wall extends Box {
 
-    public Wall(float x, float y, float z, AssetManager assetManager, Node localRootNode, float px, float py, float pz) {
-        super(x/2, y/2, z/2);
-        Geometry geom = new Geometry("Wall", (Box) (this));
+    public Wall(float x, float y, float z, AssetManager assetManager, Node localRootNode, float px, float py, float pz, BulletAppState bulletAppState) {
+        super(x / 2, y / 2, z / 2);
+        Geometry geom = new Geometry("Wall", this);
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         Texture tex = assetManager.loadTexture("Textures/br.png");
+        tex.setWrap(Texture.WrapMode.Repeat);
         mat.setTexture("ColorMap", tex);
         geom.setMaterial(mat);
+
+        // Adjust the texture coordinates to stretch vertically and repeat horizontally
+        this.scaleTextureCoordinates(x, y, z);
+
         localRootNode.attachChild(geom);
         geom.setLocalTranslation(px, py, pz);
+
+        RigidBodyControl wallPhysics = new RigidBodyControl(0.0f);
+        geom.addControl(wallPhysics);
+        bulletAppState.getPhysicsSpace().add(wallPhysics);
     }
 
-    public Wall(float x, float y, float z, AssetManager assetManager, Node localRootNode, float px, float py, float pz,ColorRGBA color) {
-        super(x/2, y/2, z/2);
-        Geometry geom = new Geometry("Wall", (Box) (this));
-        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        Texture tex = assetManager.loadTexture("Textures/br.png");
-        mat.setTexture("ColorMap", tex);
-        //mat.getTextureParam("ColorMap").getTextureValue().setWrap(Texture.WrapMode.Repeat);
-        mat.setColor("Color", color);
-        geom.setMaterial(mat);
-        localRootNode.attachChild(geom);
-        geom.setLocalTranslation(px, py, pz);
+    private void scaleTextureCoordinates(float x, float y, float z) {
+        FloatBuffer texCoords = BufferUtils.createFloatBuffer(new float[]{
+                // Front face
+                0, y,
+                x, y,
+                x, 0,
+                0, 0,
+                // Back face
+                0, y,
+                x, y,
+                x, 0,
+                0, 0,
+                // Right face
+                0, y,
+                z, y,
+                z, 0,
+                0, 0,
+                // Left face
+                0, y,
+                z, y,
+                z, 0,
+                0, 0,
+                // Top face
+                0, z,
+                x, z,
+                x, 0,
+                0, 0,
+                // Bottom face
+                0, z,
+                x, z,
+                x, 0,
+                0, 0
+        });
+        setBuffer(VertexBuffer.Type.TexCoord, 2, texCoords);
     }
 }
