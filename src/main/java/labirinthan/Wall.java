@@ -4,14 +4,11 @@ import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
-import com.jme3.math.Vector2f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.util.BufferUtils;
-import com.jme3.util.TangentBinormalGenerator;
 import com.jme3.scene.VertexBuffer;
 
 import java.nio.FloatBuffer;
@@ -28,7 +25,7 @@ public class Wall extends Box {
         geom.setMaterial(mat);
 
         // Adjust the texture coordinates to stretch vertically and repeat horizontally
-        this.scaleTextureCoordinates(x, y, z);
+        this.scaleTextureCoordinates(x,y,z);
 
         localRootNode.attachChild(geom);
         geom.setLocalTranslation(px, py, pz);
@@ -39,13 +36,8 @@ public class Wall extends Box {
     }
 
     private void scaleTextureCoordinates(float x, float y, float z) {
-        FloatBuffer texCoords = BufferUtils.createFloatBuffer(new float[]{
+        FloatBuffer texCoords = BufferUtils.createFloatBuffer(
                 // Front face
-                0, y,
-                x, y,
-                x, 0,
-                0, 0,
-                // Back face
                 0, y,
                 x, y,
                 x, 0,
@@ -55,22 +47,26 @@ public class Wall extends Box {
                 z, y,
                 z, 0,
                 0, 0,
+                //Back face
+                0, y,
+                x, y,
+                x, 0,
+                0, 0,
                 // Left face
                 0, y,
                 z, y,
                 z, 0,
                 0, 0,
                 // Top face
-                0, z,
-                x, z,
-                x, 0,
+                0, 0,
+                0, 0,
+                0, 0,
                 0, 0,
                 // Bottom face
-                0, z,
-                x, z,
-                x, 0,
-                0, 0
-        });
+                0, 0,
+                0, 0,
+                0, 0,
+                0, 0);
         setBuffer(VertexBuffer.Type.TexCoord, 2, texCoords);
     }
 }

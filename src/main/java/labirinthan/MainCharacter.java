@@ -23,7 +23,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener {
     private boolean left = false, right = false, forward = false, backward = false;
 
     private final float CHARACTER_SPEED = 10f;
-    private final float JUMP_FORCE = 800f; // Adjust this value to make the jump stronger
+    private final float JUMP_FORCE = 400f; // Adjust this value to make the jump appropriate
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
@@ -32,8 +32,9 @@ public class MainCharacter extends AbstractAppState implements ActionListener {
         bulletAppState = this.app.getStateManager().getState(BulletAppState.class);
 
         characterNode = new Node("Character");
-        characterControl = new BetterCharacterControl(0.5f, 1.8f, 80f);
+        characterControl = new BetterCharacterControl(1.2f, 2.5f, 80f);
         characterControl.setJumpForce(new Vector3f(0, JUMP_FORCE, 0));
+        characterControl.setGravity(new Vector3f(0, -9.81f, 0)); // Ensure gravity is set correctly
         characterNode.addControl(characterControl);
         this.app.getRootNode().attachChild(characterNode);
         bulletAppState.getPhysicsSpace().add(characterControl);
@@ -67,7 +68,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener {
                 backward = isPressed;
                 break;
             case "Jump":
-                if (isPressed) {
+                if (isPressed && characterControl.isOnGround()) { // Ensure jump is only triggered when on the ground
                     characterControl.jump();
                 }
                 break;
