@@ -23,6 +23,7 @@ public class Level extends AbstractAppState {
     public Cross cross;
     protected ArrayList<Wall> walls = new ArrayList<>();
     protected ArrayList<ArrayList<Float>> blocksInfo = new ArrayList<>();
+    protected ArrayList<Float> blocksDecorationInfo = new ArrayList<>();
     protected BulletAppState bulletAppState;
     public Random random = new Random();
     public int labyrinthSizeX;
@@ -68,6 +69,16 @@ public class Level extends AbstractAppState {
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*3+passageWidth*2.5f);
         res.add(startZ+wallWidth*2+passageWidth*1.5f);
+
+        //decoration coordinates
+        res.add(startX+wallWidth*3+passageWidth*2.5f);
+        res.add(startZ+wallWidth*1+passageWidth*0.5f);
+
+        res.add(startX+wallWidth*4+passageWidth*3.5f);
+        res.add(startZ+wallWidth*3+passageWidth*2.5f);
+
+        res.add(startX+wallWidth*1+passageWidth*0.5f);
+        res.add(startZ+wallWidth*4+passageWidth*3.5f);
         return res;
     }
 
@@ -89,6 +100,20 @@ public class Level extends AbstractAppState {
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*4+passageWidth*3.5f);
         res.add(startZ+wallWidth*4+passageWidth*3.5f);
+
+        //decoration coordinates
+        res.add(startX+wallWidth*2+passageWidth*1.5f);
+        res.add(startZ+wallWidth*1+passageWidth*0.5f);
+
+        res.add(startX+wallWidth*2+passageWidth*1.5f);
+        res.add(startZ+wallWidth*5+passageWidth*4.5f);
+
+        res.add(startX+wallWidth*5+passageWidth*4.5f);
+        res.add(startZ+wallWidth*1+passageWidth*0.5f);
+
+        res.add(startX+wallWidth*3+passageWidth*2.5f);
+        res.add(startZ+wallWidth*2+passageWidth*1.5f);
+
         return res;
     }
 
@@ -111,6 +136,16 @@ public class Level extends AbstractAppState {
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*5+passageWidth*4.5f);
         res.add(startZ+wallWidth+passageWidth*0.5f);
+
+        //decoration coordinates
+        res.add(startX+wallWidth*4+passageWidth*3.5f);
+        res.add(startZ+wallWidth*1+passageWidth*0.5f);
+
+        res.add(startX+wallWidth*3+passageWidth*2.5f);
+        res.add(startZ+wallWidth*4+passageWidth*3.5f);
+
+        res.add(startX+wallWidth*5+passageWidth*4.5f);
+        res.add(startZ+wallWidth*4+passageWidth*3.5f);
         return res;
     }
 
@@ -129,6 +164,16 @@ public class Level extends AbstractAppState {
 
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*4+passageWidth*3.5f);
+        res.add(startZ+wallWidth*4+passageWidth*3.5f);
+
+        //decoration coordinates
+        res.add(startX+wallWidth*1+passageWidth*0.5f);
+        res.add(startZ+wallWidth*1+passageWidth*0.5f);
+
+        res.add(startX+wallWidth*3+passageWidth*2.5f);
+        res.add(startZ+wallWidth*3+passageWidth*2.5f);
+
+        res.add(startX+wallWidth*5+passageWidth*4.5f);
         res.add(startZ+wallWidth*4+passageWidth*3.5f);
         return res;
     }

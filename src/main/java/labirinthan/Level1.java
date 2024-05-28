@@ -39,6 +39,9 @@ public class Level1 extends Level {
                     case 3 -> blocksInfo.add(buildBlock3(currentX,currentZ));
                     case 4 -> blocksInfo.add(buildBlock4(currentX,currentZ));
                 }
+                for(int a=2;a<blocksInfo.get(blocksInfo.size()-1).size();a++){
+                    blocksDecorationInfo.add(blocksInfo.get(blocksInfo.size()-1).get(a));
+                }
                 if((i<clearSpan)&&(j<clearSpan)){
                     blocksInfo.remove(blocksInfo.size()-1);
                 }
@@ -50,7 +53,11 @@ public class Level1 extends Level {
         floor = new Floor(labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth, 0.1f, labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth, assetManager, localRootNode, (labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth)/2, -0.05f, (labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth)/2, bulletAppState);
         ceiling = new Ceiling(labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth, 0.1f, labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth, assetManager, localRootNode, (labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth)/2, wallHeight-0.05f, (labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth)/2, bulletAppState);
         int chooseCross = random.nextInt(blocksInfo.size());
-        cross = new Cross(passageWidth, 0.1f, passageWidth, assetManager, localRootNode, blocksInfo.get(chooseCross).get(0), -0.1f, blocksInfo.get(chooseCross).get(1), bulletAppState);
+        cross = new Cross(passageWidth, 0.1f, passageWidth, assetManager, localRootNode, blocksInfo.get(chooseCross).get(0), -0.05f, blocksInfo.get(chooseCross).get(1), bulletAppState);
+
+        for(int i=0;i<blocksDecorationInfo.size()-1;i+=2){
+            Decoration decoration = new Decoration(passageWidth, 0.1f, passageWidth, assetManager, localRootNode, blocksDecorationInfo.get(i), -0.05f, blocksDecorationInfo.get(i+1), bulletAppState);
+        }
 
         //Closing extras
         super.addWall(labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth, wallHeight, wallWidth, (labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth) / 2, wallHeight / 2, wallWidth / 2);
