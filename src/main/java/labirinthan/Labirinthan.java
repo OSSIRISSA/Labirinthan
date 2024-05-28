@@ -42,8 +42,8 @@ public class Labirinthan extends SimpleApplication {
         assetManager.registerLocator("assets/", FileLocator.class);
 
         // Initialize Main Menu GUI
-        //MainMenu mainMenu = new MainMenu(this, guiNode, settings, assetManager);
-        //mainMenu.createHomeScreen();
+        MainMenu mainMenu = new MainMenu(this, guiNode, settings, assetManager);
+        mainMenu.createHomeScreen();
 
         //flyCam.setMoveSpeed(100);
 
@@ -59,7 +59,7 @@ public class Labirinthan extends SimpleApplication {
         al.setColor(ColorRGBA.White.mult(10f));
         rootNode.addLight(al);
 
-        startGame();
+        //startGame();
         flyCam.setMoveSpeed(100);
     }
 
