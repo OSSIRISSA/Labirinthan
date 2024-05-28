@@ -95,6 +95,6 @@ public class MainCharacter extends AbstractAppState implements ActionListener {
             walkDirection.addLocal(camDir.negate());
         }
         characterControl.setWalkDirection(walkDirection);
-        this.app.getCamera().setLocation(characterNode.getLocalTranslation().add(0, 1.8f, 0));
+        if(!Labirinthan.isFlying) this.app.getCamera().setLocation(characterNode.getLocalTranslation().add(0, 1.8f, 0));
     }
 }
