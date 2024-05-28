@@ -19,7 +19,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener {
     private BetterCharacterControl characterControl;
     private Node characterNode;
 
-    private Vector3f walkDirection = new Vector3f();
+    private final Vector3f walkDirection = new Vector3f();
     private boolean left = false, right = false, forward = false, backward = false;
 
     private final float CHARACTER_SPEED = 10f;
@@ -33,7 +33,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener {
 
         characterNode = new Node("Character");
         characterNode.setLocalTranslation(Labirinthan.X,Labirinthan.Y,Labirinthan.Z);
-        characterControl = new BetterCharacterControl(1.2f, 2.5f, 80f);
+        characterControl = new BetterCharacterControl(1.4f, 3.0f, 80f);
         characterControl.setJumpForce(new Vector3f(0, JUMP_FORCE, 0));
         characterControl.setGravity(new Vector3f(0, -9.81f, 0)); // Ensure gravity is set correctly
         characterNode.addControl(characterControl);

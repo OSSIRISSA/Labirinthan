@@ -3,13 +3,8 @@ package labirinthan;
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.font.BitmapFont;
 import com.jme3.light.AmbientLight;
 import com.jme3.math.ColorRGBA;
-import com.simsilica.lemur.Button;
-import com.simsilica.lemur.GuiGlobals;
-import com.simsilica.lemur.Label;
-import com.simsilica.lemur.style.BaseStyles;
 import com.jme3.system.AppSettings;
 import labirinthan.GUI.MainMenu;
 
@@ -44,8 +39,6 @@ public class Labirinthan extends SimpleApplication {
         // Initialize Main Menu GUI
         MainMenu mainMenu = new MainMenu(this, guiNode, settings, assetManager);
         mainMenu.createHomeScreen();
-
-        //flyCam.setMoveSpeed(100);
 
         //init Physics
         bulletAppState = new BulletAppState();

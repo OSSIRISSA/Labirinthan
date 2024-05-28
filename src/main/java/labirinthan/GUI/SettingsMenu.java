@@ -2,15 +2,11 @@ package labirinthan.GUI;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.font.BitmapFont;
-import com.jme3.input.event.MouseButtonEvent;
-import com.jme3.input.event.MouseMotionEvent;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
 import com.simsilica.lemur.*;
-import com.simsilica.lemur.event.MouseEventControl;
-import com.simsilica.lemur.event.MouseListener;
+import com.simsilica.lemur.component.SpringGridLayout;
 import labirinthan.Labirinthan;
 
 public class SettingsMenu {
@@ -22,6 +18,9 @@ public class SettingsMenu {
     private final MainMenu mainMenu;
 
     private final BitmapFont mainFont;
+    private TextField widthField;
+    private TextField heightField;
+    private Checkbox fullscreenCheckbox;
 
     public SettingsMenu(Labirinthan mainApp, Node guiNode, AppSettings settings, AssetManager assetManager, MainMenu mainMenu, BitmapFont font){
         this.app = mainApp;
@@ -31,78 +30,132 @@ public class SettingsMenu {
         this.mainMenu = mainMenu;
         this.mainFont = font;
 
-        System.out.println("initialized");
+        createSettingsScreen();
     }
 
     public void createSettingsScreen() {
+        guiNode.detachAllChildren(); // Clear previous elements
+
         // Create a title label
         Label titleLabel = new Label("Settings");
         titleLabel.setFont(mainFont);
         titleLabel.setFontSize(114f);
-        titleLabel.setLocalTranslation((settings.getWidth()-titleLabel.getPreferredSize().x) / 2f, (settings.getHeight()-titleLabel.getPreferredSize().y) / 2f +2*titleLabel.getPreferredSize().y, 0);
-        System.out.println(titleLabel);
+        titleLabel.setLocalTranslation((settings.getWidth() - titleLabel.getPreferredSize().x) / 2f, settings.getHeight(), 0);
         guiNode.attachChild(titleLabel);
-        float yOffset = titleLabel.getLocalTranslation().y - titleLabel.getPreferredSize().y;
 
-        // Create a "Toggle Fullscreen" checkbox
-        Checkbox fullscreenCheckbox = new Checkbox("Fullscreen");
-        fullscreenCheckbox.setFont(mainFont);
-        fullscreenCheckbox.setFontSize(48f);
-        fullscreenCheckbox.setChecked(settings.isFullscreen());
-        fullscreenCheckbox.setLocalTranslation((settings.getWidth()-fullscreenCheckbox.getPreferredSize().x) / 2f, yOffset - fullscreenCheckbox.getPreferredSize().y, 1);
-        fullscreenCheckbox.addClickCommands(source -> toggleFullscreen(fullscreenCheckbox.isChecked()));
-        guiNode.attachChild(fullscreenCheckbox);
-        yOffset = fullscreenCheckbox.getLocalTranslation().y - fullscreenCheckbox.getPreferredSize().y;
-
-        // Create a "Volume" slider
-        Label volumeLabel = new Label("Volume");
-        volumeLabel.setFont(mainFont);
-        volumeLabel.setFontSize(48f);
-        volumeLabel.setLocalTranslation((settings.getWidth()-volumeLabel.getPreferredSize().x) / 2f, yOffset - volumeLabel.getPreferredSize().y, 1);
-        guiNode.attachChild(volumeLabel);
-        yOffset = volumeLabel.getLocalTranslation().y - volumeLabel.getPreferredSize().y;
-
-        Slider volumeSlider = new Slider();
-        volumeSlider.setPreferredSize(new Vector3f(300, 48, 0));
-        volumeSlider.setLocalTranslation((settings.getWidth()-volumeSlider.getPreferredSize().x) / 2f, yOffset - volumeSlider.getPreferredSize().y, 1);
-        volumeSlider.getModel().setValue(50); // Set initial value
-        guiNode.attachChild(volumeSlider);
-
-        // Add mouse listener to the slider
-        MouseEventControl.addListenersToSpatial(volumeSlider, new MouseListener() {
-            @Override
-            public void mouseButtonEvent(MouseButtonEvent event, Spatial target, Spatial capture) {
-                if (!event.isPressed()) { // Check if the mouse button is released
-                    adjustVolume((float)volumeSlider.getModel().getValue());
-                }
-            }
-
-            @Override
-            public void mouseEntered(MouseMotionEvent event, Spatial target, Spatial capture) {}
-
-            @Override
-            public void mouseExited(MouseMotionEvent event, Spatial target, Spatial capture) {}
-
-            @Override
-            public void mouseMoved(MouseMotionEvent event, Spatial target, Spatial capture) {}
-        });
-
-        yOffset = volumeSlider.getLocalTranslation().y - volumeSlider.getPreferredSize().y;
-
-        // Create a "Back" button
+        // Back button
         Button backButton = new Button("Back");
         backButton.setFont(mainFont);
         backButton.setFontSize(48f);
         backButton.setTextHAlignment(HAlignment.Center);
-        backButton.setPreferredSize(new Vector3f(titleLabel.getPreferredSize().x/1.5f, backButton.getPreferredSize().y, 0));
-        backButton.setLocalTranslation((settings.getWidth()-backButton.getPreferredSize().x) / 2f, yOffset - backButton.getPreferredSize().y, 1);
+        backButton.setPreferredSize(new Vector3f(titleLabel.getPreferredSize().x/2.5f, backButton.getPreferredSize().y, 0));
+        backButton.setLocalTranslation((settings.getWidth() - backButton.getPreferredSize().x)/2f - backButton.getPreferredSize().x*2, backButton.getPreferredSize().y, 0);
         backButton.addClickCommands(source -> returnToMainMenu());
         guiNode.attachChild(backButton);
+
+        // Apply button
+        Button applyButton = new Button("Apply");
+        applyButton.setFont(mainFont);
+        applyButton.setFontSize(48f);
+        applyButton.setTextHAlignment(HAlignment.Center);
+        applyButton.setPreferredSize(new Vector3f(backButton.getPreferredSize().x, applyButton.getPreferredSize().y, 0));
+        applyButton.setLocalTranslation((settings.getWidth() - applyButton.getPreferredSize().x) / 2f + applyButton.getPreferredSize().x*2f, applyButton.getPreferredSize().y, 0);
+        applyButton.addClickCommands(source -> applySettings());
+        guiNode.attachChild(applyButton);
+
+        // Create a Tabs component
+        Container tabsContainer = new Container(new SpringGridLayout(Axis.Y, Axis.X, FillMode.Last, FillMode.First));
+        tabsContainer.setPreferredSize(new Vector3f(settings.getWidth() / 1.2f, settings.getHeight() - titleLabel.getPreferredSize().y-backButton.getPreferredSize().y, 0));
+        tabsContainer.setLocalTranslation((settings.getWidth() - tabsContainer.getPreferredSize().x) / 2f, (settings.getHeight() - titleLabel.getPreferredSize().y), 0);
+        guiNode.attachChild(tabsContainer);
+
+        TabbedPanel tabs = new TabbedPanel();
+        tabsContainer.addChild(tabs);
+
+        // Graphics Tab
+        Container graphicsTab = new Container(new SpringGridLayout(Axis.Y, Axis.X, FillMode.None, FillMode.Even));
+        createGraphicsSettings(graphicsTab);
+        tabs.addTab("Graphics", graphicsTab);
+
+        // Audio Tab
+        Container audioTab = new Container(new SpringGridLayout(Axis.Y, Axis.X, FillMode.None, FillMode.Even));
+        createAudioSettings(audioTab);
+        tabs.addTab("Audio", audioTab);
+
+        // Controls Tab
+        Container controlsTab = new Container(new SpringGridLayout(Axis.Y, Axis.X, FillMode.None, FillMode.Even));
+        createControlsSettings(controlsTab);
+        tabs.addTab("Controls", controlsTab);
     }
 
-    private void returnToMainMenu() {
-        guiNode.detachAllChildren();
-        mainMenu.createHomeScreen();
+    private void createGraphicsSettings(Container graphicsTab) {
+        Label fullscreenLabel = new Label("Fullscreen");
+        fullscreenLabel.setFontSize(48f);
+        fullscreenLabel.setFont(mainFont);
+        graphicsTab.addChild(fullscreenLabel,0,0);
+        fullscreenCheckbox = graphicsTab.addChild(new Checkbox(""),0,1);
+        fullscreenCheckbox.setFont(mainFont);
+        fullscreenCheckbox.setFontSize(48f);
+        fullscreenCheckbox.setChecked(settings.isFullscreen());
+        fullscreenCheckbox.addClickCommands(source -> toggleFullscreen(fullscreenCheckbox.isChecked()));
+
+        Label widthLabel = new Label("Resolution Width");
+        widthLabel.setFontSize(48f);
+        widthLabel.setFont(mainFont);
+        graphicsTab.addChild(widthLabel,1,0);
+        widthField = graphicsTab.addChild(new TextField(""),1,1);
+        //widthField.setFont(mainFont);
+        widthField.setFontSize(48f);
+        widthField.setText(String.valueOf(settings.getWidth()));
+
+        Label heightLabel = new Label("Resolution Height");
+        heightLabel.setFontSize(48f);
+        heightLabel.setFont(mainFont);
+        graphicsTab.addChild(heightLabel,2,0);
+        heightField = graphicsTab.addChild(new TextField(""),2,1);
+        //heightField.setFont(mainFont);
+        heightField.setFontSize(48f);
+        heightField.setText(String.valueOf(settings.getHeight()));
+
+        Label vsyncLabel = new Label("Vertical Sync");
+        vsyncLabel.setFontSize(48f);
+        vsyncLabel.setFont(mainFont);
+        graphicsTab.addChild(vsyncLabel,3,0);
+        Checkbox vsyncCheckbox = graphicsTab.addChild(new Checkbox(""),3,1);
+        vsyncCheckbox.setFont(mainFont);
+        vsyncCheckbox.setFontSize(48f);
+        vsyncCheckbox.setChecked(settings.isVSync());
+    }
+
+    private void createAudioSettings(Container audioTab) {
+        Label volumeLabel = new Label("Master Volume");
+        volumeLabel.setFontSize(48f);
+        volumeLabel.setFont(mainFont);
+        audioTab.addChild(volumeLabel,0,0);
+        Slider volumeSlider = audioTab.addChild(new Slider(new DefaultRangedValueModel(0, 100, 50)),0,1);
+        volumeSlider.setPreferredSize(new Vector3f(300, 48, 0));
+        //volumeSlider.getModel().setValue(50); // Set initial value
+
+        Label musicLabel = new Label("Music Volume");
+        musicLabel.setFontSize(48f);
+        musicLabel.setFont(mainFont);
+        audioTab.addChild(musicLabel,1,0);
+        Slider musicSlider = audioTab.addChild(new Slider(new DefaultRangedValueModel(0, 100, 50)),1,1);
+        musicSlider.setPreferredSize(new Vector3f(300, 48, 0));
+        //musicSlider.getModel().setValue(50);
+
+        Label soundLabel = new Label("Sound Volume");
+        soundLabel.setFontSize(48f);
+        soundLabel.setFont(mainFont);
+        audioTab.addChild(soundLabel,2,0);
+        Slider soundSlider = audioTab.addChild(new Slider(new DefaultRangedValueModel(0, 100, 50)),2,1);
+        soundSlider.setPreferredSize(new Vector3f(300, 48, 0));
+        //soundSlider.getModel().setValue(50);
+    }
+
+    private void createControlsSettings(Container controlsTab) {
+        // Add control settings here
+        controlsTab.addChild(new Label("Control Settings Coming Soon")).setFontSize(48f);
     }
 
     private void toggleFullscreen(boolean fullscreen) {
@@ -110,8 +163,13 @@ public class SettingsMenu {
         app.restart();
     }
 
-    private void adjustVolume(float volume) {
-        // TODO: Implement volume adjustment
-        System.out.println("Volume set to: " + volume);
+    private void returnToMainMenu() {
+        guiNode.detachAllChildren();
+        mainMenu.createHomeScreen();
+    }
+
+    private void applySettings() {
+        // TODO: Implement logic
+        System.out.println("Settings are applied!");
     }
 }
