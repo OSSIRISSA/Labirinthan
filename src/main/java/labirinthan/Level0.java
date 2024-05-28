@@ -21,12 +21,20 @@ public class Level0 extends Level {
         super.initialize(sm, application);
 
         // Adding walls
-        blocksInfo.add(buildBlock4(0,0));
+        blocksInfo.add(buildBlock1(0,0));
+        for(int a=2;a<blocksInfo.get(blocksInfo.size()-1).size();a++){
+            blocksDecorationInfo.add(blocksInfo.get(blocksInfo.size()-1).get(a));
+        }
 
         // Adding floor
         floor = new Floor(wallWidth * 6 + passageWidth * 5, 0.1f, wallWidth * 6 + passageWidth * 5, assetManager, localRootNode, (wallWidth * 6 + passageWidth * 5)/2, -0.05f, (wallWidth * 6 + passageWidth * 5)/2, bulletAppState);
         ceiling = new Ceiling(wallWidth * 6 + passageWidth * 5, 0.1f, wallWidth * 6 + passageWidth * 5, assetManager, localRootNode, (wallWidth * 6 + passageWidth * 5)/2, wallHeight-0.05f, (wallWidth * 6 + passageWidth * 5)/2, bulletAppState);
-        cross = new Cross(passageWidth, 0.1f, passageWidth, assetManager, localRootNode, blocksInfo.get(0).get(0), -0.1f, blocksInfo.get(0).get(1), bulletAppState);
+        cross = new Cross(passageWidth, 0.1f, passageWidth, assetManager, localRootNode, blocksInfo.get(0).get(0), -0.05f, blocksInfo.get(0).get(1), bulletAppState);
+
+
+        for(int i=0;i<blocksDecorationInfo.size()-1;i+=2){
+            Decoration decoration = new Decoration(passageWidth, 0.1f, passageWidth, assetManager, localRootNode, blocksDecorationInfo.get(i), -0.05f, blocksDecorationInfo.get(i+1), bulletAppState);
+        }
 
         //Closing extras
         super.addWall((wallWidth * 6 + passageWidth * 5), wallHeight, wallWidth, (wallWidth * 6 + passageWidth * 5) / 2, wallHeight / 2, wallWidth / 2);
