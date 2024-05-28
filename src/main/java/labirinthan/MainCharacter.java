@@ -32,6 +32,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener {
         bulletAppState = this.app.getStateManager().getState(BulletAppState.class);
 
         characterNode = new Node("Character");
+        characterNode.setLocalTranslation(Labirinthan.X,Labirinthan.Y,Labirinthan.Z);
         characterControl = new BetterCharacterControl(1.2f, 2.5f, 80f);
         characterControl.setJumpForce(new Vector3f(0, JUMP_FORCE, 0));
         characterControl.setGravity(new Vector3f(0, -9.81f, 0)); // Ensure gravity is set correctly

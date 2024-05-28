@@ -13,10 +13,10 @@ import com.jme3.texture.Texture;
 public class Floor extends Box {
 
     public Floor(float x, float y, float z, AssetManager assetManager, Node localRootNode, float px, float py, float pz, BulletAppState bulletAppState) {
-        super(x, y, z);
+        super(x/2, y/2, z/2);
         Geometry geom = new Geometry("Floor", this);
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        Texture tex = assetManager.loadTexture("Textures/grass.jpg");
+        Texture tex = assetManager.loadTexture("Textures/grass-floor.jpg");
         mat.setTexture("ColorMap", tex);
         geom.setMaterial(mat);
         localRootNode.attachChild(geom);

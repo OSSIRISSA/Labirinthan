@@ -10,6 +10,10 @@ import com.jme3.renderer.RenderManager;
 public class Labirinthan extends SimpleApplication {
 
     private BulletAppState bulletAppState;
+    public static final float X = Level.wallWidth*1+Level.passageWidth*0.5f;
+    public static final float Y = 0;
+    public static final float Z = Level.wallWidth*3+Level.passageWidth*2.5f;
+
 
     public static void main(String[] args) {
         Labirinthan app = new Labirinthan();
