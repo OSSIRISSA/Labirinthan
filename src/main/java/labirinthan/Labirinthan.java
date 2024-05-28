@@ -16,7 +16,7 @@ public class Labirinthan extends SimpleApplication {
     public static final float Z = Level.wallWidth*3+Level.passageWidth*2.5f;
 
 
-    public static boolean isFlying = true;
+    public static boolean isFlying = false;
 
     public static void main(String[] args) {
         Labirinthan app = new Labirinthan();
