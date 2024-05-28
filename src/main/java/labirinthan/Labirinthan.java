@@ -49,7 +49,7 @@ public class Labirinthan extends SimpleApplication {
     }
 
     public void startLevel0() {
-        Level0 level0 = new Level0(this, bulletAppState);
-        stateManager.attach(level0);
+        Level1 level1 = new Level1(this, bulletAppState);
+        stateManager.attach(level1);
     }
 }
