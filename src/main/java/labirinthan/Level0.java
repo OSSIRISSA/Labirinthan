@@ -10,7 +10,6 @@ import com.jme3.math.Vector3f;
 
 public class Level0 extends Level {
 
-    private BulletAppState bulletAppState;
 
     public Level0(SimpleApplication application, BulletAppState bulletAppState) {
         super(application, "Level0");
@@ -22,27 +21,19 @@ public class Level0 extends Level {
         super.initialize(sm, application);
 
         // Adding walls
-        addWall((wallWidth * 6 + passageWidth * 5), wallHeight, wallWidth, (wallWidth * 6 + passageWidth * 5) / 2, wallHeight / 2, wallWidth / 2);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, wallWidth / 2, wallHeight / 2, (wallWidth * 3 + passageWidth * 2) / 2);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, (wallWidth * 2 + passageWidth) / 2);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, wallWidth * 5.5f + passageWidth * 5, wallHeight / 2, (wallWidth * 3 + passageWidth * 2) / 2);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, wallWidth * 5.5f + passageWidth * 5, wallHeight / 2, wallWidth * 4.5f + passageWidth * 4);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, wallWidth / 2, wallHeight / 2, wallWidth * 4.5f + passageWidth * 4);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, wallWidth * 1.5f + passageWidth, wallHeight / 2, wallWidth * 2 + passageWidth * 1.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 4 + passageWidth * 3, wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, wallWidth * 3 + passageWidth * 2.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, wallWidth * 1.5f + passageWidth, wallHeight / 2, wallWidth * 4 + passageWidth * 3.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, wallWidth * 3 + passageWidth * 2.5f);
-        addWall((wallWidth * 6 + passageWidth * 5), wallHeight, wallWidth, (wallWidth * 6 + passageWidth * 5) / 2, wallHeight / 2, wallWidth * 5.5f + passageWidth * 5);
-        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, wallWidth * 1.5f + passageWidth * 1);
-        addWall(wallWidth * 4 + passageWidth * 3, wallHeight, wallWidth, wallWidth * 3 + passageWidth * 2.5f, wallHeight / 2, wallWidth * 2.5f + passageWidth * 2);
-        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, wallWidth * 1.5f + passageWidth * 1);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, wallWidth * 1 + passageWidth * 0.5f, wallHeight / 2, wallWidth * 3.5f + passageWidth * 3);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, wallWidth * 3 + passageWidth * 2.5f, wallHeight / 2, wallWidth * 3.5f + passageWidth * 3);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, wallWidth * 4.5f + passageWidth * 4);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, wallWidth * 4.5f + passageWidth * 4);
+        blocksInfo.add(buildBlock4(0,0));
 
         // Adding floor
-        floor = new Floor(50, 0.1f, 50, assetManager, localRootNode, 0, -0.1f, 0, bulletAppState);
+        floor = new Floor(wallWidth * 6 + passageWidth * 5, 0.1f, wallWidth * 6 + passageWidth * 5, assetManager, localRootNode, (wallWidth * 6 + passageWidth * 5)/2, -0.1f, (wallWidth * 6 + passageWidth * 5)/2, bulletAppState);
+        ceiling = new Ceiling(wallWidth * 6 + passageWidth * 5, 0.1f, wallWidth * 6 + passageWidth * 5, assetManager, localRootNode, (wallWidth * 6 + passageWidth * 5)/2, wallHeight-0.05f, (wallWidth * 6 + passageWidth * 5)/2, bulletAppState);
+        cross = new Cross(passageWidth, 0.1f, passageWidth, assetManager, localRootNode, blocksInfo.get(0).get(0), -0.1f, blocksInfo.get(0).get(1), bulletAppState);
+
+        //Closing extras
+        super.addWall((wallWidth * 6 + passageWidth * 5), wallHeight, wallWidth, (wallWidth * 6 + passageWidth * 5) / 2, wallHeight / 2, wallWidth / 2);
+        super.addWall(wallWidth, wallHeight, (wallWidth * 6 + passageWidth * 5), wallWidth / 2, wallHeight / 2, (wallWidth * 6 + passageWidth * 5) / 2);
+        super.addWall((wallWidth * 6 + passageWidth * 5), wallHeight, wallWidth, (wallWidth * 6 + passageWidth * 5) / 2, wallHeight / 2, wallWidth * 5.5f + passageWidth * 5);
+        super.addWall(wallWidth, wallHeight, (wallWidth * 6 + passageWidth * 5), wallWidth * 5.5f + passageWidth * 5, wallHeight / 2, (wallWidth * 6 + passageWidth * 5) / 2);
+
 
         // Adding light
         DirectionalLight sun = new DirectionalLight();
@@ -51,7 +42,4 @@ public class Level0 extends Level {
         localRootNode.addLight(sun);
     }
 
-    private void addWall(float x, float y, float z, float px, float py, float pz) {
-        walls.add(new Wall(x, y, z, assetManager, localRootNode, px, py, pz, bulletAppState));
-    }
 }

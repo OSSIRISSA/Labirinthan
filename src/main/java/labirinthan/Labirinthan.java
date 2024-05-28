@@ -16,6 +16,10 @@ import labirinthan.GUI.MainMenu;
 public class Labirinthan extends SimpleApplication {
 
     private BulletAppState bulletAppState;
+    public static final float X = Level.wallWidth*1+Level.passageWidth*0.5f;
+    public static final float Y = 0;
+    public static final float Z = Level.wallWidth*3+Level.passageWidth*2.5f;
+
 
     public static boolean isFlying = true;
 
@@ -71,7 +75,7 @@ public class Labirinthan extends SimpleApplication {
     }
 
     public void startLevel0() {
-        Level0 level0 = new Level0(this, bulletAppState);
-        stateManager.attach(level0);
+        Level1 level1 = new Level1(this, bulletAppState);
+        stateManager.attach(level1);
     }
 }

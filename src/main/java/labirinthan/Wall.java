@@ -19,7 +19,7 @@ public class Wall extends Box {
         super(x / 2, y / 2, z / 2);
         Geometry geom = new Geometry("Wall", this);
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        Texture tex = assetManager.loadTexture("Textures/br.png");
+        Texture tex = assetManager.loadTexture("Textures/bricks.png");
         tex.setWrap(Texture.WrapMode.Repeat);
         mat.setTexture("ColorMap", tex);
         geom.setMaterial(mat);
