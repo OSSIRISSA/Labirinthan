@@ -49,7 +49,7 @@ public class SettingsMenu {
         backButton.setFontSize(48f);
         backButton.setTextHAlignment(HAlignment.Center);
         backButton.setPreferredSize(new Vector3f(titleLabel.getPreferredSize().x/2.5f, backButton.getPreferredSize().y, 0));
-        backButton.setLocalTranslation((settings.getWidth() - backButton.getPreferredSize().x)/2f - backButton.getPreferredSize().x*2, backButton.getPreferredSize().y, 0);
+        backButton.setLocalTranslation((settings.getWidth() - backButton.getPreferredSize().x)/2f - backButton.getPreferredSize().x*2, backButton.getPreferredSize().y*1.5f, 0);
         backButton.addClickCommands(source -> returnToMainMenu());
         guiNode.attachChild(backButton);
 
@@ -59,13 +59,13 @@ public class SettingsMenu {
         applyButton.setFontSize(48f);
         applyButton.setTextHAlignment(HAlignment.Center);
         applyButton.setPreferredSize(new Vector3f(backButton.getPreferredSize().x, applyButton.getPreferredSize().y, 0));
-        applyButton.setLocalTranslation((settings.getWidth() - applyButton.getPreferredSize().x) / 2f + applyButton.getPreferredSize().x*2f, applyButton.getPreferredSize().y, 0);
+        applyButton.setLocalTranslation((settings.getWidth() - applyButton.getPreferredSize().x) / 2f + applyButton.getPreferredSize().x*2f, applyButton.getPreferredSize().y*1.5f, 0);
         applyButton.addClickCommands(source -> applySettings());
         guiNode.attachChild(applyButton);
 
         // Create a Tabs component
         Container tabsContainer = new Container(new SpringGridLayout(Axis.Y, Axis.X, FillMode.Last, FillMode.First));
-        tabsContainer.setPreferredSize(new Vector3f(settings.getWidth() / 1.2f, settings.getHeight() - titleLabel.getPreferredSize().y-backButton.getPreferredSize().y, 0));
+        tabsContainer.setPreferredSize(new Vector3f(settings.getWidth() / 1.2f, settings.getHeight() - titleLabel.getPreferredSize().y-backButton.getPreferredSize().y*2, 0));
         tabsContainer.setLocalTranslation((settings.getWidth() - tabsContainer.getPreferredSize().x) / 2f, (settings.getHeight() - titleLabel.getPreferredSize().y), 0);
         guiNode.attachChild(tabsContainer);
 
