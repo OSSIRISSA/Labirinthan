@@ -5,17 +5,20 @@ import com.jme3.asset.plugins.FileLocator;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.light.AmbientLight;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.FogFilter;
-import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
-import labirinthan.GUI.MainMenu;
-
-import java.awt.*;
+import labirinthan.levels.Level;
+import labirinthan.levels.Level0;
+import labirinthan.levels.Level1;
+import labirinthan.props.TorchHandler;
 
 public class Labirinthan extends SimpleApplication {
 
     private BulletAppState bulletAppState;
+    private MainCharacter character;
+
     public static final float X = Level.wallWidth*1+Level.passageWidth*0.5f;
     public static final float Y = 0;
     public static final float Z = Level.wallWidth*3+Level.passageWidth*2.5f;
@@ -29,7 +32,7 @@ public class Labirinthan extends SimpleApplication {
 
         // Set the game to fullscreen
         AppSettings settings = new AppSettings(true);
-        settings.setFullscreen(true);
+        settings.setFullscreen(false);
         settings.setResolution(1920, 1080);
         settings.setTitle("Labirinthan");
         app.setSettings(settings);
@@ -56,27 +59,30 @@ public class Labirinthan extends SimpleApplication {
         //Add All lighted map          ----------(TEMPORARY)----------
         AmbientLight al = new AmbientLight();
         al.setColor(ColorRGBA.White.mult(10f));
-        rootNode.addLight(al);
+        //rootNode.addLight(al);
 
         startGame();
-        flyCam.setMoveSpeed(100);
+        loadTorch();
+        flyCam.setMoveSpeed(10);
+    }
+
+    private void loadTorch() {
+        TorchHandler torchHandler = new TorchHandler(assetManager, rootNode);
+        rootNode.attachChild(torchHandler.torchNode);
+        torchHandler.rotateTorch(0, FastMath.HALF_PI, 0);
+        torchHandler.moveTorch(5, 2.5f, 1);
     }
 
     public void startGame() {
         guiNode.detachAllChildren(); // Remove the home screen elements
 
         startLevel0();
-        stateManager.attach(new MainCharacter());
+        character = new MainCharacter();
+        stateManager.attach(character);
 
         // Hide the mouse cursor and enable game input
         inputManager.setCursorVisible(false);
         flyCam.setEnabled(true);
-
-        //temporary add character
-        //Spatial character = assetManager.loadModel("Models/scene/scene.j3o");
-        //rootNode.attachChild(character);
-        //AnimComposer composer = character.getControl(AnimComposer.class);
-        //System.out.println(composer);
     }
 
     public void stopLevel() {
@@ -85,8 +91,8 @@ public class Labirinthan extends SimpleApplication {
     }
 
     public void startLevel0() {
-        Level1 level1 = new Level1(this, bulletAppState);
-        stateManager.attach(level1);
+        level = new Level0(this, bulletAppState, guiNode, settings);
+        stateManager.attach(level);
         addFog();
     }
 
@@ -99,22 +105,25 @@ public class Labirinthan extends SimpleApplication {
         // Add the fog filter to the post processor
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         fpp.addFilter(fog);
-        viewPort.addProcessor(fpp);
-        level = new Level0(this, bulletAppState, guiNode, settings);
-        stateManager.attach(level);
+        //viewPort.addProcessor(fpp);
     }
 
     public void startLevel1() {
         guiNode.detachAllChildren(); // Remove the home screen elements
+        stateManager.detach(character);
         stateManager.detach(level);
+        bulletAppState.cleanup();
+        stateManager.detach(bulletAppState);
 
+        bulletAppState = new BulletAppState();
+        stateManager.attach(bulletAppState);
+        //bulletAppState.setDebugEnabled(true);
         level = new Level1(this, bulletAppState, guiNode, settings);
         stateManager.attach(level);
-        stateManager.attach(new MainCharacter());
+        stateManager.attach(character);
 
         // Hide the mouse cursor and enable game input
         inputManager.setCursorVisible(false);
         flyCam.setEnabled(true);
-
     }
 }

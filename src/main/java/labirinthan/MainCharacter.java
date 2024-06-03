@@ -10,6 +10,7 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import labirinthan.levels.Level;
 
 public class MainCharacter extends AbstractAppState implements ActionListener {
 
@@ -102,7 +103,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener {
     }
 
     private void crossCheck() {
-        if((characterNode.getLocalTranslation().x <= Labirinthan.level.blocksInfo.get(Labirinthan.level.chooseCross).get(0)+Level.passageWidth/2 )&&(characterNode.getLocalTranslation().x >= Labirinthan.level.blocksInfo.get(Labirinthan.level.chooseCross).get(0)-Level.passageWidth/2)&&(characterNode.getLocalTranslation().z <= Labirinthan.level.blocksInfo.get(Labirinthan.level.chooseCross).get(1)+Level.passageWidth/2)&&(characterNode.getLocalTranslation().z >= Labirinthan.level.blocksInfo.get(Labirinthan.level.chooseCross).get(1)-Level.passageWidth/2)&&!isPuzzleFound){
+        if((characterNode.getLocalTranslation().x <= Labirinthan.level.blocksInfo.get(Labirinthan.level.chooseCross).get(0)+ Level.passageWidth/2 )&&(characterNode.getLocalTranslation().x >= Labirinthan.level.blocksInfo.get(Labirinthan.level.chooseCross).get(0)-Level.passageWidth/2)&&(characterNode.getLocalTranslation().z <= Labirinthan.level.blocksInfo.get(Labirinthan.level.chooseCross).get(1)+Level.passageWidth/2)&&(characterNode.getLocalTranslation().z >= Labirinthan.level.blocksInfo.get(Labirinthan.level.chooseCross).get(1)-Level.passageWidth/2)&&!isPuzzleFound){
             this.app.getRootNode().detachChild(characterNode);
             app.stopLevel();
             Labirinthan.level.startPuzzle();
