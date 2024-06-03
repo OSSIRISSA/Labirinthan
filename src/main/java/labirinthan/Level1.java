@@ -1,21 +1,19 @@
 package labirinthan;
 
 import com.jme3.app.Application;
-import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-
-import java.util.Random;
-import java.util.random.RandomGenerator;
+import com.jme3.scene.Node;
+import com.jme3.system.AppSettings;
 
 public class Level1 extends Level {
 
 
-    public Level1(SimpleApplication application, BulletAppState bulletAppState) {
-        super(application, "Level1");
+    public Level1(Labirinthan application, BulletAppState bulletAppState, Node guiNode, AppSettings settings) {
+        super(application, "Level1", guiNode, settings);
         this.bulletAppState = bulletAppState;
     }
 
@@ -33,7 +31,7 @@ public class Level1 extends Level {
                 currentX = i*5*(wallWidth+passageWidth);
                 currentZ = j*5*(wallWidth+passageWidth);
 
-                int blockNumber = random.nextInt(1,5);
+                int blockNumber = random.nextInt(1,11);
                 switch (blockNumber){
                     case 1 -> blocksInfo.add(buildBlock1(currentX,currentZ));
                     case 2 -> blocksInfo.add(buildBlock2(currentX,currentZ));
@@ -59,7 +57,7 @@ public class Level1 extends Level {
         // Adding floor
         floor = new Floor(labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth, 0.1f, labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth, assetManager, localRootNode, (labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth)/2, -0.05f, (labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth)/2, bulletAppState);
         ceiling = new Ceiling(labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth, 0.1f, labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth, assetManager, localRootNode, (labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth)/2, wallHeight-0.05f, (labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth)/2, bulletAppState);
-        int chooseCross = random.nextInt(blocksInfo.size());
+        chooseCross = random.nextInt(blocksInfo.size());
         cross = new Cross(passageWidth, 0.1f, passageWidth, assetManager, localRootNode, blocksInfo.get(chooseCross).get(0), -0.05f, blocksInfo.get(chooseCross).get(1), bulletAppState);
 
         for(int i=0;i<blocksDecorationInfo.size()-1;i+=2){

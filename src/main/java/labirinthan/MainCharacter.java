@@ -1,7 +1,6 @@
 package labirinthan;
 
 import com.jme3.app.Application;
-import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bullet.BulletAppState;
@@ -14,13 +13,15 @@ import com.jme3.scene.Node;
 
 public class MainCharacter extends AbstractAppState implements ActionListener {
 
-    private SimpleApplication app;
+    private Labirinthan app;
     private BulletAppState bulletAppState;
     private BetterCharacterControl characterControl;
-    private Node characterNode;
+    public static Node characterNode;
 
     private final Vector3f walkDirection = new Vector3f();
     private boolean left = false, right = false, forward = false, backward = false;
+
+    private boolean isPuzzleFound = false;
 
     private final float CHARACTER_SPEED = 10f;
     private final float JUMP_FORCE = 400f; // Adjust this value to make the jump appropriate
@@ -28,7 +29,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener {
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
-        this.app = (SimpleApplication) app;
+        this.app = (Labirinthan) app;
         bulletAppState = this.app.getStateManager().getState(BulletAppState.class);
 
         characterNode = new Node("Character");
@@ -96,5 +97,16 @@ public class MainCharacter extends AbstractAppState implements ActionListener {
         }
         characterControl.setWalkDirection(walkDirection);
         if(!Labirinthan.isFlying) this.app.getCamera().setLocation(characterNode.getLocalTranslation().add(0, 1.8f, 0));
+
+        crossCheck();
+    }
+
+    private void crossCheck() {
+        if((characterNode.getLocalTranslation().x <= Labirinthan.level.blocksInfo.get(Labirinthan.level.chooseCross).get(0)+Level.passageWidth/2 )&&(characterNode.getLocalTranslation().x >= Labirinthan.level.blocksInfo.get(Labirinthan.level.chooseCross).get(0)-Level.passageWidth/2)&&(characterNode.getLocalTranslation().z <= Labirinthan.level.blocksInfo.get(Labirinthan.level.chooseCross).get(1)+Level.passageWidth/2)&&(characterNode.getLocalTranslation().z >= Labirinthan.level.blocksInfo.get(Labirinthan.level.chooseCross).get(1)-Level.passageWidth/2)&&!isPuzzleFound){
+            this.app.getRootNode().detachChild(characterNode);
+            app.stopLevel();
+            Labirinthan.level.startPuzzle();
+            isPuzzleFound = true;
+        }
     }
 }

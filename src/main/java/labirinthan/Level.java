@@ -1,12 +1,13 @@
 package labirinthan;
 
 import com.jme3.app.Application;
-import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.scene.Node;
+import com.jme3.system.AppSettings;
+import labirinthan.GUI.PuzzleSudoku;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -14,7 +15,11 @@ import java.util.Random;
 public class Level extends AbstractAppState {
     protected final Node rootNode;
     protected final Node localRootNode;
+
     protected final AssetManager assetManager;
+    private final Node guiNode;
+    private final AppSettings settings;
+    public Labirinthan application;
     public static float wallHeight = 6;
     public static float wallWidth = 1;
     public static float passageWidth = 4;
@@ -29,9 +34,13 @@ public class Level extends AbstractAppState {
     public int labyrinthSizeX;
     public int labyrinthSizeZ;
     public int clearSpan;
+    public int chooseCross;
 
-    public Level(SimpleApplication application, String name) {
+    public Level(Labirinthan application, String name, Node guiNode, AppSettings settings) {
         this.rootNode = application.getRootNode();
+        this.guiNode = guiNode;
+        this.settings = settings;
+        this.application = application;
         localRootNode = new Node(name);
         assetManager = application.getAssetManager();
     }
@@ -49,6 +58,11 @@ public class Level extends AbstractAppState {
     }
     public void addWall(float x, float y, float z, float px, float py, float pz) {
         walls.add(new Wall(x, y, z, assetManager, localRootNode, px, py, pz, bulletAppState));
+    }
+
+    public void startPuzzle(){
+        PuzzleSudoku puzzle = new PuzzleSudoku(application,guiNode,settings,assetManager);
+        puzzle.createScreen();
     }
 
     public ArrayList<Float> buildBlock1(float startX, float startZ){

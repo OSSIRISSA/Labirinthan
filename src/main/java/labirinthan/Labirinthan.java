@@ -1,7 +1,5 @@
 package labirinthan;
 
-import com.jme3.anim.AnimComposer;
-import com.jme3.animation.AnimControl;
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.bullet.BulletAppState;
@@ -21,9 +19,10 @@ public class Labirinthan extends SimpleApplication {
     public static final float X = Level.wallWidth*1+Level.passageWidth*0.5f;
     public static final float Y = 0;
     public static final float Z = Level.wallWidth*3+Level.passageWidth*2.5f;
-
+    public static Level level;
 
     public static boolean isFlying = false;
+
 
     public static void main(String[] args) {
         Labirinthan app = new Labirinthan();
@@ -80,6 +79,11 @@ public class Labirinthan extends SimpleApplication {
         //System.out.println(composer);
     }
 
+    public void stopLevel() {
+        inputManager.setCursorVisible(true);
+        flyCam.setEnabled(false);
+    }
+
     public void startLevel0() {
         Level1 level1 = new Level1(this, bulletAppState);
         stateManager.attach(level1);
@@ -96,5 +100,21 @@ public class Labirinthan extends SimpleApplication {
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         fpp.addFilter(fog);
         viewPort.addProcessor(fpp);
+        level = new Level0(this, bulletAppState, guiNode, settings);
+        stateManager.attach(level);
+    }
+
+    public void startLevel1() {
+        guiNode.detachAllChildren(); // Remove the home screen elements
+        stateManager.detach(level);
+
+        level = new Level1(this, bulletAppState, guiNode, settings);
+        stateManager.attach(level);
+        stateManager.attach(new MainCharacter());
+
+        // Hide the mouse cursor and enable game input
+        inputManager.setCursorVisible(false);
+        flyCam.setEnabled(true);
+
     }
 }

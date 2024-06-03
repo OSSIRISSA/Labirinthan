@@ -1,18 +1,19 @@
 package labirinthan;
 
 import com.jme3.app.Application;
-import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
+import com.jme3.system.AppSettings;
 
 public class Level0 extends Level {
 
 
-    public Level0(SimpleApplication application, BulletAppState bulletAppState) {
-        super(application, "Level0");
+    public Level0(Labirinthan application, BulletAppState bulletAppState, Node guiNode, AppSettings settings) {
+        super(application, "Level0", guiNode, settings);
         this.bulletAppState = bulletAppState;
     }
 
