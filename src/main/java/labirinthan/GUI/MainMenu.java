@@ -36,6 +36,8 @@ public class MainMenu {
     }
 
     public void createHomeScreen() {
+        guiNode.detachAllChildren();
+
         // Create a title label
         Label titleLabel = new Label("Labirinthan");
         titleLabel.setFont(mainFont);

@@ -1,12 +1,19 @@
 package labirinthan;
 
+import com.jme3.anim.AnimComposer;
+import com.jme3.animation.AnimControl;
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.light.AmbientLight;
 import com.jme3.math.ColorRGBA;
+import com.jme3.post.FilterPostProcessor;
+import com.jme3.post.filters.FogFilter;
+import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
 import labirinthan.GUI.MainMenu;
+
+import java.awt.*;
 
 public class Labirinthan extends SimpleApplication {
 
@@ -24,10 +31,10 @@ public class Labirinthan extends SimpleApplication {
         // Set the game to fullscreen
         AppSettings settings = new AppSettings(true);
         settings.setFullscreen(true);
-        settings.setResolution(1920, 1080); // Set your desired resolution
+        settings.setResolution(1920, 1080);
         settings.setTitle("Labirinthan");
         app.setSettings(settings);
-        app.setShowSettings(false); // Disable the settings dialog
+        app.setShowSettings(false);
         app.start();
     }
 
@@ -37,8 +44,8 @@ public class Labirinthan extends SimpleApplication {
         assetManager.registerLocator("assets/", FileLocator.class);
 
         // Initialize Main Menu GUI
-        MainMenu mainMenu = new MainMenu(this, guiNode, settings, assetManager);
-        mainMenu.createHomeScreen();
+        //MainMenu mainMenu = new MainMenu(this, guiNode, settings, assetManager);
+        //mainMenu.createHomeScreen();
 
         //init Physics
         bulletAppState = new BulletAppState();
@@ -52,7 +59,7 @@ public class Labirinthan extends SimpleApplication {
         al.setColor(ColorRGBA.White.mult(10f));
         rootNode.addLight(al);
 
-        //startGame();
+        startGame();
         flyCam.setMoveSpeed(100);
     }
 
@@ -65,10 +72,29 @@ public class Labirinthan extends SimpleApplication {
         // Hide the mouse cursor and enable game input
         inputManager.setCursorVisible(false);
         flyCam.setEnabled(true);
+
+        //temporary add character
+        //Spatial character = assetManager.loadModel("Models/scene/scene.j3o");
+        //rootNode.attachChild(character);
+        //AnimComposer composer = character.getControl(AnimComposer.class);
+        //System.out.println(composer);
     }
 
     public void startLevel0() {
         Level1 level1 = new Level1(this, bulletAppState);
         stateManager.attach(level1);
+        addFog();
+    }
+
+    private void addFog(){
+        FogFilter fog = new FogFilter();
+        fog.setFogColor(new ColorRGBA(179/255f,229/255f,251/255f,1f));
+        fog.setFogDistance(100f); // Distance at which fog starts
+        fog.setFogDensity(4.0f); // Density of the fog
+
+        // Add the fog filter to the post processor
+        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+        fpp.addFilter(fog);
+        viewPort.addProcessor(fpp);
     }
 }
