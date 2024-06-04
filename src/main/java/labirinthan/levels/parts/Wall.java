@@ -7,10 +7,10 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.VertexBuffer;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.util.BufferUtils;
-import com.jme3.scene.VertexBuffer;
 
 import java.nio.FloatBuffer;
 
@@ -21,22 +21,22 @@ public class Wall extends Box {
         Geometry geom = new Geometry("Wall", this);
 
         //коли розставиш факели - це комітиш
-        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        //Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         //це розкомітиш
-        //Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
 
         Texture diffuseTex = assetManager.loadTexture("Textures/bricks.png");
         diffuseTex.setWrap(Texture.WrapMode.Repeat);
 
         //це комітиш
-        mat.setTexture("ColorMap", diffuseTex);
+        //mat.setTexture("ColorMap", diffuseTex);
 
         //а це все розкомітиш --------------------------- щоб бачити де накладання, зі світлом ясно буде
-        //mat.setTexture("DiffuseMap", diffuseTex);
-        //mat.setBoolean("UseMaterialColors", true);
-        //mat.setColor("Diffuse", ColorRGBA.DarkGray);
-        //mat.setColor("Specular", ColorRGBA.White);
-        //mat.setFloat("Shininess", 0f);
+        mat.setTexture("DiffuseMap", diffuseTex);
+        mat.setBoolean("UseMaterialColors", true);
+        mat.setColor("Diffuse", ColorRGBA.DarkGray);
+        mat.setColor("Specular", ColorRGBA.White);
+        mat.setFloat("Shininess", 0f);
         geom.setMaterial(mat);
 
         // Adjust the texture coordinates to stretch vertically and repeat horizontally

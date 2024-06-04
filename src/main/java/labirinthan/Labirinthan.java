@@ -6,17 +6,14 @@ import com.jme3.asset.plugins.FileLocator;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.light.AmbientLight;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.FogFilter;
 import com.jme3.system.AppSettings;
-import com.simsilica.lemur.GuiGlobals;
 import labirinthan.GUI.MainHUD;
 import labirinthan.GUI.MainMenu;
 import labirinthan.levels.Level;
 import labirinthan.levels.Level0;
 import labirinthan.levels.Level1;
-import labirinthan.props.TorchHandler;
 
 public class Labirinthan extends SimpleApplication {
 
@@ -71,17 +68,10 @@ public class Labirinthan extends SimpleApplication {
         startGame();
         //THIS
 
-        loadTorch();
         flyCam.setMoveSpeed(10);
     }
 
-    private void loadTorch() {
-        TorchHandler torchHandler = new TorchHandler(assetManager, rootNode);
-        rootNode.attachChild(torchHandler);
-        torchHandler.rotateTorch(0, FastMath.HALF_PI, 0);
-        torchHandler.moveTorch(5, 2.5f, 1);
-        torchHandler.updateTorchStatus(true);
-    }
+
 
     public void startGame() {
         guiNode.detachAllChildren(); // Remove the home screen elements

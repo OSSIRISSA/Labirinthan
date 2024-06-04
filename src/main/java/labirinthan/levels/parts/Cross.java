@@ -18,7 +18,7 @@ public class Cross extends Box {
         mat.setColor("Color", ColorRGBA.Red);
         geom.setMaterial(mat);
         localRootNode.attachChild(geom);
-        geom.setLocalTranslation(px, py, pz);
+        geom.setLocalTranslation(px, py+0.01f, pz);
 
         RigidBodyControl floorPhysics = new RigidBodyControl(0.0f);
         geom.addControl(floorPhysics);

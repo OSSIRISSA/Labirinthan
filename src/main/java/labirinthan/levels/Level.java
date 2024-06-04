@@ -5,14 +5,16 @@ import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.math.FastMath;
 import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
-import labirinthan.*;
-import labirinthan.GUI.PuzzleSudoku;
+import labirinthan.GUI.PuzzlePyramid;
+import labirinthan.Labirinthan;
 import labirinthan.levels.parts.Ceiling;
 import labirinthan.levels.parts.Cross;
 import labirinthan.levels.parts.Floor;
 import labirinthan.levels.parts.Wall;
+import labirinthan.props.TorchHandler;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -23,6 +25,7 @@ public class Level extends AbstractAppState {
 
     protected final AssetManager assetManager;
     private final Node guiNode;
+    private final Node localPuzzleNode;
     private final AppSettings settings;
     public Labirinthan application;
     public static float wallHeight = 6;
@@ -48,17 +51,20 @@ public class Level extends AbstractAppState {
         this.application = application;
         localRootNode = new Node(name);
         assetManager = application.getAssetManager();
+        localPuzzleNode = new Node(name+"Puzzle");
     }
 
     @Override
     public void initialize(AppStateManager sm, Application application){
         super.initialize(sm,application);
         rootNode.attachChild(localRootNode);
+        guiNode.attachChild(localPuzzleNode);
     }
 
     @Override
     public void cleanup(){
         rootNode.detachChild(localRootNode);
+        guiNode.detachChild(localPuzzleNode);
         super.cleanup();
     }
     public void addWall(float x, float y, float z, float px, float py, float pz) {
@@ -66,12 +72,26 @@ public class Level extends AbstractAppState {
     }
 
     public void startPuzzle(){
-        PuzzleSudoku puzzle = new PuzzleSudoku(application,guiNode,settings,assetManager);
+        //PuzzleSudoku puzzle = new PuzzleSudoku(application,localPuzzleNode,settings,assetManager);
+        PuzzlePyramid puzzle = new PuzzlePyramid(application,localPuzzleNode,settings,assetManager);
         puzzle.createScreen();
     }
 
+    private void loadTorch(float x, float z, int direction) {
+        if(random.nextInt(10)!=0){
+            TorchHandler torchHandler = new TorchHandler(assetManager, rootNode);
+            localRootNode.attachChild(torchHandler);
+            switch (direction){
+                case 1 -> torchHandler.rotateTorch(0, -FastMath.HALF_PI, 0);
+                case 2 -> torchHandler.rotateTorch(0, FastMath.PI, 0);
+                case 3 -> torchHandler.rotateTorch(0, FastMath.HALF_PI, 0);
+            }
+            torchHandler.moveTorch(x, 2.5f, z);
+            torchHandler.updateTorchStatus(true);
+        }
+    }
+
     public ArrayList<Float> buildBlock1(float startX, float startZ){
-        makeFrameWalls(startX,startZ);
 
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX+wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ+(wallWidth * 2 + passageWidth) / 2);
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX+wallWidth * 1.5f + passageWidth, wallHeight / 2, startZ+wallWidth * 2 + passageWidth * 1.5f);
@@ -85,6 +105,13 @@ public class Level extends AbstractAppState {
         addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 3 + passageWidth * 2.5f, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
         addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
         addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
+
+        loadTorch(startX+wallWidth+passageWidth,startZ+wallWidth+passageWidth*0,3);
+        loadTorch(startX+wallWidth*3+passageWidth*3,startZ+wallWidth*3+passageWidth*2.5f,4);
+        loadTorch(startX+wallWidth*4.5f+passageWidth*4,startZ+wallWidth,3);
+        loadTorch(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*4+passageWidth*4, 1);
+        loadTorch(startX+wallWidth+passageWidth,startZ+wallWidth*5+passageWidth*5, 1);
+
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*3+passageWidth*2.5f);
         res.add(startZ+wallWidth*2+passageWidth*1.5f);
@@ -102,7 +129,6 @@ public class Level extends AbstractAppState {
     }
 
     public ArrayList<Float> buildBlock2(float startX, float startZ){
-        makeFrameWalls(startX,startZ);
 
         addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX+wallWidth*2.5f+passageWidth*2, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX+wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ+wallWidth * 2 + passageWidth*1.5f);
@@ -137,7 +163,6 @@ public class Level extends AbstractAppState {
     }
 
     public ArrayList<Float> buildBlock3(float startX, float startZ){
-        makeFrameWalls(startX,startZ);
 
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX+wallWidth*1.5f+passageWidth* 1, wallHeight / 2, startZ+wallWidth * 2 + passageWidth * 1.5f);
         addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth*2, startX+wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth*2);
@@ -169,7 +194,6 @@ public class Level extends AbstractAppState {
     }
 
     public ArrayList<Float> buildBlock4(float startX, float startZ){
-        makeFrameWalls(startX,startZ);
 
         addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth *2, startX+wallWidth*1.5f+passageWidth* 1, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth*1, startX+wallWidth * 1.5f + passageWidth * 1, wallHeight / 2, startZ+wallWidth * 4 + passageWidth*3.5f);
@@ -198,7 +222,6 @@ public class Level extends AbstractAppState {
     }
 
     public ArrayList<Float> buildBlock5(float startX, float startZ){
-        makeFrameWalls(startX,startZ);
 
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 1 + passageWidth * 0.5f);
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 4 + passageWidth * 3.5f);
@@ -229,7 +252,6 @@ public class Level extends AbstractAppState {
     }
 
     public ArrayList<Float> buildBlock6(float startX, float startZ){
-        makeFrameWalls(startX,startZ);
 
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 1 + passageWidth * 0.5f);
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*4.5f+passageWidth* 4, wallHeight / 2, startZ+wallWidth * 1 + passageWidth * 0.5f);
@@ -262,7 +284,6 @@ public class Level extends AbstractAppState {
     }
 
     public ArrayList<Float> buildBlock7(float startX, float startZ){
-        makeFrameWalls(startX,startZ);
 
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*4.5f+passageWidth* 4, wallHeight / 2, startZ+wallWidth * 2 + passageWidth * 1.5f);
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*4.5f+passageWidth* 4, wallHeight / 2, startZ+wallWidth * 5 + passageWidth * 4.5f);
@@ -295,7 +316,6 @@ public class Level extends AbstractAppState {
     }
 
     public ArrayList<Float> buildBlock8(float startX, float startZ){
-        makeFrameWalls(startX,startZ);
 
         addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth *2, startX+wallWidth*1.5f+passageWidth* 1, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
         addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth *2, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
@@ -326,7 +346,6 @@ public class Level extends AbstractAppState {
     }
 
     public ArrayList<Float> buildBlock9(float startX, float startZ){
-        makeFrameWalls(startX,startZ);
 
         addWall(wallWidth, wallHeight, wallWidth * 4 + passageWidth *3, startX+wallWidth*1.5f+passageWidth* 1, wallHeight / 2, startZ+wallWidth * 3 + passageWidth * 2.5f);
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 3 + passageWidth * 2.5f);
@@ -356,7 +375,7 @@ public class Level extends AbstractAppState {
     }
 
     public ArrayList<Float> buildBlock10(float startX, float startZ){
-        makeFrameWalls(startX,startZ);
+        //makeFrameWalls(startX,startZ);
 
         addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth *2, startX+wallWidth*1.5f+passageWidth* 1, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
         addWall(wallWidth, wallHeight, wallWidth * 4 + passageWidth *3, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 3 + passageWidth * 2.5f);

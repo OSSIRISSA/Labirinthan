@@ -10,8 +10,8 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import labirinthan.levels.Level;
 import labirinthan.GUI.MainHUD;
+import labirinthan.levels.Level;
 
 public class MainCharacter extends AbstractAppState implements ActionListener {
 
@@ -141,7 +141,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener {
 
     public void checkForInteraction() {
         // Logic to check if interaction is possible
-        boolean canInteract = true; // Replace with actual logic
+        boolean canInteract = false; // Replace with actual logic
         hud.showInteractionSign(canInteract);
     }
 }

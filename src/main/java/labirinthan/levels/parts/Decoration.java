@@ -18,7 +18,7 @@ public class Decoration extends Box {
         mat.setColor("Color", ColorRGBA.Blue);
         geom.setMaterial(mat);
         localRootNode.attachChild(geom);
-        geom.setLocalTranslation(px, py, pz);
+        geom.setLocalTranslation(px, py+0.01f, pz);
 
         RigidBodyControl floorPhysics = new RigidBodyControl(0.0f);
         geom.addControl(floorPhysics);
