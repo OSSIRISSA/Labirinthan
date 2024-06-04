@@ -19,14 +19,24 @@ public class Wall extends Box {
     public Wall(float x, float y, float z, AssetManager assetManager, Node localRootNode, float px, float py, float pz, BulletAppState bulletAppState) {
         super(x / 2, y / 2, z / 2);
         Geometry geom = new Geometry("Wall", this);
-        Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+
+        //коли розставиш факели - це комітиш
+        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        //це розкомітиш
+        //Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+
         Texture diffuseTex = assetManager.loadTexture("Textures/bricks.png");
         diffuseTex.setWrap(Texture.WrapMode.Repeat);
-        mat.setTexture("DiffuseMap", diffuseTex);
-        mat.setBoolean("UseMaterialColors", true);
-        mat.setColor("Diffuse", ColorRGBA.DarkGray);
-        mat.setColor("Specular", ColorRGBA.White);
-        mat.setFloat("Shininess", 0f);
+
+        //це комітиш
+        mat.setTexture("ColorMap", diffuseTex);
+
+        //а це все розкомітиш --------------------------- щоб бачити де накладання, зі світлом ясно буде
+        //mat.setTexture("DiffuseMap", diffuseTex);
+        //mat.setBoolean("UseMaterialColors", true);
+        //mat.setColor("Diffuse", ColorRGBA.DarkGray);
+        //mat.setColor("Specular", ColorRGBA.White);
+        //mat.setFloat("Shininess", 0f);
         geom.setMaterial(mat);
 
         // Adjust the texture coordinates to stretch vertically and repeat horizontally

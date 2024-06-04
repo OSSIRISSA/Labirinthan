@@ -11,6 +11,7 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import labirinthan.levels.Level;
+import labirinthan.GUI.MainHUD;
 
 public class MainCharacter extends AbstractAppState implements ActionListener {
 
@@ -18,6 +19,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener {
     private BulletAppState bulletAppState;
     private BetterCharacterControl characterControl;
     public static Node characterNode;
+    private final MainHUD hud;
 
     private final Vector3f walkDirection = new Vector3f();
     private boolean left = false, right = false, forward = false, backward = false;
@@ -27,6 +29,12 @@ public class MainCharacter extends AbstractAppState implements ActionListener {
     private final float CHARACTER_SPEED = 10f;
     private final float JUMP_FORCE = 400f; // Adjust this value to make the jump appropriate
 
+    private float health = 1.0f; // full health
+
+    public MainCharacter(MainHUD hud) {
+        this.hud = hud;
+    }
+
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
@@ -34,7 +42,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener {
         bulletAppState = this.app.getStateManager().getState(BulletAppState.class);
 
         characterNode = new Node("Character");
-        characterNode.setLocalTranslation(Labirinthan.X,Labirinthan.Y,Labirinthan.Z);
+        characterNode.setLocalTranslation(Labirinthan.X, Labirinthan.Y, Labirinthan.Z);
         characterControl = new BetterCharacterControl(1.4f, 3.0f, 80f);
         characterControl.setJumpForce(new Vector3f(0, JUMP_FORCE, 0));
         characterControl.setGravity(new Vector3f(0, -9.81f, 0)); // Ensure gravity is set correctly
@@ -97,17 +105,43 @@ public class MainCharacter extends AbstractAppState implements ActionListener {
             walkDirection.addLocal(camDir.negate());
         }
         characterControl.setWalkDirection(walkDirection);
-        if(!Labirinthan.isFlying) this.app.getCamera().setLocation(characterNode.getLocalTranslation().add(0, 1.8f, 0));
+        if (!Labirinthan.isFlying) this.app.getCamera().setLocation(characterNode.getLocalTranslation().add(0, 1.8f, 0));
 
         crossCheck();
     }
 
     private void crossCheck() {
-        if((characterNode.getLocalTranslation().x <= Labirinthan.level.blocksInfo.get(Labirinthan.level.chooseCross).get(0)+ Level.passageWidth/2 )&&(characterNode.getLocalTranslation().x >= Labirinthan.level.blocksInfo.get(Labirinthan.level.chooseCross).get(0)-Level.passageWidth/2)&&(characterNode.getLocalTranslation().z <= Labirinthan.level.blocksInfo.get(Labirinthan.level.chooseCross).get(1)+Level.passageWidth/2)&&(characterNode.getLocalTranslation().z >= Labirinthan.level.blocksInfo.get(Labirinthan.level.chooseCross).get(1)-Level.passageWidth/2)&&!isPuzzleFound){
+        if ((characterNode.getLocalTranslation().x <= Labirinthan.level.blocksInfo.get(Labirinthan.level.chooseCross).get(0) + Level.passageWidth / 2)
+                && (characterNode.getLocalTranslation().x >= Labirinthan.level.blocksInfo.get(Labirinthan.level.chooseCross).get(0) - Level.passageWidth / 2)
+                && (characterNode.getLocalTranslation().z <= Labirinthan.level.blocksInfo.get(Labirinthan.level.chooseCross).get(1) + Level.passageWidth / 2)
+                && (characterNode.getLocalTranslation().z >= Labirinthan.level.blocksInfo.get(Labirinthan.level.chooseCross).get(1) - Level.passageWidth / 2)
+                && !isPuzzleFound) {
             this.app.getRootNode().detachChild(characterNode);
             app.stopLevel();
             Labirinthan.level.startPuzzle();
             isPuzzleFound = true;
         }
+    }
+
+    public void takeDamage(float damage) {
+        health -= damage;
+        if (health < 0) {
+            health = 0;
+        }
+        hud.updateHealth(health);
+    }
+
+    public void heal(float amount) {
+        health += amount;
+        if (health > 1.0f) {
+            health = 1.0f;
+        }
+        hud.updateHealth(health);
+    }
+
+    public void checkForInteraction() {
+        // Logic to check if interaction is possible
+        boolean canInteract = true; // Replace with actual logic
+        hud.showInteractionSign(canInteract);
     }
 }

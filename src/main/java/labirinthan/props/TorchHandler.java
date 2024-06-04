@@ -11,14 +11,15 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
-public class TorchHandler {
+public class TorchHandler extends Node{
     public final Spatial torchHolderMesh;
     private final Torch torch;
     private boolean torchEnabled;
-    public final Node torchNode;
-    private final Node fireNode;
     private final AssetManager assetManager;
     private final PointLight light;
+    private final ParticleEmitter fire;
+    private final Node torchNode;
+    private final Node rootNode;
 
     //CONSTANTS
     private final Vector3f TORCH_MESH_LOCATION = new Vector3f(-0.11f, 0.1f, 0);
@@ -27,6 +28,7 @@ public class TorchHandler {
     private final Vector3f FIRE_LOCATION = new Vector3f(-0.25f, 0.7f, 0);
 
     public TorchHandler(AssetManager assetManager, Node rootNode) {
+        this.rootNode = rootNode;
         this.assetManager = assetManager;
         this.torch = new Torch(assetManager);
         this.torchHolderMesh = assetManager.loadModel("Models/TorchHolder/torchholder.fbx");
@@ -34,18 +36,20 @@ public class TorchHandler {
 
         torch.torchMesh.setLocalTranslation(TORCH_MESH_LOCATION);
         torch.torchMesh.rotate(TORCH_MESH_ROTATION_X, TORCH_MESH_ROTATION_Y, 0);
+
+        this.attachChild(torchHolderMesh);
+
         torchNode = new Node("TorchNode");
-        this.torchNode.attachChild(torchHolderMesh);
-        this.torchNode.attachChild(torch.torchMesh);
+        torchNode.attachChild(torch.torchMesh);
 
         light = createLight();
         rootNode.addLight(light);
 
-        ParticleEmitter fire = createFire();
-        fireNode = new Node("FireNode");
-        fireNode.attachChild(fire);
-        fireNode.setLocalTranslation(FIRE_LOCATION);
-        this.torchNode.attachChild(fireNode);
+        fire = createFire();
+        torchNode.attachChild(fire);
+        fire.setLocalTranslation(FIRE_LOCATION);
+
+        this.attachChild(torchNode);
 
         updateLightPosition();
     }
@@ -71,7 +75,7 @@ public class TorchHandler {
     }
 
     private void updateLightPosition(){
-        light.setPosition(fireNode.getWorldTranslation());
+        light.setPosition(fire.getWorldTranslation());
     }
 
     private PointLight createLight(){
@@ -82,12 +86,24 @@ public class TorchHandler {
     }
 
     public void rotateTorch(float x, float y, float z) {
-        torchNode.rotate(x, y, z);
+        this.rotate(x, y, z);
         updateLightPosition();
     }
 
     public void moveTorch(float x, float y, float z) {
-        torchNode.move(x, y, z);
+        this.move(x, y, z);
         updateLightPosition();
+    }
+
+    public void updateTorchStatus(boolean torchEnabled){
+        if (torchEnabled){
+            this.attachChild(torchNode);
+            rootNode.addLight(light);
+            this.torchEnabled = true;
+        } else{
+            this.detachChild(torchNode);
+            rootNode.removeLight(light);
+            this.torchEnabled = false;
+        }
     }
 }
