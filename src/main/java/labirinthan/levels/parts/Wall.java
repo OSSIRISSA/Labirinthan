@@ -5,6 +5,7 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.VertexBuffer;
@@ -39,6 +40,7 @@ public class Wall extends Box {
         mat.setFloat("Shininess", 0f);
         geom.setMaterial(mat);
 
+        geom.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         // Adjust the texture coordinates to stretch vertically and repeat horizontally
         this.scaleTextureCoordinates(x,y,z);
 
