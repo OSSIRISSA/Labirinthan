@@ -5,6 +5,7 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
@@ -26,11 +27,13 @@ public class Ceiling extends Box {
 
         // Set material properties
         mat.setBoolean("UseMaterialColors", true);
-        mat.setColor("Diffuse", ColorRGBA.Gray);
-        mat.setColor("Specular", ColorRGBA.Black);
-        mat.setFloat("Shininess", 0f);
-
+        mat.setColor("Diffuse", ColorRGBA.DarkGray);
+        mat.setColor("Specular", ColorRGBA.White);
+        mat.setFloat("Shininess", 1f);
         geom.setMaterial(mat);
+
+        geom.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
+
         localRootNode.attachChild(geom);
         geom.setLocalTranslation(px, py, pz);
 

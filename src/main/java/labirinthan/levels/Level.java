@@ -14,7 +14,7 @@ import labirinthan.levels.parts.Ceiling;
 import labirinthan.levels.parts.Cross;
 import labirinthan.levels.parts.Floor;
 import labirinthan.levels.parts.Wall;
-import labirinthan.props.TorchHandler;
+import labirinthan.props.TorchHolder;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -79,15 +79,16 @@ public class Level extends AbstractAppState {
 
     private void loadTorch(float x, float z, int direction) {
         if(random.nextInt(10)!=0){
-            TorchHandler torchHandler = new TorchHandler(assetManager, rootNode);
-            localRootNode.attachChild(torchHandler);
+            TorchHolder torchHolder = new TorchHolder(assetManager, rootNode);
+            localRootNode.attachChild(torchHolder);
             switch (direction){
-                case 1 -> torchHandler.rotateTorch(0, -FastMath.HALF_PI, 0);
-                case 2 -> torchHandler.rotateTorch(0, FastMath.PI, 0);
-                case 3 -> torchHandler.rotateTorch(0, FastMath.HALF_PI, 0);
+                case 1 -> torchHolder.rotateTorch(0, -FastMath.HALF_PI, 0);
+                case 2 -> torchHolder.rotateTorch(0, FastMath.PI, 0);
+                case 3 -> torchHolder.rotateTorch(0, FastMath.HALF_PI, 0);
             }
-            torchHandler.moveTorch(x, 2.5f, z);
-            torchHandler.updateTorchStatus(true);
+            torchHolder.moveTorch(x, 2.5f, z);
+            torchHolder.updateTorchStatus(true);
+            System.out.println(torchHolder);
         }
     }
 

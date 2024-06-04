@@ -37,12 +37,10 @@ public class MainHUD {
 
         // HP Bar
         hpBar = new ProgressBar();
-        hpBar.setPreferredSize(new Vector3f(200, 30, 0));  // Make the bar smaller
-        hpBar.setProgressPercent(1f);  // Full health
-        mainHUDNode.attachChild(hpBar);
-
-        // Position the HP bar in the bottom left corner
+        hpBar.setPreferredSize(new Vector3f(300, 40, 0));
         hpBar.setLocalTranslation(10, 500, 0);
+        hpBar.setProgressPercent(1f);
+        mainHUDNode.attachChild(hpBar);
 
         // Interaction Sign
         interactionSign = new Label("Press 'E' to interact");
@@ -55,14 +53,11 @@ public class MainHUD {
         // Position the interaction sign at the bottom middle
         interactionSign.setLocalTranslation(
                 (settings.getWidth() / 2f) - (interactionSign.getPreferredSize().x / 2),
-                interactionSign.getPreferredSize().y*4f, // Adjust as needed
+                interactionSign.getPreferredSize().y*4f,
                 0
         );
 
         guiNode.attachChild(mainHUDNode);
-
-        System.out.println(guiNode.getChildren());
-        System.out.println(mainHUDNode.getChildren());
     }
 
     public void updateHealth(float healthPercent) {
