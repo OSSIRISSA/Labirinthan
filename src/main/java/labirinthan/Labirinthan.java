@@ -95,6 +95,7 @@ public class Labirinthan extends SimpleApplication {
 
     public void startLevel0() {
         level = new Level0(this, bulletAppState, guiNode, settings);
+
         stateManager.attach(level);
         addFog();
     }
@@ -128,6 +129,8 @@ public class Labirinthan extends SimpleApplication {
         // Hide the mouse cursor and enable game input
         inputManager.setCursorVisible(false);
         flyCam.setEnabled(true);
+
+        character.isPuzzleFound = false;
     }
 
     @Override

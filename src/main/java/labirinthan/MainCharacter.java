@@ -24,7 +24,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener {
     private final Vector3f walkDirection = new Vector3f();
     private boolean left = false, right = false, forward = false, backward = false;
 
-    private boolean isPuzzleFound = false;
+    public boolean isPuzzleFound = false;
 
     private final float CHARACTER_SPEED = 10f;
     private final float JUMP_FORCE = 400f; // Adjust this value to make the jump appropriate

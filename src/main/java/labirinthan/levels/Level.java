@@ -92,6 +92,8 @@ public class Level extends AbstractAppState {
     }
 
     public ArrayList<Float> buildBlock1(float startX, float startZ){
+        makeFloor(startX,startZ);
+        makeCeiling(startX,startZ);
 
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX+wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ+(wallWidth * 2 + passageWidth) / 2);
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX+wallWidth * 1.5f + passageWidth, wallHeight / 2, startZ+wallWidth * 2 + passageWidth * 1.5f);
@@ -129,6 +131,8 @@ public class Level extends AbstractAppState {
     }
 
     public ArrayList<Float> buildBlock2(float startX, float startZ){
+        makeFloor(startX,startZ);
+        makeCeiling(startX,startZ);
 
         addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX+wallWidth*2.5f+passageWidth*2, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX+wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ+wallWidth * 2 + passageWidth*1.5f);
@@ -163,6 +167,8 @@ public class Level extends AbstractAppState {
     }
 
     public ArrayList<Float> buildBlock3(float startX, float startZ){
+        makeFloor(startX,startZ);
+        makeCeiling(startX,startZ);
 
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX+wallWidth*1.5f+passageWidth* 1, wallHeight / 2, startZ+wallWidth * 2 + passageWidth * 1.5f);
         addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth*2, startX+wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth*2);
@@ -194,6 +200,8 @@ public class Level extends AbstractAppState {
     }
 
     public ArrayList<Float> buildBlock4(float startX, float startZ){
+        makeFloor(startX,startZ);
+        makeCeiling(startX,startZ);
 
         addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth *2, startX+wallWidth*1.5f+passageWidth* 1, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth*1, startX+wallWidth * 1.5f + passageWidth * 1, wallHeight / 2, startZ+wallWidth * 4 + passageWidth*3.5f);
@@ -222,6 +230,8 @@ public class Level extends AbstractAppState {
     }
 
     public ArrayList<Float> buildBlock5(float startX, float startZ){
+        makeFloor(startX,startZ);
+        makeCeiling(startX,startZ);
 
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 1 + passageWidth * 0.5f);
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 4 + passageWidth * 3.5f);
@@ -252,6 +262,8 @@ public class Level extends AbstractAppState {
     }
 
     public ArrayList<Float> buildBlock6(float startX, float startZ){
+        makeFloor(startX,startZ);
+        makeCeiling(startX,startZ);
 
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 1 + passageWidth * 0.5f);
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*4.5f+passageWidth* 4, wallHeight / 2, startZ+wallWidth * 1 + passageWidth * 0.5f);
@@ -284,6 +296,8 @@ public class Level extends AbstractAppState {
     }
 
     public ArrayList<Float> buildBlock7(float startX, float startZ){
+        makeFloor(startX,startZ);
+        makeCeiling(startX,startZ);
 
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*4.5f+passageWidth* 4, wallHeight / 2, startZ+wallWidth * 2 + passageWidth * 1.5f);
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*4.5f+passageWidth* 4, wallHeight / 2, startZ+wallWidth * 5 + passageWidth * 4.5f);
@@ -316,6 +330,8 @@ public class Level extends AbstractAppState {
     }
 
     public ArrayList<Float> buildBlock8(float startX, float startZ){
+        makeFloor(startX,startZ);
+        makeCeiling(startX,startZ);
 
         addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth *2, startX+wallWidth*1.5f+passageWidth* 1, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
         addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth *2, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
@@ -346,6 +362,8 @@ public class Level extends AbstractAppState {
     }
 
     public ArrayList<Float> buildBlock9(float startX, float startZ){
+        makeFloor(startX,startZ);
+        makeCeiling(startX,startZ);
 
         addWall(wallWidth, wallHeight, wallWidth * 4 + passageWidth *3, startX+wallWidth*1.5f+passageWidth* 1, wallHeight / 2, startZ+wallWidth * 3 + passageWidth * 2.5f);
         addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 3 + passageWidth * 2.5f);
@@ -375,7 +393,8 @@ public class Level extends AbstractAppState {
     }
 
     public ArrayList<Float> buildBlock10(float startX, float startZ){
-        //makeFrameWalls(startX,startZ);
+        makeFloor(startX,startZ);
+        makeCeiling(startX,startZ);
 
         addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth *2, startX+wallWidth*1.5f+passageWidth* 1, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
         addWall(wallWidth, wallHeight, wallWidth * 4 + passageWidth *3, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 3 + passageWidth * 2.5f);
@@ -414,5 +433,20 @@ public class Level extends AbstractAppState {
         addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX+wallWidth * 5.5f + passageWidth * 5, wallHeight / 2, startZ+(wallWidth * 3 + passageWidth * 2) / 2);
         addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX+wallWidth * 5.5f + passageWidth * 5, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
         addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX+wallWidth / 2, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
+    }
+
+    public void makeFloor(float startX, float startZ){
+        floor = new Floor((wallWidth * 6 + passageWidth * 5)/2, 0.1f, (wallWidth * 6 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 6 + passageWidth * 5)*0.25f), -0.05f, startZ+((wallWidth * 6 + passageWidth * 5)*0.25f), bulletAppState);
+        floor = new Floor((wallWidth * 6 + passageWidth * 5)/2, 0.1f, (wallWidth * 6 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 6 + passageWidth * 5)*0.75f), -0.05f, startZ+((wallWidth * 6 + passageWidth * 5)*0.75f), bulletAppState);
+        floor = new Floor((wallWidth * 6 + passageWidth * 5)/2, 0.1f, (wallWidth * 6 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 6 + passageWidth * 5)*0.75f), -0.05f, startZ+((wallWidth * 6 + passageWidth * 5)*0.25f), bulletAppState);
+        floor = new Floor((wallWidth * 6 + passageWidth * 5)/2, 0.1f, (wallWidth * 6 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 6 + passageWidth * 5)*0.25f), -0.05f, startZ+((wallWidth * 6 + passageWidth * 5)*0.75f), bulletAppState);
+    }
+
+    public void makeCeiling(float startX, float startZ){
+        ceiling = new Ceiling((wallWidth * 6 + passageWidth * 5)/2, 0.1f, (wallWidth * 6 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 6 + passageWidth * 5)*0.25f), wallHeight-0.05f, startZ+((wallWidth * 6 + passageWidth * 5)*0.75f), bulletAppState);
+        ceiling = new Ceiling((wallWidth * 6 + passageWidth * 5)/2, 0.1f, (wallWidth * 6 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 6 + passageWidth * 5)*0.75f), wallHeight-0.05f, startZ+((wallWidth * 6 + passageWidth * 5)*0.75f), bulletAppState);
+        ceiling = new Ceiling((wallWidth * 6 + passageWidth * 5)/2, 0.1f, (wallWidth * 6 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 6 + passageWidth * 5)*0.25f), wallHeight-0.05f, startZ+((wallWidth * 6 + passageWidth * 5)*0.25f), bulletAppState);
+        ceiling = new Ceiling((wallWidth * 6 + passageWidth * 5)/2, 0.1f, (wallWidth * 6 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 6 + passageWidth * 5)*0.75f), wallHeight-0.05f, startZ+((wallWidth * 6 + passageWidth * 5)*0.25f), bulletAppState);
+
     }
 }
