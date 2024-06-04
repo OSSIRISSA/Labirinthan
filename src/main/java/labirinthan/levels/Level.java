@@ -8,7 +8,7 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.math.FastMath;
 import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
-import labirinthan.GUI.PuzzlePyramid;
+import labirinthan.GUI.PuzzleSquareEncryption;
 import labirinthan.Labirinthan;
 import labirinthan.levels.parts.Ceiling;
 import labirinthan.levels.parts.Cross;
@@ -73,7 +73,8 @@ public class Level extends AbstractAppState {
 
     public void startPuzzle(){
         //PuzzleSudoku puzzle = new PuzzleSudoku(application,localPuzzleNode,settings,assetManager);
-        PuzzlePyramid puzzle = new PuzzlePyramid(application,localPuzzleNode,settings,assetManager);
+        //PuzzlePyramid puzzle = new PuzzlePyramid(application,localPuzzleNode,settings,assetManager);
+        PuzzleSquareEncryption puzzle = new PuzzleSquareEncryption(application,localPuzzleNode,settings,assetManager);
         puzzle.createScreen();
     }
 
