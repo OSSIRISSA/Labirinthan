@@ -35,7 +35,7 @@ public class Floor extends Box {
         mat.setBoolean("UseMaterialColors", true);
         mat.setColor("Diffuse", ColorRGBA.Gray);
         mat.setColor("Specular", ColorRGBA.White);
-        mat.setFloat("Shininess", 1f);
+        mat.setFloat("Shininess", 0f);
 
         geom.setMaterial(mat);
 

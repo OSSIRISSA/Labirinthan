@@ -24,7 +24,7 @@ public class Level extends AbstractAppState {
     private final Node guiNode;
     private final Node localPuzzleNode;
     private final AppSettings settings;
-    public Labirinthan application;
+    protected Labirinthan application;
     public static float wallHeight = 6;
     public static float wallWidth = 1;
     public static float passageWidth = 4;
@@ -42,6 +42,8 @@ public class Level extends AbstractAppState {
     public int labyrinthSizeZ;
     public int clearSpan;
     public int chooseCross;
+
+    private boolean isFirstTorch = true;
 
     public Level(Labirinthan application, String name, Node guiNode, AppSettings settings) {
         this.rootNode = application.getRootNode();
@@ -79,7 +81,8 @@ public class Level extends AbstractAppState {
 
     private void loadTorch(float x, float z, int direction) {
         if(random.nextInt(10)!=0){
-            TorchHolder torchHolder = new TorchHolder(assetManager, rootNode);
+            TorchHolder torchHolder = new TorchHolder(application, assetManager, rootNode, isFirstTorch);
+            isFirstTorch = false;
             localRootNode.attachChild(torchHolder);
             switch (direction){
                 case 1 -> torchHolder.rotateTorch(0, -FastMath.HALF_PI, 0);

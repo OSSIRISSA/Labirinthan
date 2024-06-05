@@ -29,7 +29,7 @@ public class Ceiling extends Box {
         mat.setBoolean("UseMaterialColors", true);
         mat.setColor("Diffuse", ColorRGBA.DarkGray);
         mat.setColor("Specular", ColorRGBA.White);
-        mat.setFloat("Shininess", 1f);
+        mat.setFloat("Shininess", 0f);
         geom.setMaterial(mat);
 
         geom.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);

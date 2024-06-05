@@ -4,9 +4,9 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.StatsAppState;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.PhysicsSpace;
 import com.jme3.light.AmbientLight;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.FogFilter;
 import com.jme3.system.AppSettings;
@@ -15,20 +15,20 @@ import labirinthan.GUI.MainMenu;
 import labirinthan.levels.Level;
 import labirinthan.levels.Level0;
 import labirinthan.levels.Level1;
-import labirinthan.props.TorchHolder;
 
 public class Labirinthan extends SimpleApplication {
 
     private BulletAppState bulletAppState;
     private MainCharacter character;
     private MainHUD mainHUD;
+    public FilterPostProcessor filterPostProcessor;
 
     public static final float X = Level.wallWidth*1+Level.passageWidth*0.5f;
     public static final float Y = 0;
     public static final float Z = Level.wallWidth*3+Level.passageWidth*2.5f;
     public static Level level;
 
-    public static boolean isFlying = true;
+    public static boolean isFlying = false;
 
 
     public static void main(String[] args) {
@@ -46,6 +46,7 @@ public class Labirinthan extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
+        filterPostProcessor = new FilterPostProcessor(assetManager);
         //init main folder for assets
         stateManager.detach(stateManager.getState(StatsAppState.class));
         assetManager.registerLocator("assets/", FileLocator.class);
@@ -107,9 +108,7 @@ public class Labirinthan extends SimpleApplication {
         fog.setFogDensity(4.0f); // Density of the fog
 
         // Add the fog filter to the post processor
-        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
-        fpp.addFilter(fog);
-        viewPort.addProcessor(fpp);
+        filterPostProcessor.addFilter(fog);
     }
 
     public void startLevel1() {
