@@ -10,10 +10,7 @@ import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 import labirinthan.GUI.PuzzleSquareEncryption;
 import labirinthan.Labirinthan;
-import labirinthan.levels.parts.Ceiling;
-import labirinthan.levels.parts.Cross;
-import labirinthan.levels.parts.Floor;
-import labirinthan.levels.parts.Wall;
+import labirinthan.levels.parts.*;
 import labirinthan.props.TorchHolder;
 
 import java.util.ArrayList;
@@ -34,6 +31,8 @@ public class Level extends AbstractAppState {
     public Floor floor;
     public Ceiling ceiling;
     public Cross cross;
+    public Trap trap;
+
     protected ArrayList<Wall> walls = new ArrayList<>();
     public ArrayList<ArrayList<Float>> blocksInfo = new ArrayList<>();
     protected ArrayList<Float> blocksDecorationInfo = new ArrayList<>();
@@ -84,7 +83,10 @@ public class Level extends AbstractAppState {
             localRootNode.attachChild(torchHolder);
             switch (direction){
                 case 1 -> torchHolder.rotateTorch(0, -FastMath.HALF_PI, 0);
-                case 2 -> torchHolder.rotateTorch(0, FastMath.PI, 0);
+                case 2 -> {
+                    x+=wallWidth/2;
+                    torchHolder.rotateTorch(0, FastMath.PI, 0);
+                }
                 case 3 -> torchHolder.rotateTorch(0, FastMath.HALF_PI, 0);
             }
             torchHolder.moveTorch(x, 2.5f, z);
@@ -92,6 +94,8 @@ public class Level extends AbstractAppState {
             System.out.println(torchHolder);
         }
     }
+
+
 
     public ArrayList<Float> buildBlock1(float startX, float startZ){
         makeFloor(startX,startZ);
@@ -115,6 +119,9 @@ public class Level extends AbstractAppState {
         loadTorch(startX+wallWidth*4.5f+passageWidth*4,startZ+wallWidth,3);
         loadTorch(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*4+passageWidth*4, 1);
         loadTorch(startX+wallWidth+passageWidth,startZ+wallWidth*5+passageWidth*5, 1);
+
+        makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f);
+        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*5+passageWidth*4.5f);
 
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*3+passageWidth*2.5f);
@@ -147,6 +154,18 @@ public class Level extends AbstractAppState {
         addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
         addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
         addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX+wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth * 2);
+
+        loadTorch(startX+wallWidth+passageWidth*0.5f,startZ+wallWidth+passageWidth*0,3);
+        loadTorch(startX+wallWidth,startZ+wallWidth*4+passageWidth*3.5f,2);
+        loadTorch(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*4+passageWidth*0,3);
+        loadTorch(startX+wallWidth*5+passageWidth*4,startZ+wallWidth*2+passageWidth*1.5f,2);
+        loadTorch(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*5+passageWidth*5,1);
+
+
+        makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f);
+        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*4+passageWidth*3.5f);
+        makeTrap(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*4+passageWidth*3.5f);
+
 
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*4+passageWidth*3.5f);
@@ -185,6 +204,16 @@ public class Level extends AbstractAppState {
         addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 5 + passageWidth * 4.5f, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
         addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX+wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
 
+        loadTorch(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth+passageWidth*0,3);
+        loadTorch(startX+wallWidth+passageWidth*0.5f,startZ+wallWidth*2+passageWidth*1,3);
+        loadTorch(startX+wallWidth*5+passageWidth*5,startZ+wallWidth*2+passageWidth*0.5f,4);
+        loadTorch(startX+wallWidth,startZ+wallWidth*4+passageWidth*3.5f,2);
+        loadTorch(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*5+passageWidth*5,1);
+
+        makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f);
+        makeTrap(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*5+passageWidth*4.5f);
+
+
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*5+passageWidth*4.5f);
         res.add(startZ+wallWidth+passageWidth*0.5f);
@@ -214,6 +243,15 @@ public class Level extends AbstractAppState {
         addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 5 + passageWidth * 4.5f, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
         addWall(wallWidth * 5 + passageWidth * 4, wallHeight, wallWidth, startX+wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
         addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX+wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
+
+        loadTorch(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth+passageWidth*0,3);
+        loadTorch(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*2+passageWidth*1,3);
+        loadTorch(startX+wallWidth+passageWidth*0.5f,startZ+wallWidth*5+passageWidth*5,1);
+
+
+        makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f);
+        makeTrap(startX+wallWidth*2+passageWidth*2.5f,startZ+wallWidth*4+passageWidth*3.5f);
+
 
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*4+passageWidth*3.5f);
@@ -247,6 +285,13 @@ public class Level extends AbstractAppState {
         addWall(wallWidth * 5 + passageWidth * 4, wallHeight, wallWidth, startX+wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth * 2);
         addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
 
+        loadTorch(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*2+passageWidth*2,1);
+        loadTorch(startX+wallWidth*3+passageWidth*2,startZ+wallWidth*4+passageWidth*3.5f,2);
+        loadTorch(startX+wallWidth+passageWidth*0.5f,startZ+wallWidth*5+passageWidth*5,1);
+
+        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*2+passageWidth*1.5f);
+        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*5+passageWidth*4.5f);
+
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*5+passageWidth*4.5f);
         res.add(startZ+wallWidth*2+passageWidth*1.5f);
@@ -277,6 +322,15 @@ public class Level extends AbstractAppState {
         addWall(wallWidth * 5 + passageWidth * 4, wallHeight, wallWidth, startX+wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth * 2);
         addWall(wallWidth * 4 + passageWidth * 3, wallHeight, wallWidth, startX+wallWidth * 3 + passageWidth * 2.5f, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
         addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 3 + passageWidth * 2.5f, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
+
+        loadTorch(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*2+passageWidth*2,1);
+        loadTorch(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*2+passageWidth*2,1);
+        loadTorch(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*5+passageWidth*5,1);
+        loadTorch(startX+wallWidth*5+passageWidth*5,startZ+wallWidth*4+passageWidth*3.5f,4);
+
+        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*2+passageWidth*1.5f);
+        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*1+passageWidth*0.5f);
+        makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*4+passageWidth*3.5f);
 
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*3+passageWidth*2.5f);
@@ -314,6 +368,13 @@ public class Level extends AbstractAppState {
         addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
         addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
 
+        loadTorch(startX+wallWidth*5+passageWidth*5,startZ+wallWidth*1+passageWidth*0.5f,4);
+        loadTorch(startX+wallWidth,startZ+wallWidth*4+passageWidth*3.5f,2);
+        loadTorch(startX+wallWidth*3+passageWidth*2,startZ+wallWidth*3+passageWidth*2.5f,2);
+        loadTorch(startX+wallWidth*5+passageWidth*5,startZ+wallWidth*4+passageWidth*3.5f,4);
+
+        makeTrap(startX+wallWidth*1+passageWidth*0.5f,startZ+wallWidth*2+passageWidth*1.5f);
+        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*5+passageWidth*4.5f);
 
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*4+passageWidth*3.5f);
@@ -346,6 +407,13 @@ public class Level extends AbstractAppState {
         addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX+wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
         addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth * 2);
 
+        loadTorch(startX+wallWidth+passageWidth*0.5f,startZ+wallWidth,3);
+        loadTorch(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth,3);
+        loadTorch(startX+wallWidth*3+passageWidth*2,startZ+wallWidth*4+passageWidth*3.5f,2);
+        loadTorch(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*5+passageWidth*5,1);
+
+        makeTrap(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*4+passageWidth*3.5f);
+        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*2+passageWidth*1.5f);
 
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*5+passageWidth*4.5f);
@@ -377,6 +445,13 @@ public class Level extends AbstractAppState {
         addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
         addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
 
+        loadTorch(startX+wallWidth*1+passageWidth*0.5f,startZ+wallWidth,3);
+        loadTorch(startX+wallWidth*4+passageWidth*4,startZ+wallWidth*2+passageWidth*1.5f,4);
+        loadTorch(startX+wallWidth*5+passageWidth*4,startZ+wallWidth*3+passageWidth*2.5f,2);
+        loadTorch(startX+wallWidth*2+passageWidth*1,startZ+wallWidth*4+passageWidth*3.5f,2);
+
+        makeTrap(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*3+passageWidth*2.5f);
+        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*4+passageWidth*3.5f);
 
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*1+passageWidth*0.5f);
@@ -410,6 +485,13 @@ public class Level extends AbstractAppState {
         addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth * 2);
         addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 1 + passageWidth * 0.5f, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth * 2);
 
+        loadTorch(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth,3);
+        loadTorch(startX+wallWidth*1+passageWidth*0.5f,startZ+wallWidth*5+passageWidth*5,1);
+        loadTorch(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*3+passageWidth*3,1);
+        loadTorch(startX+wallWidth*5+passageWidth*5,startZ+wallWidth*4+passageWidth*3.5f,4);
+
+        makeTrap(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*3+passageWidth*2.5f);
+        makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*4+passageWidth*3.5f);
 
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*4+passageWidth*3.5f);
@@ -437,18 +519,32 @@ public class Level extends AbstractAppState {
         addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX+wallWidth / 2, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
     }
 
+    public void makeZWall(float startX, float startZ){
+        addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, startX+(wallWidth * 3 + passageWidth * 2) / 2, wallHeight / 2, startZ+wallWidth / 2);
+        addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, startX+wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ+wallWidth / 2);
+    }
+
+    public void makeXWall(float startX, float startZ){
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX+wallWidth / 2, wallHeight / 2, startZ+(wallWidth * 3 + passageWidth * 2) / 2);
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX+wallWidth / 2, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
+    }
+
     public void makeFloor(float startX, float startZ){
-        floor = new Floor((wallWidth * 6 + passageWidth * 5)/2, 0.1f, (wallWidth * 6 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 6 + passageWidth * 5)*0.25f), -0.05f, startZ+((wallWidth * 6 + passageWidth * 5)*0.25f), bulletAppState);
-        floor = new Floor((wallWidth * 6 + passageWidth * 5)/2, 0.1f, (wallWidth * 6 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 6 + passageWidth * 5)*0.75f), -0.05f, startZ+((wallWidth * 6 + passageWidth * 5)*0.75f), bulletAppState);
-        floor = new Floor((wallWidth * 6 + passageWidth * 5)/2, 0.1f, (wallWidth * 6 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 6 + passageWidth * 5)*0.75f), -0.05f, startZ+((wallWidth * 6 + passageWidth * 5)*0.25f), bulletAppState);
-        floor = new Floor((wallWidth * 6 + passageWidth * 5)/2, 0.1f, (wallWidth * 6 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 6 + passageWidth * 5)*0.25f), -0.05f, startZ+((wallWidth * 6 + passageWidth * 5)*0.75f), bulletAppState);
+        floor = new Floor((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 5 + passageWidth * 5)*0.25f), -0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.25f), bulletAppState);
+        floor = new Floor((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 5 + passageWidth * 5)*0.75f), -0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.75f), bulletAppState);
+        floor = new Floor((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 5 + passageWidth * 5)*0.75f), -0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.25f), bulletAppState);
+        floor = new Floor((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 5 + passageWidth * 5)*0.25f), -0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.75f), bulletAppState);
     }
 
     public void makeCeiling(float startX, float startZ){
-        ceiling = new Ceiling((wallWidth * 6 + passageWidth * 5)/2, 0.1f, (wallWidth * 6 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 6 + passageWidth * 5)*0.25f), wallHeight-0.05f, startZ+((wallWidth * 6 + passageWidth * 5)*0.75f), bulletAppState);
-        ceiling = new Ceiling((wallWidth * 6 + passageWidth * 5)/2, 0.1f, (wallWidth * 6 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 6 + passageWidth * 5)*0.75f), wallHeight-0.05f, startZ+((wallWidth * 6 + passageWidth * 5)*0.75f), bulletAppState);
-        ceiling = new Ceiling((wallWidth * 6 + passageWidth * 5)/2, 0.1f, (wallWidth * 6 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 6 + passageWidth * 5)*0.25f), wallHeight-0.05f, startZ+((wallWidth * 6 + passageWidth * 5)*0.25f), bulletAppState);
-        ceiling = new Ceiling((wallWidth * 6 + passageWidth * 5)/2, 0.1f, (wallWidth * 6 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 6 + passageWidth * 5)*0.75f), wallHeight-0.05f, startZ+((wallWidth * 6 + passageWidth * 5)*0.25f), bulletAppState);
-
+        ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 5 + passageWidth * 5)*0.25f), wallHeight-0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.75f), bulletAppState);
+        ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 5 + passageWidth * 5)*0.75f), wallHeight-0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.75f), bulletAppState);
+        ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 5 + passageWidth * 5)*0.25f), wallHeight-0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.25f), bulletAppState);
+        ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 5 + passageWidth * 5)*0.75f), wallHeight-0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.25f), bulletAppState);
     }
+
+    public void makeTrap(float x, float z){
+        trap = new Trap(passageWidth, 0.1f, passageWidth, assetManager, localRootNode, x, -0.05f, z, bulletAppState);
+    }
+
 }

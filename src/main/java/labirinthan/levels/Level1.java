@@ -50,6 +50,16 @@ public class Level1 extends Level {
                 if((i<clearSpan)&&(j<clearSpan)){
                     blocksInfo.remove(blocksInfo.size()-1);
                 }
+                if((i!=0)&&(j!=0)){
+                    makeXWall(currentX,currentZ);
+                    makeZWall(currentX,currentZ);
+                }
+                if((i==0)&&(j!=0)){
+                    makeZWall(currentX,currentZ);
+                }
+                if((j==0)&&(i!=0)){
+                    makeXWall(currentX,currentZ);
+                }
             }
         }
 
@@ -70,5 +80,6 @@ public class Level1 extends Level {
         super.addWall(labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth, wallHeight, wallWidth, (labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth) / 2, wallHeight / 2, labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth*0.5f);
         super.addWall(wallWidth, wallHeight, labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth, labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth*0.5f, wallHeight / 2, (labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth) / 2);
     }
+
 
 }

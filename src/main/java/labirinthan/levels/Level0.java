@@ -22,8 +22,9 @@ public class Level0 extends Level {
         super.initialize(sm, application);
 
         // Adding walls
-        blocksInfo.add(buildBlock1(0,0));
-        makeFrameWalls(0,0);
+        blocksInfo.add(buildBlock10(0,0));
+        //makeFrameWalls(0,0);
+
         //addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, 0+(wallWidth * 3 + passageWidth * 6) / 2, wallHeight / 2, 0+wallWidth / 2);
 
         for(int a=2;a<blocksInfo.get(blocksInfo.size()-1).size();a++){
