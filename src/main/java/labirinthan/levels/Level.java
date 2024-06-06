@@ -8,7 +8,7 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.math.FastMath;
 import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
-import labirinthan.GUI.PuzzleSquareEncryption;
+import labirinthan.GUI.PuzzleSudoku;
 import labirinthan.Labirinthan;
 import labirinthan.levels.parts.*;
 import labirinthan.props.TorchHolder;
@@ -69,13 +69,19 @@ public class Level extends AbstractAppState {
         super.cleanup();
     }
     public void addWall(float x, float y, float z, float px, float py, float pz) {
+        if(x==wallWidth){
+            z-=0.01f;
+        }
+        if(z==wallWidth){
+            x-=0.01f;
+        }
         walls.add(new Wall(x, y, z, assetManager, localRootNode, px, py, pz, bulletAppState));
     }
 
     public void startPuzzle(){
-        //PuzzleSudoku puzzle = new PuzzleSudoku(application,localPuzzleNode,settings,assetManager);
+        PuzzleSudoku puzzle = new PuzzleSudoku(application,localPuzzleNode,settings,assetManager);
         //PuzzlePyramid puzzle = new PuzzlePyramid(application,localPuzzleNode,settings,assetManager);
-        PuzzleSquareEncryption puzzle = new PuzzleSquareEncryption(application,localPuzzleNode,settings,assetManager);
+        //PuzzleSquareEncryption puzzle = new PuzzleSquareEncryption(application,localPuzzleNode,settings,assetManager);
         puzzle.createScreen();
     }
 
