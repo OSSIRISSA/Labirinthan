@@ -29,7 +29,7 @@ public class Floor extends Box {
         tex.setWrap(Texture.WrapMode.Repeat);
         mat.setTexture("DiffuseMap", tex);
 
-        geom.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
+        geom.setShadowMode(RenderQueue.ShadowMode.Receive);
 
         // Set material properties
         mat.setBoolean("UseMaterialColors", true);

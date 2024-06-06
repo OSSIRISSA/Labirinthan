@@ -32,7 +32,7 @@ public class Ceiling extends Box {
         mat.setFloat("Shininess", 0f);
         geom.setMaterial(mat);
 
-        geom.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
+        geom.setShadowMode(RenderQueue.ShadowMode.Receive);
 
         localRootNode.attachChild(geom);
         geom.setLocalTranslation(px, py, pz);

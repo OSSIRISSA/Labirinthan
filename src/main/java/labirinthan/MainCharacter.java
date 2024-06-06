@@ -3,33 +3,42 @@ package labirinthan;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
-import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.collision.PhysicsCollisionEvent;
+import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import labirinthan.GUI.MainHUD;
 import labirinthan.levels.Level;
+import labirinthan.props.Torch;
 
-public class MainCharacter extends AbstractAppState implements ActionListener {
+public class MainCharacter extends AbstractAppState implements ActionListener, PhysicsCollisionListener {
 
     private Labirinthan app;
-    private BulletAppState bulletAppState;
     private BetterCharacterControl characterControl;
+    private Object interactionObject;
     public static Node characterNode;
+    private Node cameraNode; // Node for the camera
     private final MainHUD hud;
 
     private final Vector3f walkDirection = new Vector3f();
     private boolean left = false, right = false, forward = false, backward = false;
-
     public boolean isPuzzleFound = false;
+    public boolean isCarryingTorch = false;
 
-    private final float CHARACTER_SPEED = 10f;
-    private final float JUMP_FORCE = 400f; // Adjust this value to make the jump appropriate
+    private InteractionType interactType = InteractionType.NONE;
 
-    private float health = 1.0f; // full health
+    final float CHARACTER_SPEED = 10f;
+    final float JUMP_FORCE = 400f;
+
+    private float health = 1.0f;
+
+    private Node torchNode; // Reference to the torch node
 
     public MainCharacter(MainHUD hud) {
         this.hud = hud;
@@ -39,16 +48,25 @@ public class MainCharacter extends AbstractAppState implements ActionListener {
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
         this.app = (Labirinthan) app;
-        bulletAppState = this.app.getStateManager().getState(BulletAppState.class);
-
         characterNode = new Node("Character");
         characterNode.setLocalTranslation(Labirinthan.X, Labirinthan.Y, Labirinthan.Z);
         characterControl = new BetterCharacterControl(1.4f, 3.0f, 80f);
         characterControl.setJumpForce(new Vector3f(0, JUMP_FORCE, 0));
-        characterControl.setGravity(new Vector3f(0, -9.81f, 0)); // Ensure gravity is set correctly
         characterNode.addControl(characterControl);
         this.app.getRootNode().attachChild(characterNode);
-        bulletAppState.getPhysicsSpace().add(characterControl);
+
+        // Create and attach the camera node
+        cameraNode = new Node("Camera Node");
+        this.app.getRootNode().attachChild(cameraNode);
+        cameraNode.setLocalTranslation(this.app.getCamera().getLocation());
+
+        this.app.bulletAppState.getPhysicsSpace().add(characterControl);
+
+        this.app.getCamera().setFrustumNear(0.1f);
+        float aspect = (float) this.app.getCamera().getWidth() / this.app.getCamera().getHeight();
+        this.app.getCamera().setFrustumPerspective(45f, aspect, 0.1f, 1000f);
+
+        addCollisionListener();
 
         initKeys();
     }
@@ -59,8 +77,28 @@ public class MainCharacter extends AbstractAppState implements ActionListener {
         this.app.getInputManager().addMapping("Forward", new KeyTrigger(KeyInput.KEY_W));
         this.app.getInputManager().addMapping("Backward", new KeyTrigger(KeyInput.KEY_S));
         this.app.getInputManager().addMapping("Jump", new KeyTrigger(KeyInput.KEY_SPACE));
+        this.app.getInputManager().addMapping("Interact", new KeyTrigger(KeyInput.KEY_E)); // Add interaction key
 
-        this.app.getInputManager().addListener(this, "Left", "Right", "Forward", "Backward", "Jump");
+        this.app.getInputManager().addListener(this, "Left", "Right", "Forward", "Backward", "Jump", "Interact");
+    }
+
+    private void addCollisionListener() {
+        this.app.bulletAppState.getPhysicsSpace().addCollisionListener(this);
+    }
+
+    @Override
+    public void collision(PhysicsCollisionEvent event) {
+        //System.out.println("Collision detected: " + event.getObjectA() + " with " + event.getObjectB());
+        if ((event.getObjectA() instanceof TorchInteractionArea || event.getObjectB() instanceof TorchInteractionArea) && !isCarryingTorch) {
+            if (event.getObjectA() instanceof TorchInteractionArea) {
+                interactionObject = event.getObjectA();
+            } else interactionObject = event.getObjectB();
+            interactType = InteractionType.TORCH;
+            setInteractionText(true, MainHUD.TORCH_INTERACTION_TEXT);
+        } else {
+            interactType = InteractionType.NONE;
+            setInteractionText(false);
+        }
     }
 
     @Override
@@ -79,8 +117,13 @@ public class MainCharacter extends AbstractAppState implements ActionListener {
                 backward = isPressed;
                 break;
             case "Jump":
-                if (isPressed && characterControl.isOnGround()) { // Ensure jump is only triggered when on the ground
+                if (isPressed && characterControl.isOnGround()) {
                     characterControl.jump();
+                }
+                break;
+            case "Interact":
+                if (isPressed && (interactType != InteractionType.NONE)) {
+                    interact();
                 }
                 break;
         }
@@ -105,10 +148,39 @@ public class MainCharacter extends AbstractAppState implements ActionListener {
             walkDirection.addLocal(camDir.negate());
         }
         characterControl.setWalkDirection(walkDirection);
-        if (!Labirinthan.isFlying) this.app.getCamera().setLocation(characterNode.getLocalTranslation().add(0, 1.8f, 0));
+        if (!Labirinthan.isFlying) {
+            this.app.getCamera().setLocation(characterNode.getLocalTranslation().add(0, 1.8f, 0));
+            cameraNode.setLocalTranslation(this.app.getCamera().getLocation()); // Update camera node position
+        }
+
+        float[] angles = this.app.getCamera().getRotation().toAngles(null);
+        float pitch = FastMath.clamp(angles[0], -FastMath.PI / 4, FastMath.PI / 4); // Clamp between -45 and 45 degrees
+        Quaternion clampedRotation = new Quaternion().fromAngles(pitch, angles[1], angles[2]);
+        this.app.getCamera().setRotation(clampedRotation);
+        cameraNode.setLocalRotation(clampedRotation);
+
+        if (torchNode != null) {
+            Vector3f torchPosition = this.app.getCamera().getLocation()
+                    .add(this.app.getCamera().getDirection().mult(0.5f))
+                    .add(camLeft.mult(-0.02f))
+                    .add(0, -0.5f, 0);
+            torchNode.setLocalTranslation(torchPosition);
+
+            Quaternion horizontalRotation = new Quaternion().fromAngleAxis(clampedRotation.toAngles(null)[1], Vector3f.UNIT_Y);
+            torchNode.setLocalRotation(horizontalRotation.mult(new Quaternion().fromAngleAxis(FastMath.PI / 2, Vector3f.UNIT_Y)));
+        }
 
         crossCheck();
     }
+
+    private void carryTorch() {
+        if (torchNode == null) {
+            torchNode = new Node("Torch Node");
+            new Torch(app.getAssetManager(), torchNode);
+            this.app.getRootNode().attachChild(torchNode); // Attach torch node to the root node
+        }
+    }
+
 
     private void crossCheck() {
         if ((characterNode.getLocalTranslation().x <= Labirinthan.level.blocksInfo.get(Labirinthan.level.chooseCross).get(0) + Level.passageWidth / 2)
@@ -139,9 +211,26 @@ public class MainCharacter extends AbstractAppState implements ActionListener {
         hud.updateHealth(health);
     }
 
-    public void checkForInteraction() {
-        // Logic to check if interaction is possible
-        boolean canInteract = false; // Replace with actual logic
-        hud.showInteractionSign(canInteract);
+    private void setInteractionText(boolean status, String... text) {
+        hud.showInteractionSign(status, text.length > 0 ? text[0] : "");
+    }
+
+    private void interact() {
+        switch (interactType) {
+            case TORCH:
+                ((TorchInteractionArea) interactionObject).getParent().updateTorchStatus(false);
+                isCarryingTorch = true;
+                carryTorch();
+                break;
+            case PUZZLE:
+                System.out.println("Interacted with puzzle");
+                break;
+            case BOOK:
+                System.out.println("Interacted with book");
+                break;
+            default:
+                System.out.println("No interaction available");
+                break;
+        }
     }
 }
