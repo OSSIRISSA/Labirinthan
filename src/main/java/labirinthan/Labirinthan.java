@@ -4,7 +4,6 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.StatsAppState;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.PhysicsSpace;
 import com.jme3.light.AmbientLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.post.FilterPostProcessor;
@@ -28,7 +27,7 @@ public class Labirinthan extends SimpleApplication {
     public static final float Z = Level.wallWidth*3+Level.passageWidth*2.5f;
     public static Level level;
 
-    public static boolean isFlying = false;
+    public static boolean isFlying = true;
 
 
     public static void main(String[] args) {

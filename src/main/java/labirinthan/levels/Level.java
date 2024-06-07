@@ -104,8 +104,6 @@ public class Level extends AbstractAppState {
         }
     }
 
-
-
     public ArrayList<Float> buildBlock1(float startX, float startZ){
         makeFloor(startX,startZ);
         makeCeiling(startX,startZ);
@@ -137,14 +135,13 @@ public class Level extends AbstractAppState {
         res.add(startZ+wallWidth*2+passageWidth*1.5f);
 
         //decoration coordinates
-        res.add(startX+wallWidth*3+passageWidth*2.5f);
-        res.add(startZ+wallWidth*1+passageWidth*0.5f);
-
         res.add(startX+wallWidth*4+passageWidth*3.5f);
         res.add(startZ+wallWidth*3+passageWidth*2.5f);
+        res.add(3f);
 
         res.add(startX+wallWidth*1+passageWidth*0.5f);
         res.add(startZ+wallWidth*4+passageWidth*3.5f);
+        res.add(3f);
         return res;
     }
 
@@ -183,15 +180,19 @@ public class Level extends AbstractAppState {
         //decoration coordinates
         res.add(startX+wallWidth*2+passageWidth*1.5f);
         res.add(startZ+wallWidth*1+passageWidth*0.5f);
+        res.add(4f);
 
         res.add(startX+wallWidth*2+passageWidth*1.5f);
         res.add(startZ+wallWidth*5+passageWidth*4.5f);
+        res.add(2f);
 
         res.add(startX+wallWidth*5+passageWidth*4.5f);
         res.add(startZ+wallWidth*1+passageWidth*0.5f);
+        res.add(3f);
 
         res.add(startX+wallWidth*3+passageWidth*2.5f);
         res.add(startZ+wallWidth*2+passageWidth*1.5f);
+        res.add(1f);
 
         return res;
     }
@@ -230,12 +231,15 @@ public class Level extends AbstractAppState {
         //decoration coordinates
         res.add(startX+wallWidth*4+passageWidth*3.5f);
         res.add(startZ+wallWidth*1+passageWidth*0.5f);
+        res.add(4f);
 
         res.add(startX+wallWidth*3+passageWidth*2.5f);
         res.add(startZ+wallWidth*4+passageWidth*3.5f);
+        res.add(4f);
 
         res.add(startX+wallWidth*5+passageWidth*4.5f);
         res.add(startZ+wallWidth*4+passageWidth*3.5f);
+        res.add(3f);
         return res;
     }
 
@@ -269,12 +273,15 @@ public class Level extends AbstractAppState {
         //decoration coordinates
         res.add(startX+wallWidth*1+passageWidth*0.5f);
         res.add(startZ+wallWidth*1+passageWidth*0.5f);
+        res.add(3f);
 
         res.add(startX+wallWidth*3+passageWidth*2.5f);
         res.add(startZ+wallWidth*3+passageWidth*2.5f);
+        res.add(2f);
 
         res.add(startX+wallWidth*5+passageWidth*4.5f);
         res.add(startZ+wallWidth*4+passageWidth*3.5f);
+        res.add(3f);
         return res;
     }
 
@@ -308,12 +315,15 @@ public class Level extends AbstractAppState {
         //decoration coordinates
         res.add(startX+wallWidth*5+passageWidth*4.5f);
         res.add(startZ+wallWidth*1+passageWidth*0.5f);
+        res.add(4f);
 
         res.add(startX+wallWidth*4+passageWidth*3.5f);
         res.add(startZ+wallWidth*3+passageWidth*2.5f);
+        res.add(3f);
 
         res.add(startX+wallWidth*2+passageWidth*1.5f);
         res.add(startZ+wallWidth*5+passageWidth*4.5f);
+        res.add(2f);
         return res;
     }
 
@@ -348,15 +358,19 @@ public class Level extends AbstractAppState {
         //decoration coordinates
         res.add(startX+wallWidth*1+passageWidth*0.5f);
         res.add(startZ+wallWidth*1+passageWidth*0.5f);
+        res.add(2f);
 
         res.add(startX+wallWidth*5+passageWidth*4.5f);
         res.add(startZ+wallWidth*1+passageWidth*0.5f);
+        res.add(3f);
 
         res.add(startX+wallWidth*5+passageWidth*4.5f);
         res.add(startZ+wallWidth*5+passageWidth*4.5f);
+        res.add(1f);
 
         res.add(startX+wallWidth*2+passageWidth*1.5f);
         res.add(startZ+wallWidth*3+passageWidth*2.5f);
+        res.add(4f);
         return res;
     }
 
@@ -392,12 +406,15 @@ public class Level extends AbstractAppState {
         //decoration coordinates
         res.add(startX+wallWidth*5+passageWidth*4.5f);
         res.add(startZ+wallWidth*2+passageWidth*1.5f);
+        res.add(1f);
 
         res.add(startX+wallWidth*4+passageWidth*3.5f);
         res.add(startZ+wallWidth*3+passageWidth*2.5f);
+        res.add(2f);
 
         res.add(startX+wallWidth*2+passageWidth*1.5f);
         res.add(startZ+wallWidth*4+passageWidth*3.5f);
+        res.add(2f);
         return res;
     }
 
@@ -431,12 +448,15 @@ public class Level extends AbstractAppState {
         //decoration coordinates
         res.add(startX+wallWidth*5+passageWidth*4.5f);
         res.add(startZ+wallWidth*5+passageWidth*4.5f);
+        res.add(4f);
 
         res.add(startX+wallWidth*1+passageWidth*0.5f);
         res.add(startZ+wallWidth*4+passageWidth*3.5f);
+        res.add(1f);
 
         res.add(startX+wallWidth*4+passageWidth*3.5f);
         res.add(startZ+wallWidth*2+passageWidth*1.5f);
+        res.add(1f);
         return res;
     }
 
@@ -469,12 +489,15 @@ public class Level extends AbstractAppState {
         //decoration coordinates
         res.add(startX+wallWidth*1+passageWidth*0.5f);
         res.add(startZ+wallWidth*4+passageWidth*3.5f);
+        res.add(1f);
 
         res.add(startX+wallWidth*4+passageWidth*3.5f);
         res.add(startZ+wallWidth*3+passageWidth*2.5f);
+        res.add(4f);
 
         res.add(startX+wallWidth*5+passageWidth*4.5f);
         res.add(startZ+wallWidth*2+passageWidth*1.5f);
+        res.add(1f);
         return res;
     }
 
@@ -509,12 +532,15 @@ public class Level extends AbstractAppState {
         //decoration coordinates
         res.add(startX+wallWidth*5+passageWidth*4.5f);
         res.add(startZ+wallWidth*1+passageWidth*0.5f);
+        res.add(4f);
 
         res.add(startX+wallWidth*3+passageWidth*2.5f);
         res.add(startZ+wallWidth*2+passageWidth*1.5f);
+        res.add(3f);
 
         res.add(startX+wallWidth*5+passageWidth*4.5f);
         res.add(startZ+wallWidth*2+passageWidth*1.5f);
+        res.add(3f);
         return res;
     }
     public void makeFrameWalls(float startX, float startZ){

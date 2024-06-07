@@ -22,13 +22,13 @@ public class Level0 extends Level {
         super.initialize(sm, application);
 
         // Adding walls
-        blocksInfo.add(buildBlock10(0,0));
+        blocksInfo.add(buildBlock1(0, 0));
         //makeFrameWalls(0,0);
 
         //addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, 0+(wallWidth * 3 + passageWidth * 6) / 2, wallHeight / 2, 0+wallWidth / 2);
 
-        for(int a=2;a<blocksInfo.get(blocksInfo.size()-1).size();a++){
-            blocksDecorationInfo.add(blocksInfo.get(blocksInfo.size()-1).get(a));
+        for (int a = 2; a < blocksInfo.get(blocksInfo.size() - 1).size(); a++) {
+            blocksDecorationInfo.add(blocksInfo.get(blocksInfo.size() - 1).get(a));
         }
 
 
@@ -38,8 +38,8 @@ public class Level0 extends Level {
         cross = new Cross(passageWidth, 0.1f, passageWidth, assetManager, localRootNode, blocksInfo.get(0).get(0), -0.05f, blocksInfo.get(0).get(1), bulletAppState);
 
 
-        for(int i=0;i<blocksDecorationInfo.size()-1;i+=2){
-            Decoration decoration = new Decoration(passageWidth, 0.1f, passageWidth, assetManager, localRootNode, blocksDecorationInfo.get(i), -0.05f, blocksDecorationInfo.get(i+1), bulletAppState);
+        for (int i = 0; i < blocksDecorationInfo.size() - 1; i += 3) {
+            Decoration decoration = new Decoration(blocksDecorationInfo.get(i+2), assetManager, localRootNode, blocksDecorationInfo.get(i), -0.05f, blocksDecorationInfo.get(i+1), bulletAppState);
         }
 
         //Closing extras

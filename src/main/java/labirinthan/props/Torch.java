@@ -24,7 +24,7 @@ public class Torch {
 
     protected Torch(AssetManager assetManager, Node torchNode){
         this.assetManager = assetManager;
-        this.torchMesh = assetManager.loadModel("Models/Torch/torch.fbx");
+        this.torchMesh = assetManager.loadModel("Models/Torch/wooden_handle_torch.glb");
         torchMesh.setShadowMode(RenderQueue.ShadowMode.Receive);
 
         this.torchMesh.setLocalTranslation(TORCH_MESH_LOCATION);
