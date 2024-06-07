@@ -21,6 +21,9 @@ public class MainHUD {
     private Label interactionSign;
     private final Node mainHUDNode = new Node("Main HUD");
 
+    private static final String DEFAULT_INTERACTION_TEXT = "Press 'E' to ";
+    public static final String TORCH_INTERACTION_TEXT = "take a torch";
+
     public MainHUD(Labirinthan mainApp, Node guiNode, AppSettings settings, AssetManager assetManager){
         this.app = mainApp;
         this.guiNode = guiNode;
@@ -43,7 +46,7 @@ public class MainHUD {
         mainHUDNode.attachChild(hpBar);
 
         // Interaction Sign
-        interactionSign = new Label("Press 'E' to interact");
+        interactionSign = new Label(DEFAULT_INTERACTION_TEXT);
         interactionSign.setFontSize(48);
         interactionSign.setFont(mainFont);
         interactionSign.setColor(ColorRGBA.Red);
@@ -64,11 +67,17 @@ public class MainHUD {
         hpBar.setProgressValue(healthPercent);
     }
 
-    public void showInteractionSign(boolean show) {
+    public void showInteractionSign(boolean show, String text) {
         if (show) {
             interactionSign.setCullHint(Spatial.CullHint.Never);
+            interactionSign.setText(DEFAULT_INTERACTION_TEXT+text);
         } else {
             interactionSign.setCullHint(Spatial.CullHint.Always);
         }
+        interactionSign.setLocalTranslation(
+                (settings.getWidth() / 2f) - (interactionSign.getPreferredSize().x / 2),
+                interactionSign.getPreferredSize().y*4f,
+                0
+        );
     }
 }

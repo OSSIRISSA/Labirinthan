@@ -100,7 +100,6 @@ public class Level extends AbstractAppState {
             }
             torchHolder.moveTorch(x, 2.5f, z);
             torchHolder.updateTorchStatus(true);
-            System.out.println(torchHolder);
         }
     }
 

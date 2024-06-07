@@ -22,7 +22,7 @@ public class Torch {
     final static float TORCH_MESH_ROTATION_Y = -FastMath.PI/2;
     final Vector3f FIRE_LOCATION = new Vector3f(-0.25f, 0.7f, 0);
 
-    protected Torch(AssetManager assetManager, Node torchNode){
+    public Torch(AssetManager assetManager, Node torchNode){
         this.assetManager = assetManager;
         this.torchMesh = assetManager.loadModel("Models/Torch/wooden_handle_torch.glb");
         torchMesh.setShadowMode(RenderQueue.ShadowMode.Receive);
@@ -53,6 +53,7 @@ public class Torch {
         fire.setLowLife(1f);
         fire.setHighLife(3f);
         fire.getParticleInfluencer().setVelocityVariation(0.1f);
+        fire.setShadowMode(RenderQueue.ShadowMode.Off);
 
         return fire;
     }

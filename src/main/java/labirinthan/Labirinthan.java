@@ -17,7 +17,7 @@ import labirinthan.levels.Level1;
 
 public class Labirinthan extends SimpleApplication {
 
-    private BulletAppState bulletAppState;
+    public BulletAppState bulletAppState;
     private MainCharacter character;
     private MainHUD mainHUD;
     public FilterPostProcessor filterPostProcessor;
@@ -27,7 +27,7 @@ public class Labirinthan extends SimpleApplication {
     public static final float Z = Level.wallWidth*3+Level.passageWidth*2.5f;
     public static Level level;
 
-    public static boolean isFlying = true;
+    public static boolean isFlying = false;
 
 
     public static void main(String[] args) {
@@ -60,11 +60,6 @@ public class Labirinthan extends SimpleApplication {
 
         // Enable physics debug
         //bulletAppState.setDebugEnabled(true);
-
-        //Add All lighted map          ----------(TEMPORARY)----------
-        AmbientLight al = new AmbientLight();
-        al.setColor(ColorRGBA.White.mult(10f));
-        //rootNode.addLight(al);
 
         //COMMENT THIS IF YOU WANT TO INTERACT WITH MAIN MENU
         startGame();
@@ -103,7 +98,7 @@ public class Labirinthan extends SimpleApplication {
     private void addFog(){
         FogFilter fog = new FogFilter();
         fog.setFogColor(new ColorRGBA(0.01f,0.01f,0.01f,1f));
-        fog.setFogDistance(100f); // Distance at which fog starts
+        fog.setFogDistance(600f); // Distance at which fog starts
         fog.setFogDensity(4.0f); // Density of the fog
 
         // Add the fog filter to the post processor
@@ -120,6 +115,7 @@ public class Labirinthan extends SimpleApplication {
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         //bulletAppState.setDebugEnabled(true);
+
         level = new Level1(this, bulletAppState, guiNode, settings);
         stateManager.attach(level);
         stateManager.attach(character);
@@ -129,13 +125,5 @@ public class Labirinthan extends SimpleApplication {
         flyCam.setEnabled(true);
 
         character.isPuzzleFound = false;
-    }
-
-    @Override
-    public void simpleUpdate(float tpf) {
-        super.simpleUpdate(tpf);
-        if(character!=null) {
-            character.checkForInteraction();
-        }
     }
 }

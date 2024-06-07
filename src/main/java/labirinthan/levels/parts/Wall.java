@@ -2,6 +2,7 @@ package labirinthan.levels.parts;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.collision.PhysicsCollisionObject;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -42,13 +43,14 @@ public class Wall extends Box {
 
         geom.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         // Adjust the texture coordinates to stretch vertically and repeat horizontally
-        this.scaleTextureCoordinates(x,y,z);
+        this.scaleTextureCoordinates(x, y, z);
 
         localRootNode.attachChild(geom);
         geom.setLocalTranslation(px, py, pz);
 
         RigidBodyControl wallPhysics = new RigidBodyControl(0.0f);
         geom.addControl(wallPhysics);
+
         bulletAppState.getPhysicsSpace().add(wallPhysics);
     }
 
