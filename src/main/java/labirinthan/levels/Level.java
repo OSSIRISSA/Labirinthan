@@ -23,6 +23,7 @@ public class Level extends AbstractAppState {
     protected final AssetManager assetManager;
     private final Node guiNode;
     private final Node localPuzzleNode;
+    private Node currentNode;
     private final AppSettings settings;
     protected Labirinthan application;
     public static float wallHeight = 6;
@@ -36,12 +37,15 @@ public class Level extends AbstractAppState {
     protected ArrayList<Wall> walls = new ArrayList<>();
     public ArrayList<ArrayList<Float>> blocksInfo = new ArrayList<>();
     protected ArrayList<Float> blocksDecorationInfo = new ArrayList<>();
+    protected Node[][] blocks;
+
     protected BulletAppState bulletAppState;
     public Random random = new Random();
     public int labyrinthSizeX;
     public int labyrinthSizeZ;
     public int clearSpan;
     public int chooseCross;
+
 
     private boolean isFirstTorch = true;
 
@@ -75,7 +79,7 @@ public class Level extends AbstractAppState {
         if(z==wallWidth){
             x-=0.01f;
         }
-        walls.add(new Wall(x, y, z, assetManager, localRootNode, px, py, pz, bulletAppState));
+        walls.add(new Wall(x, y, z, assetManager, currentNode, px, py, pz, bulletAppState));
     }
 
     public void startPuzzle(){
@@ -89,7 +93,7 @@ public class Level extends AbstractAppState {
         if(random.nextInt(10)!=0){
             TorchHolder torchHolder = new TorchHolder(application, assetManager, rootNode, isFirstTorch);
             isFirstTorch = false;
-            localRootNode.attachChild(torchHolder);
+            currentNode.attachChild(torchHolder);
             switch (direction){
                 case 1 -> torchHolder.rotateTorch(0, -FastMath.HALF_PI, 0);
                 case 2 -> {
@@ -103,7 +107,9 @@ public class Level extends AbstractAppState {
         }
     }
 
-    public ArrayList<Float> buildBlock1(float startX, float startZ){
+    public ArrayList<Float> buildBlock1(float startX, float startZ, Node node){
+
+        currentNode = node;
         makeFloor(startX,startZ);
         makeCeiling(startX,startZ);
 
@@ -129,22 +135,18 @@ public class Level extends AbstractAppState {
         makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f);
         makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*5+passageWidth*4.5f);
 
+        createDecor(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*3+passageWidth*2.5f,3f);
+        createDecor(startX+wallWidth*1+passageWidth*0.5f,startZ+wallWidth*4+passageWidth*3.5f,3f);
+
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*3+passageWidth*2.5f);
         res.add(startZ+wallWidth*2+passageWidth*1.5f);
 
-        //decoration coordinates
-        res.add(startX+wallWidth*4+passageWidth*3.5f);
-        res.add(startZ+wallWidth*3+passageWidth*2.5f);
-        res.add(3f);
-
-        res.add(startX+wallWidth*1+passageWidth*0.5f);
-        res.add(startZ+wallWidth*4+passageWidth*3.5f);
-        res.add(3f);
         return res;
     }
 
-    public ArrayList<Float> buildBlock2(float startX, float startZ){
+    public ArrayList<Float> buildBlock2(float startX, float startZ, Node node){
+        currentNode = node;
         makeFloor(startX,startZ);
         makeCeiling(startX,startZ);
 
@@ -166,37 +168,24 @@ public class Level extends AbstractAppState {
         loadTorch(startX+wallWidth*5+passageWidth*4,startZ+wallWidth*2+passageWidth*1.5f,2);
         loadTorch(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*5+passageWidth*5,1);
 
-
         makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f);
         makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*4+passageWidth*3.5f);
         makeTrap(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*4+passageWidth*3.5f);
 
+        createDecor(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*1+passageWidth*0.5f,4f);
+        createDecor(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*5+passageWidth*4.5f,2f);
+        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*1+passageWidth*0.5f,3f);
+        createDecor(startX+wallWidth*3+passageWidth*2.5f, startZ+wallWidth*2+passageWidth*1.5f,1f);
 
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*4+passageWidth*3.5f);
         res.add(startZ+wallWidth*4+passageWidth*3.5f);
 
-        //decoration coordinates
-        res.add(startX+wallWidth*2+passageWidth*1.5f);
-        res.add(startZ+wallWidth*1+passageWidth*0.5f);
-        res.add(4f);
-
-        res.add(startX+wallWidth*2+passageWidth*1.5f);
-        res.add(startZ+wallWidth*5+passageWidth*4.5f);
-        res.add(2f);
-
-        res.add(startX+wallWidth*5+passageWidth*4.5f);
-        res.add(startZ+wallWidth*1+passageWidth*0.5f);
-        res.add(3f);
-
-        res.add(startX+wallWidth*3+passageWidth*2.5f);
-        res.add(startZ+wallWidth*2+passageWidth*1.5f);
-        res.add(1f);
-
         return res;
     }
 
-    public ArrayList<Float> buildBlock3(float startX, float startZ){
+    public ArrayList<Float> buildBlock3(float startX, float startZ, Node node){
+        currentNode = node;
         makeFloor(startX,startZ);
         makeCeiling(startX,startZ);
 
@@ -222,27 +211,18 @@ public class Level extends AbstractAppState {
         makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f);
         makeTrap(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*5+passageWidth*4.5f);
 
+        createDecor(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*1+passageWidth*0.5f,4f);
+        createDecor(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*4+passageWidth*3.5f,4f);
+        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*4+passageWidth*3.5f,3f);
 
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*5+passageWidth*4.5f);
         res.add(startZ+wallWidth+passageWidth*0.5f);
-
-        //decoration coordinates
-        res.add(startX+wallWidth*4+passageWidth*3.5f);
-        res.add(startZ+wallWidth*1+passageWidth*0.5f);
-        res.add(4f);
-
-        res.add(startX+wallWidth*3+passageWidth*2.5f);
-        res.add(startZ+wallWidth*4+passageWidth*3.5f);
-        res.add(4f);
-
-        res.add(startX+wallWidth*5+passageWidth*4.5f);
-        res.add(startZ+wallWidth*4+passageWidth*3.5f);
-        res.add(3f);
         return res;
     }
 
-    public ArrayList<Float> buildBlock4(float startX, float startZ){
+    public ArrayList<Float> buildBlock4(float startX, float startZ, Node node){
+        currentNode = node;
         makeFloor(startX,startZ);
         makeCeiling(startX,startZ);
 
@@ -260,31 +240,21 @@ public class Level extends AbstractAppState {
         loadTorch(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*2+passageWidth*1,3);
         loadTorch(startX+wallWidth+passageWidth*0.5f,startZ+wallWidth*5+passageWidth*5,1);
 
-
         makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f);
         makeTrap(startX+wallWidth*2+passageWidth*2.5f,startZ+wallWidth*4+passageWidth*3.5f);
 
+        createDecor(startX+wallWidth*1+passageWidth*0.5f,startZ+wallWidth*1+passageWidth*0.5f,3f);
+        createDecor(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*3+passageWidth*2.5f,2f);
+        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*4+passageWidth*3.5f,3f);
 
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*4+passageWidth*3.5f);
         res.add(startZ+wallWidth*4+passageWidth*3.5f);
-
-        //decoration coordinates
-        res.add(startX+wallWidth*1+passageWidth*0.5f);
-        res.add(startZ+wallWidth*1+passageWidth*0.5f);
-        res.add(3f);
-
-        res.add(startX+wallWidth*3+passageWidth*2.5f);
-        res.add(startZ+wallWidth*3+passageWidth*2.5f);
-        res.add(2f);
-
-        res.add(startX+wallWidth*5+passageWidth*4.5f);
-        res.add(startZ+wallWidth*4+passageWidth*3.5f);
-        res.add(3f);
         return res;
     }
 
-    public ArrayList<Float> buildBlock5(float startX, float startZ){
+    public ArrayList<Float> buildBlock5(float startX, float startZ, Node node){
+        currentNode = node;
         makeFloor(startX,startZ);
         makeCeiling(startX,startZ);
 
@@ -307,26 +277,18 @@ public class Level extends AbstractAppState {
         makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*2+passageWidth*1.5f);
         makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*5+passageWidth*4.5f);
 
+        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*1+passageWidth*0.5f,4f);
+        createDecor(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*3+passageWidth*2.5f,3f);
+        createDecor(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*5+passageWidth*4.5f,2f);
+
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*5+passageWidth*4.5f);
         res.add(startZ+wallWidth*2+passageWidth*1.5f);
-
-        //decoration coordinates
-        res.add(startX+wallWidth*5+passageWidth*4.5f);
-        res.add(startZ+wallWidth*1+passageWidth*0.5f);
-        res.add(4f);
-
-        res.add(startX+wallWidth*4+passageWidth*3.5f);
-        res.add(startZ+wallWidth*3+passageWidth*2.5f);
-        res.add(3f);
-
-        res.add(startX+wallWidth*2+passageWidth*1.5f);
-        res.add(startZ+wallWidth*5+passageWidth*4.5f);
-        res.add(2f);
         return res;
     }
 
-    public ArrayList<Float> buildBlock6(float startX, float startZ){
+    public ArrayList<Float> buildBlock6(float startX, float startZ, Node node){
+        currentNode = node;
         makeFloor(startX,startZ);
         makeCeiling(startX,startZ);
 
@@ -350,30 +312,19 @@ public class Level extends AbstractAppState {
         makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*1+passageWidth*0.5f);
         makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*4+passageWidth*3.5f);
 
+        createDecor(startX+wallWidth*1+passageWidth*0.5f,startZ+wallWidth*1+passageWidth*0.5f,2f);
+        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*1+passageWidth*0.5f,3f);
+        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*5+passageWidth*4.5f,1f);
+        createDecor(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*3+passageWidth*2.5f,4f);
+
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*3+passageWidth*2.5f);
         res.add(startZ+wallWidth*4+passageWidth*3.5f);
-
-        //decoration coordinates
-        res.add(startX+wallWidth*1+passageWidth*0.5f);
-        res.add(startZ+wallWidth*1+passageWidth*0.5f);
-        res.add(2f);
-
-        res.add(startX+wallWidth*5+passageWidth*4.5f);
-        res.add(startZ+wallWidth*1+passageWidth*0.5f);
-        res.add(3f);
-
-        res.add(startX+wallWidth*5+passageWidth*4.5f);
-        res.add(startZ+wallWidth*5+passageWidth*4.5f);
-        res.add(1f);
-
-        res.add(startX+wallWidth*2+passageWidth*1.5f);
-        res.add(startZ+wallWidth*3+passageWidth*2.5f);
-        res.add(4f);
         return res;
     }
 
-    public ArrayList<Float> buildBlock7(float startX, float startZ){
+    public ArrayList<Float> buildBlock7(float startX, float startZ, Node node){
+        currentNode = node;
         makeFloor(startX,startZ);
         makeCeiling(startX,startZ);
 
@@ -398,26 +349,19 @@ public class Level extends AbstractAppState {
         makeTrap(startX+wallWidth*1+passageWidth*0.5f,startZ+wallWidth*2+passageWidth*1.5f);
         makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*5+passageWidth*4.5f);
 
+        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*2+passageWidth*1.5f,1f);
+        createDecor(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*3+passageWidth*2.5f,2f);
+        createDecor(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*4+passageWidth*3.5f,2f);
+
+
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*4+passageWidth*3.5f);
         res.add(startZ+wallWidth*2+passageWidth*1.5f);
-
-        //decoration coordinates
-        res.add(startX+wallWidth*5+passageWidth*4.5f);
-        res.add(startZ+wallWidth*2+passageWidth*1.5f);
-        res.add(1f);
-
-        res.add(startX+wallWidth*4+passageWidth*3.5f);
-        res.add(startZ+wallWidth*3+passageWidth*2.5f);
-        res.add(2f);
-
-        res.add(startX+wallWidth*2+passageWidth*1.5f);
-        res.add(startZ+wallWidth*4+passageWidth*3.5f);
-        res.add(2f);
         return res;
     }
 
-    public ArrayList<Float> buildBlock8(float startX, float startZ){
+    public ArrayList<Float> buildBlock8(float startX, float startZ, Node node){
+        currentNode = node;
         makeFloor(startX,startZ);
         makeCeiling(startX,startZ);
 
@@ -440,26 +384,18 @@ public class Level extends AbstractAppState {
         makeTrap(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*4+passageWidth*3.5f);
         makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*2+passageWidth*1.5f);
 
+        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*5+passageWidth*4.5f,4f);
+        createDecor(startX+wallWidth*1+passageWidth*0.5f,startZ+wallWidth*4+passageWidth*3.5f,1f);
+        createDecor(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f,1f);
+
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*5+passageWidth*4.5f);
         res.add(startZ+wallWidth*4+passageWidth*3.5f);
-
-        //decoration coordinates
-        res.add(startX+wallWidth*5+passageWidth*4.5f);
-        res.add(startZ+wallWidth*5+passageWidth*4.5f);
-        res.add(4f);
-
-        res.add(startX+wallWidth*1+passageWidth*0.5f);
-        res.add(startZ+wallWidth*4+passageWidth*3.5f);
-        res.add(1f);
-
-        res.add(startX+wallWidth*4+passageWidth*3.5f);
-        res.add(startZ+wallWidth*2+passageWidth*1.5f);
-        res.add(1f);
         return res;
     }
 
-    public ArrayList<Float> buildBlock9(float startX, float startZ){
+    public ArrayList<Float> buildBlock9(float startX, float startZ, Node node){
+        currentNode = node;
         makeFloor(startX,startZ);
         makeCeiling(startX,startZ);
 
@@ -481,26 +417,18 @@ public class Level extends AbstractAppState {
         makeTrap(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*3+passageWidth*2.5f);
         makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*4+passageWidth*3.5f);
 
+        createDecor(startX+wallWidth*1+passageWidth*0.5f,startZ+wallWidth*4+passageWidth*3.5f,1f);
+        createDecor(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*3+passageWidth*2.5f,4f);
+        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*2+passageWidth*1.5f,1f);
+
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*1+passageWidth*0.5f);
         res.add(startZ+wallWidth*5+passageWidth*4.5f);
-
-        //decoration coordinates
-        res.add(startX+wallWidth*1+passageWidth*0.5f);
-        res.add(startZ+wallWidth*4+passageWidth*3.5f);
-        res.add(1f);
-
-        res.add(startX+wallWidth*4+passageWidth*3.5f);
-        res.add(startZ+wallWidth*3+passageWidth*2.5f);
-        res.add(4f);
-
-        res.add(startX+wallWidth*5+passageWidth*4.5f);
-        res.add(startZ+wallWidth*2+passageWidth*1.5f);
-        res.add(1f);
         return res;
     }
 
-    public ArrayList<Float> buildBlock10(float startX, float startZ){
+    public ArrayList<Float> buildBlock10(float startX, float startZ, Node node){
+        currentNode = node;
         makeFloor(startX,startZ);
         makeCeiling(startX,startZ);
 
@@ -524,22 +452,13 @@ public class Level extends AbstractAppState {
         makeTrap(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*3+passageWidth*2.5f);
         makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*4+passageWidth*3.5f);
 
+        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*1+passageWidth*0.5f,4f);
+        createDecor(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*2+passageWidth*1.5f,3f);
+        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*2+passageWidth*1.5f,3f);
+
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX+wallWidth*4+passageWidth*3.5f);
         res.add(startZ+wallWidth*5+passageWidth*4.5f);
-
-        //decoration coordinates
-        res.add(startX+wallWidth*5+passageWidth*4.5f);
-        res.add(startZ+wallWidth*1+passageWidth*0.5f);
-        res.add(4f);
-
-        res.add(startX+wallWidth*3+passageWidth*2.5f);
-        res.add(startZ+wallWidth*2+passageWidth*1.5f);
-        res.add(3f);
-
-        res.add(startX+wallWidth*5+passageWidth*4.5f);
-        res.add(startZ+wallWidth*2+passageWidth*1.5f);
-        res.add(3f);
         return res;
     }
     public void makeFrameWalls(float startX, float startZ){
@@ -564,21 +483,25 @@ public class Level extends AbstractAppState {
     }
 
     public void makeFloor(float startX, float startZ){
-        floor = new Floor((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 5 + passageWidth * 5)*0.25f), -0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.25f), bulletAppState);
-        floor = new Floor((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 5 + passageWidth * 5)*0.75f), -0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.75f), bulletAppState);
-        floor = new Floor((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 5 + passageWidth * 5)*0.75f), -0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.25f), bulletAppState);
-        floor = new Floor((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 5 + passageWidth * 5)*0.25f), -0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.75f), bulletAppState);
+        floor = new Floor((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, currentNode, startX+((wallWidth * 5 + passageWidth * 5)*0.25f), -0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.25f), bulletAppState);
+        floor = new Floor((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, currentNode, startX+((wallWidth * 5 + passageWidth * 5)*0.75f), -0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.75f), bulletAppState);
+        floor = new Floor((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, currentNode, startX+((wallWidth * 5 + passageWidth * 5)*0.75f), -0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.25f), bulletAppState);
+        floor = new Floor((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, currentNode, startX+((wallWidth * 5 + passageWidth * 5)*0.25f), -0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.75f), bulletAppState);
     }
 
     public void makeCeiling(float startX, float startZ){
-        ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 5 + passageWidth * 5)*0.25f), wallHeight-0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.75f), bulletAppState);
-        ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 5 + passageWidth * 5)*0.75f), wallHeight-0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.75f), bulletAppState);
-        ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 5 + passageWidth * 5)*0.25f), wallHeight-0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.25f), bulletAppState);
-        ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, localRootNode, startX+((wallWidth * 5 + passageWidth * 5)*0.75f), wallHeight-0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.25f), bulletAppState);
+        ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, currentNode, startX+((wallWidth * 5 + passageWidth * 5)*0.25f), wallHeight-0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.75f), bulletAppState);
+        ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, currentNode, startX+((wallWidth * 5 + passageWidth * 5)*0.75f), wallHeight-0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.75f), bulletAppState);
+        ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, currentNode, startX+((wallWidth * 5 + passageWidth * 5)*0.25f), wallHeight-0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.25f), bulletAppState);
+        ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, currentNode, startX+((wallWidth * 5 + passageWidth * 5)*0.75f), wallHeight-0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.25f), bulletAppState);
     }
 
     public void makeTrap(float x, float z){
-        trap = new Trap(passageWidth, 0.1f, passageWidth, assetManager, localRootNode, x, -0.05f, z, bulletAppState);
+        trap = new Trap(passageWidth, 0.1f, passageWidth, assetManager, currentNode, x, -0.05f, z, bulletAppState);
+    }
+
+    public void createDecor(float x, float z, float direction){
+        Decoration decoration = new Decoration(direction,assetManager, currentNode, x, -0.05f, z, bulletAppState);
     }
 
 }
