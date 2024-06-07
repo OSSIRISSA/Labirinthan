@@ -171,6 +171,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         }
 
         crossCheck();
+        Labirinthan.level.updateBlocks(characterNode.getLocalTranslation().x,characterNode.getLocalTranslation().z);
     }
 
     private void carryTorch() {
