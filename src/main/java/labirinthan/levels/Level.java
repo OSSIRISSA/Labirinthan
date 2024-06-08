@@ -8,11 +8,12 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.math.FastMath;
 import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
-import labirinthan.GUI.PuzzleSudoku;
 import labirinthan.Labirinthan;
 import labirinthan.levels.parts.*;
+import labirinthan.levels.traps.TrapMaster;
+import labirinthan.levels.traps.TrapType;
 import labirinthan.props.TorchHolder;
-import labirinthan.puzzles.PuzzleCabinet;
+import labirinthan.levels.puzzles.PuzzleCabinet;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -23,7 +24,7 @@ public class Level extends AbstractAppState {
 
     protected final AssetManager assetManager;
     private final Node guiNode;
-    private final Node localPuzzleNode;
+    public final Node localPuzzleNode;
     private Node currentNode;
     private final AppSettings settings;
     protected Labirinthan application;
@@ -33,7 +34,7 @@ public class Level extends AbstractAppState {
     public Floor floor;
     public Ceiling ceiling;
     public PuzzleCabinet cross;
-    public Trap trap;
+    public TrapMaster trap;
 
     protected ArrayList<Wall> walls = new ArrayList<>();
     public ArrayList<ArrayList<Float>> blocksInfo = new ArrayList<>();
@@ -98,13 +99,6 @@ public class Level extends AbstractAppState {
         walls.add(new Wall(x, y, z, assetManager, localRootNode, px, py, pz, bulletAppState));
     }
 
-    public void startPuzzle(){
-        PuzzleSudoku puzzle = new PuzzleSudoku(application,localPuzzleNode,settings,assetManager);
-        //PuzzlePyramid puzzle = new PuzzlePyramid(application,localPuzzleNode,settings,assetManager);
-        //PuzzleSquareEncryption puzzle = new PuzzleSquareEncryption(application,localPuzzleNode,settings,assetManager);
-        puzzle.createScreen();
-    }
-
     private void loadTorch(float x, float z, int direction, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         if(random.nextInt(10)!=0){
             TorchHolder torchHolder = new TorchHolder(application, assetManager, rootNode, isFirstTorch, roomsNumber, allTorches);
@@ -149,8 +143,8 @@ public class Level extends AbstractAppState {
         loadTorch(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*4+passageWidth*4, 1, roomsNumber, allTorches);
         loadTorch(startX+wallWidth+passageWidth,startZ+wallWidth*5+passageWidth*5, 1, roomsNumber, allTorches);
 
-        makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f,1f);
-        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*5+passageWidth*4.5f,1f);
+        makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f,1);
+        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*5+passageWidth*4.5f,1);
 
         createDecor(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*3+passageWidth*2.5f,3f);
         createDecor(startX+wallWidth*1+passageWidth*0.5f,startZ+wallWidth*4+passageWidth*3.5f,3f);
@@ -185,9 +179,9 @@ public class Level extends AbstractAppState {
         loadTorch(startX+wallWidth*5+passageWidth*4,startZ+wallWidth*2+passageWidth*1.5f,2, roomsNumber, allTorches);
         loadTorch(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*5+passageWidth*5,1, roomsNumber, allTorches);
 
-        makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f,1f);
-        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*4+passageWidth*3.5f,1f);
-        makeTrap(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*4+passageWidth*3.5f,1f);
+        makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f,1);
+        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*4+passageWidth*3.5f,1);
+        makeTrap(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*4+passageWidth*3.5f,1);
 
         createDecor(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*1+passageWidth*0.5f,4f);
         createDecor(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*5+passageWidth*4.5f,2f);
@@ -225,8 +219,8 @@ public class Level extends AbstractAppState {
         loadTorch(startX+wallWidth,startZ+wallWidth*4+passageWidth*3.5f,2, roomsNumber, allTorches);
         loadTorch(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*5+passageWidth*5,1, roomsNumber, allTorches);
 
-        makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f,5f);
-        makeTrap(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*5+passageWidth*4.5f, 2f);
+        makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f,5);
+        makeTrap(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*5+passageWidth*4.5f, 2);
 
         createDecor(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*1+passageWidth*0.5f,4f);
         createDecor(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*4+passageWidth*3.5f,4f);
@@ -257,8 +251,8 @@ public class Level extends AbstractAppState {
         loadTorch(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*2+passageWidth*1,3, roomsNumber, allTorches);
         loadTorch(startX+wallWidth+passageWidth*0.5f,startZ+wallWidth*5+passageWidth*5,1, roomsNumber, allTorches);
 
-        makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f, 5f);
-        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*4+passageWidth*3.5f,4f);
+        makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f, 5);
+        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*4+passageWidth*3.5f,4);
 
         createDecor(startX+wallWidth*1+passageWidth*0.5f,startZ+wallWidth*1+passageWidth*0.5f,3f);
         createDecor(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*3+passageWidth*2.5f,2f);
@@ -291,8 +285,8 @@ public class Level extends AbstractAppState {
         loadTorch(startX+wallWidth*3+passageWidth*2,startZ+wallWidth*4+passageWidth*3.5f,2, roomsNumber, allTorches);
         loadTorch(startX+wallWidth+passageWidth*0.5f,startZ+wallWidth*5+passageWidth*5,1, roomsNumber, allTorches);
 
-        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*2+passageWidth*1.5f,5f);
-        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*5+passageWidth*4.5f,1f);
+        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*2+passageWidth*1.5f,5);
+        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*5+passageWidth*4.5f,1);
 
         createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*1+passageWidth*0.5f,4f);
         createDecor(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*3+passageWidth*2.5f,3f);
@@ -513,8 +507,8 @@ public class Level extends AbstractAppState {
         ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, currentNode, startX+((wallWidth * 5 + passageWidth * 5)*0.75f), wallHeight-0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.25f), bulletAppState);
     }
 
-    public void makeTrap(float x, float z, float direction){
-        trap = new Trap(direction, passageWidth, 0.1f, passageWidth, assetManager, currentNode, x, -0.05f, z, bulletAppState);
+    public void makeTrap(float x, float z, int direction){
+        trap = new TrapMaster(application, assetManager, currentNode, x, -0.05f, z, direction);
     }
 
     public void createDecor(float x, float z, float direction){

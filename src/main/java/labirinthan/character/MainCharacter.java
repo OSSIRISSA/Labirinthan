@@ -14,27 +14,35 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import com.jme3.system.AppSettings;
 import labirinthan.GUI.MainHUD;
+import labirinthan.GUI.PuzzlePyramid;
+import labirinthan.GUI.PuzzleSquareEncryption;
+import labirinthan.GUI.PuzzleSudoku;
 import labirinthan.Labirinthan;
+import labirinthan.levels.traps.TrapInteractionArea;
+import labirinthan.levels.traps.TrapMaster;
 import labirinthan.props.Torch;
 import labirinthan.props.TorchHolder;
 import labirinthan.props.TorchInteractionArea;
-import labirinthan.puzzles.PuzzleInteractionArea;
+import labirinthan.levels.puzzles.PuzzleCabinet;
+import labirinthan.levels.puzzles.PuzzleInteractionArea;
 
 public class MainCharacter extends AbstractAppState implements ActionListener, PhysicsCollisionListener {
 
+    private final AppSettings settings;
     private Labirinthan app;
     private BetterCharacterControl characterControl;
     private Object interactionObject;
     public static Node characterNode;
-    private Node cameraNode; // Node for the camera
+    public Node cameraNode;
     private final MainHUD hud;
     private PointLight light;
 
     private final Vector3f walkDirection = new Vector3f();
     private boolean left = false, right = false, forward = false, backward = false;
-    public boolean isPuzzleFound = false;
     public boolean isCarryingTorch = false;
+    public boolean isPuzzleFound = false;
 
     private InteractionType interactType = InteractionType.NONE;
 
@@ -50,8 +58,9 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
     private float torchTimer = 0f;
     private final float TORCH_DURATION = 30f;
 
-    public MainCharacter(MainHUD hud) {
+    public MainCharacter(MainHUD hud, AppSettings settings) {
         this.hud = hud;
+        this.settings = settings;
     }
 
     @Override
@@ -87,8 +96,8 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         this.app.getInputManager().addMapping("Forward", new KeyTrigger(KeyInput.KEY_W));
         this.app.getInputManager().addMapping("Backward", new KeyTrigger(KeyInput.KEY_S));
         this.app.getInputManager().addMapping("Jump", new KeyTrigger(KeyInput.KEY_SPACE));
-        this.app.getInputManager().addMapping("Interact", new KeyTrigger(KeyInput.KEY_E)); // Add interaction key
-        this.app.getInputManager().addMapping("DropTorch", new KeyTrigger(KeyInput.KEY_Q)); // Add drop torch key
+        this.app.getInputManager().addMapping("Interact", new KeyTrigger(KeyInput.KEY_E));
+        this.app.getInputManager().addMapping("DropTorch", new KeyTrigger(KeyInput.KEY_Q));
 
         this.app.getInputManager().addListener(this, "Left", "Right", "Forward", "Backward", "Jump", "Interact", "DropTorch");
     }
@@ -101,57 +110,72 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
     public void collision(PhysicsCollisionEvent event) {
         boolean interactWithTorch = (event.getObjectA() instanceof TorchInteractionArea || event.getObjectB() instanceof TorchInteractionArea) && !isCarryingTorch;
         boolean interactWithPuzzle = event.getObjectA() instanceof PuzzleInteractionArea || event.getObjectB() instanceof PuzzleInteractionArea;
-        if (interactWithTorch || interactWithPuzzle) {
-            if (interactWithTorch) {
-                if (event.getObjectA() instanceof TorchInteractionArea) {
-                    interactionObject = event.getObjectA();
-                } else interactionObject = event.getObjectB();
-                interactType = InteractionType.TORCH;
-                setInteractionText(true, MainHUD.TORCH_INTERACTION_TEXT);
-            }
-            if (interactWithPuzzle) {
-                if (event.getObjectA() instanceof PuzzleInteractionArea) {
-                    interactionObject = event.getObjectA();
-                } else interactionObject = event.getObjectB();
-                interactType = InteractionType.PUZZLE;
-                setInteractionText(true, MainHUD.PUZZLE_INTERACTION_TEXT);
-            }
+        boolean interactWithTrap = event.getObjectA() instanceof TrapInteractionArea || event.getObjectB() instanceof TrapInteractionArea;
+        //System.out.println(event.getObjectA().getUserObject() + " + " + event.getObjectB());
+        if (interactWithTorch) {
+            if (event.getObjectA() instanceof TorchInteractionArea) {
+                interactionObject = event.getObjectA();
+            } else interactionObject = event.getObjectB();
+            interactType = InteractionType.TORCH;
+            setInteractionText(true, MainHUD.TORCH_INTERACTION_TEXT);
+        } else if (interactWithPuzzle) {
+            if (event.getObjectA() instanceof PuzzleInteractionArea) {
+                interactionObject = event.getObjectA();
+            } else interactionObject = event.getObjectB();
+            interactType = InteractionType.PUZZLE;
+            setInteractionText(true, MainHUD.PUZZLE_INTERACTION_TEXT);
+        } else if (interactWithTrap) {
+            if (event.getObjectA() instanceof TrapInteractionArea) {
+                interactionObject = event.getObjectA();
+            } else interactionObject = event.getObjectB();
+            trapAction();
         } else {
             interactType = InteractionType.NONE;
             setInteractionText(false);
         }
     }
 
+    private void trapAction() {
+        TrapMaster trapMaster = ((TrapInteractionArea) interactionObject).getParent();
+        switch (trapMaster.trapType){
+            case MINE -> {
+                trapMaster.startMineExplode();
+            }
+            case SPIKE -> {
+                trapMaster.startDropAnimation();
+            }
+        }
+    }
+
     @Override
     public void onAction(String binding, boolean isPressed, float tpf) {
-        switch (binding) {
-            case "Left":
-                left = isPressed;
-                break;
-            case "Right":
-                right = isPressed;
-                break;
-            case "Forward":
-                forward = isPressed;
-                break;
-            case "Backward":
-                backward = isPressed;
-                break;
-            case "Jump":
-                if (isPressed && characterControl.isOnGround()) {
-                    characterControl.jump();
-                }
-                break;
-            case "Interact":
-                if (isPressed && (interactType != InteractionType.NONE)) {
-                    interact();
-                }
-                break;
-            case "DropTorch":
-                if (isPressed && isCarryingTorch) {
-                    dequipTorch();
-                }
-                break;
+        if (!isPuzzleFound) {
+            switch (binding) {
+                case "Left":
+                    left = isPressed;
+                    break;
+                case "Right":
+                    right = isPressed;
+                    break;
+                case "Forward":
+                    forward = isPressed;
+                    break;
+                case "Backward":
+                    backward = isPressed;
+                    break;
+                case "Jump":
+                    if (isPressed && characterControl.isOnGround())
+                        characterControl.jump();
+                    break;
+                case "Interact":
+                    if (isPressed && (interactType != InteractionType.NONE))
+                        interact();
+                    break;
+                case "DropTorch":
+                    if (isPressed && isCarryingTorch)
+                        dequipTorch();
+                    break;
+            }
         }
     }
 
@@ -161,26 +185,23 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         Vector3f camDir = this.app.getCamera().getDirection().clone().setY(0).normalizeLocal().multLocal(CHARACTER_SPEED);
         Vector3f camLeft = this.app.getCamera().getLeft().clone().setY(0).normalizeLocal().multLocal(CHARACTER_SPEED);
         walkDirection.set(0, 0, 0);
-        if (left) {
+        if (left)
             walkDirection.addLocal(camLeft);
-        }
-        if (right) {
+        if (right)
             walkDirection.addLocal(camLeft.negate());
-        }
-        if (forward) {
+        if (forward)
             walkDirection.addLocal(camDir);
-        }
-        if (backward) {
+        if (backward)
             walkDirection.addLocal(camDir.negate());
-        }
         characterControl.setWalkDirection(walkDirection);
+
         if (!Labirinthan.isFlying) {
             this.app.getCamera().setLocation(characterNode.getLocalTranslation().add(0, 1.8f, 0));
-            cameraNode.setLocalTranslation(this.app.getCamera().getLocation()); // Update camera node position
+            cameraNode.setLocalTranslation(this.app.getCamera().getLocation());
         }
 
         float[] angles = this.app.getCamera().getRotation().toAngles(null);
-        float pitch = FastMath.clamp(angles[0], -FastMath.PI / 4, FastMath.PI / 4); // Clamp between -45 and 45 degrees
+        float pitch = FastMath.clamp(angles[0], -FastMath.PI / 4, FastMath.PI / 4);
         Quaternion clampedRotation = new Quaternion().fromAngles(pitch, angles[1], angles[2]);
         this.app.getCamera().setRotation(clampedRotation);
         cameraNode.setLocalRotation(clampedRotation);
@@ -204,6 +225,56 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
             } else {
                 hud.updateTorchPercent(torchTimer / TORCH_DURATION);
             }
+        }
+    }
+
+    public void hpActions(float amount) {
+        health += amount;
+        if (health < 0) {
+            health = 0;
+        }
+        if (health > 1.0f) {
+            health = 1.0f;
+        }
+        hud.updateHealthPercent(health);
+    }
+
+    private void setInteractionText(boolean status, String... text) {
+        hud.showInteractionSign(status, text.length > 0 ? text[0] : "");
+    }
+
+    private void interact() {
+        switch (interactType) {
+            case TORCH:
+                torchHolder = ((TorchInteractionArea) interactionObject).getParent();
+                torchHolder.updateTorchStatus(false);
+                isCarryingTorch = true;
+                carryTorch();
+                break;
+            case PUZZLE:
+                isPuzzleFound = true;
+                startPuzzle(((PuzzleInteractionArea) interactionObject).getParent());
+                break;
+            case BOOK:
+                System.out.println("Interacted with book");
+                break;
+            default:
+                System.out.println("No interaction available");
+                break;
+        }
+    }
+
+    private void startPuzzle(PuzzleCabinet puzzleCab) {
+        puzzleCab.removeInteractionZone();
+        this.app.getRootNode().detachChild(characterNode);
+        app.levelPreparation(true);
+        switch (puzzleCab.puzzleType) {
+            case SUDOKU ->
+                    new PuzzleSudoku(app, Labirinthan.level.localPuzzleNode, settings, app.getAssetManager()).createScreen();
+            case PYRAMID ->
+                    new PuzzlePyramid(app, Labirinthan.level.localPuzzleNode, settings, app.getAssetManager()).createScreen();
+            case ENCRYPTION ->
+                    new PuzzleSquareEncryption(app, Labirinthan.level.localPuzzleNode, settings, app.getAssetManager()).createScreen();
         }
     }
 
@@ -233,41 +304,6 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
             isCarryingTorch = false;
             hud.updateTorchPercent(0);
             hud.showTorchProgress(false);
-        }
-    }
-
-    public void hpActions(float amount) {
-        health += amount;
-        if (health < 0) {
-            health = 0;
-        }
-        if (health > 1.0f) {
-            health = 1.0f;
-        }
-        hud.updateHealthPercent(health);
-    }
-
-    private void setInteractionText(boolean status, String... text) {
-        hud.showInteractionSign(status, text.length > 0 ? text[0] : "");
-    }
-
-    private void interact() {
-        switch (interactType) {
-            case TORCH:
-                torchHolder = ((TorchInteractionArea) interactionObject).getParent();
-                torchHolder.updateTorchStatus(false);
-                isCarryingTorch = true;
-                carryTorch();
-                break;
-            case PUZZLE:
-                System.out.println("Interacted with puzzle");
-                break;
-            case BOOK:
-                System.out.println("Interacted with book");
-                break;
-            default:
-                System.out.println("No interaction available");
-                break;
         }
     }
 }

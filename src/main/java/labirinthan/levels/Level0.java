@@ -7,8 +7,8 @@ import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 import labirinthan.Labirinthan;
 import labirinthan.props.TorchHolder;
-import labirinthan.puzzles.PuzzleCabinet;
-import labirinthan.puzzles.PuzzleType;
+import labirinthan.levels.puzzles.PuzzleCabinet;
+import labirinthan.levels.puzzles.PuzzleType;
 
 import java.util.ArrayList;
 

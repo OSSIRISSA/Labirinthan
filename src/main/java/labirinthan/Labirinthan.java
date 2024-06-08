@@ -14,18 +14,17 @@ import labirinthan.character.MainCharacter;
 import labirinthan.levels.Level;
 import labirinthan.levels.Level0;
 import labirinthan.levels.Level1;
-import labirinthan.puzzles.PuzzleCabinet;
 
 public class Labirinthan extends SimpleApplication {
 
     public BulletAppState bulletAppState;
-    private MainCharacter character;
+    public MainCharacter character;
     private MainHUD mainHUD;
     public FilterPostProcessor filterPostProcessor;
 
-    public static final float X = Level.wallWidth*1+Level.passageWidth*0.5f;
+    public static final float X = Level.wallWidth * 1 + Level.passageWidth * 0.5f;
     public static final float Y = 0;
-    public static final float Z = Level.wallWidth*3+Level.passageWidth*2.5f;
+    public static final float Z = Level.wallWidth * 3 + Level.passageWidth * 2.5f;
     public static Level level;
 
     public static boolean isFlying = false;
@@ -60,7 +59,7 @@ public class Labirinthan extends SimpleApplication {
         stateManager.attach(bulletAppState);
 
         // Enable physics debug
-        //bulletAppState.setDebugEnabled(true);
+        bulletAppState.setDebugEnabled(true);
 
         //COMMENT THIS IF YOU WANT TO INTERACT WITH MAIN MENU
         startGame();
@@ -70,44 +69,36 @@ public class Labirinthan extends SimpleApplication {
     }
 
     public void startGame() {
-        guiNode.detachAllChildren(); // Remove the home screen elements
+        guiNode.detachAllChildren();
 
-        startLevel0();
+        level = new Level0(this, bulletAppState, guiNode, settings);
+        stateManager.attach(level);
+        addFog();
 
         mainHUD = new MainHUD(guiNode, settings, assetManager);
         mainHUD.createMainHUD();
-        character = new MainCharacter(mainHUD);
+        character = new MainCharacter(mainHUD, settings);
         stateManager.attach(character);
 
-        // Hide the mouse cursor and enable game input
-        inputManager.setCursorVisible(false);
-        flyCam.setEnabled(true);
+        levelPreparation(false);
     }
 
-    public void stopLevel() {
-        inputManager.setCursorVisible(true);
-        flyCam.setEnabled(false);
+    public void levelPreparation(boolean toTurnOff) {
+        inputManager.setCursorVisible(toTurnOff);
+        flyCam.setEnabled(!toTurnOff);
     }
 
-    public void startLevel0() {
-        level = new Level0(this, bulletAppState, guiNode, settings);
-
-        stateManager.attach(level);
-        addFog();
-    }
-
-    private void addFog(){
+    private void addFog() {
         FogFilter fog = new FogFilter();
-        fog.setFogColor(new ColorRGBA(0.01f,0.01f,0.01f,1f));
-        fog.setFogDistance(600f); // Distance at which fog starts
-        fog.setFogDensity(4.0f); // Density of the fog
+        fog.setFogColor(new ColorRGBA(0.01f, 0.01f, 0.01f, 1f));
+        fog.setFogDistance(600f);
+        fog.setFogDensity(4.0f);
 
-        // Add the fog filter to the post processor
         filterPostProcessor.addFilter(fog);
     }
 
     public void startLevel1() {
-        guiNode.detachAllChildren(); // Remove the home screen elements
+        guiNode.attachChild(level.localPuzzleNode);
         stateManager.detach(character);
         stateManager.detach(level);
         bulletAppState.cleanup();
@@ -121,9 +112,7 @@ public class Labirinthan extends SimpleApplication {
         stateManager.attach(level);
         stateManager.attach(character);
 
-        // Hide the mouse cursor and enable game input
-        inputManager.setCursorVisible(false);
-        flyCam.setEnabled(true);
+        levelPreparation(false);
 
         character.isPuzzleFound = false;
     }

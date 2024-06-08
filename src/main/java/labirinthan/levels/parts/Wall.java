@@ -2,10 +2,11 @@ package labirinthan.levels.parts;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.collision.PhysicsCollisionObject;
-import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.collision.shapes.BoxCollisionShape;
+import com.jme3.bullet.objects.PhysicsRigidBody;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -22,18 +23,11 @@ public class Wall extends Box {
         super(x / 2, y / 2, z / 2);
         Geometry geom = new Geometry("Wall", this);
 
-        //коли розставиш факели - це комітиш
-        //Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        //це розкомітиш
         Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
 
         Texture diffuseTex = assetManager.loadTexture("Textures/bricks.png");
         diffuseTex.setWrap(Texture.WrapMode.Repeat);
 
-        //це комітиш
-        //mat.setTexture("ColorMap", diffuseTex);
-
-        //а це все розкомітиш --------------------------- щоб бачити де накладання, зі світлом ясно буде
         mat.setTexture("DiffuseMap", diffuseTex);
         mat.setBoolean("UseMaterialColors", true);
         mat.setColor("Diffuse", ColorRGBA.DarkGray);
@@ -42,15 +36,19 @@ public class Wall extends Box {
         geom.setMaterial(mat);
 
         geom.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
-        // Adjust the texture coordinates to stretch vertically and repeat horizontally
         this.scaleTextureCoordinates(x, y, z);
 
         localRootNode.attachChild(geom);
         geom.setLocalTranslation(px, py, pz);
 
-        RigidBodyControl wallPhysics = new RigidBodyControl(0.0f);
-        geom.addControl(wallPhysics);
+        // Create a BoxCollisionShape and PhysicsRigidBody for the wall
+        BoxCollisionShape wallShape = new BoxCollisionShape(new Vector3f(x / 2, y / 2, z / 2));
+        PhysicsRigidBody wallPhysics = new PhysicsRigidBody(wallShape, 0.0f);
 
+        // Set the position of the rigid body to match the geometry
+        wallPhysics.setPhysicsLocation(geom.getWorldTranslation());
+
+        // Add the rigid body to the physics space
         bulletAppState.getPhysicsSpace().add(wallPhysics);
     }
 

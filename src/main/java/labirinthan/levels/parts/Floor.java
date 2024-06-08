@@ -2,9 +2,12 @@ package labirinthan.levels.parts;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.collision.PhysicsCollisionObject;
+import com.jme3.bullet.collision.shapes.BoxCollisionShape;
+import com.jme3.bullet.objects.PhysicsRigidBody;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -39,13 +42,22 @@ public class Floor extends Box {
 
         geom.setMaterial(mat);
 
-        this.scaleTextureCoordinates(x,z);
+        this.scaleTextureCoordinates(x, z);
 
         localRootNode.attachChild(geom);
         geom.setLocalTranslation(px, py, pz);
 
-        RigidBodyControl floorPhysics = new RigidBodyControl(0.0f);
-        geom.addControl(floorPhysics);
+        // Create a BoxCollisionShape and PhysicsRigidBody for the floor
+        BoxCollisionShape floorShape = new BoxCollisionShape(new Vector3f(x / 2, y / 2, z / 2));
+        PhysicsRigidBody floorPhysics = new PhysicsRigidBody(floorShape, 0.0f); // Mass = 0.0f for static objects
+
+        // Set the position of the rigid body to match the geometry
+        floorPhysics.setPhysicsLocation(geom.getWorldTranslation());
+
+        floorPhysics.setCollisionGroup(PhysicsCollisionObject.COLLISION_GROUP_02);
+        floorPhysics.setCollideWithGroups(PhysicsCollisionObject.COLLISION_GROUP_01);
+
+        // Add the rigid body to the physics space
         bulletAppState.getPhysicsSpace().add(floorPhysics);
     }
 
@@ -61,7 +73,7 @@ public class Floor extends Box {
                 0, 0,
                 0, 0,
                 0, 0,
-                //Back face
+                // Back face
                 0, 0,
                 0, 0,
                 0, 0,

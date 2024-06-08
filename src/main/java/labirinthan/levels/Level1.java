@@ -6,9 +6,8 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 import labirinthan.Labirinthan;
-import labirinthan.levels.parts.Cross;
-import labirinthan.puzzles.PuzzleCabinet;
-import labirinthan.puzzles.PuzzleType;
+import labirinthan.levels.puzzles.PuzzleCabinet;
+import labirinthan.levels.puzzles.PuzzleType;
 
 import java.util.ArrayList;
 
@@ -71,7 +70,6 @@ public class Level1 extends Level {
         }
 
 
-        //Adding floor
         //floor = new Floor(labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth, 0.1f, labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth, assetManager, localRootNode, (labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth)/2, -0.05f, (labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth)/2, bulletAppState);
         //ceiling = new Ceiling(labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth, 0.1f, labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth, assetManager, localRootNode, (labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth)/2, wallHeight-0.05f, (labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth)/2, bulletAppState);
         chooseCross = random.nextInt(blocksInfo.size());
