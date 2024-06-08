@@ -6,8 +6,9 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 import labirinthan.Labirinthan;
-import labirinthan.levels.parts.Cross;
 import labirinthan.props.TorchHolder;
+import labirinthan.puzzles.PuzzleCabinet;
+import labirinthan.puzzles.PuzzleType;
 
 import java.util.ArrayList;
 
