@@ -153,7 +153,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
 
     @Override
     public void onAction(String binding, boolean isPressed, float tpf) {
-        if (!isPuzzleFound && !isDead) { // Disable input if the character is dead
+        if (!isPuzzleFound && !isDead) {
             switch (binding) {
                 case "Left":
                     left = isPressed;
@@ -200,40 +200,41 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
             walkDirection.addLocal(camDir.negate());
         characterControl.setWalkDirection(walkDirection);
 
-        if (!Labirinthan.isFlying) {
+        if (!Labirinthan.isFlying && !isDead) {
             this.app.getCamera().setLocation(characterNode.getLocalTranslation().add(0, 1.8f, 0));
             cameraNode.setLocalTranslation(this.app.getCamera().getLocation());
         }
 
-        float[] angles = this.app.getCamera().getRotation().toAngles(null);
-        float pitch = FastMath.clamp(angles[0], -FastMath.PI / 4, FastMath.PI / 4);
-        Quaternion clampedRotation = new Quaternion().fromAngles(pitch, angles[1], angles[2]);
-        this.app.getCamera().setRotation(clampedRotation);
-        cameraNode.setLocalRotation(clampedRotation);
+        if (!isDead) {
+            float[] angles = this.app.getCamera().getRotation().toAngles(null);
+            float pitch = FastMath.clamp(angles[0], -FastMath.PI / 4, FastMath.PI / 4);
+            Quaternion clampedRotation = new Quaternion().fromAngles(pitch, angles[1], angles[2]);
+            this.app.getCamera().setRotation(clampedRotation);
+            cameraNode.setLocalRotation(clampedRotation);
 
-        if ((torchNode != null) && (light != null)) {
-            Vector3f torchPosition = this.app.getCamera().getLocation()
-                    .add(this.app.getCamera().getDirection().mult(0.5f))
-                    .add(camLeft.mult(-0.02f))
-                    .add(0, -0.5f, 0);
-            torchNode.setLocalTranslation(torchPosition);
+            if ((torchNode != null) && (light != null)) {
+                Vector3f torchPosition = this.app.getCamera().getLocation()
+                        .add(this.app.getCamera().getDirection().mult(0.5f))
+                        .add(camLeft.mult(-0.02f))
+                        .add(0, -0.5f, 0);
+                torchNode.setLocalTranslation(torchPosition);
 
-            Quaternion horizontalRotation = new Quaternion().fromAngleAxis(clampedRotation.toAngles(null)[1], Vector3f.UNIT_Y);
-            torchNode.setLocalRotation(horizontalRotation.mult(new Quaternion().fromAngleAxis(FastMath.PI / 2, Vector3f.UNIT_Y)));
-            light.setPosition(lightNode.getWorldTranslation());
-        }
+                Quaternion horizontalRotation = new Quaternion().fromAngleAxis(clampedRotation.toAngles(null)[1], Vector3f.UNIT_Y);
+                torchNode.setLocalRotation(horizontalRotation.mult(new Quaternion().fromAngleAxis(FastMath.PI / 2, Vector3f.UNIT_Y)));
+                light.setPosition(lightNode.getWorldTranslation());
+            }
 
-        if (isCarryingTorch) {
-            torchTimer -= tpf;
-            if (torchTimer <= 0) {
-                dequipTorch();
-            } else {
-                hud.updateTorchPercent(torchTimer / TORCH_DURATION);
+            if (isCarryingTorch) {
+                torchTimer -= tpf;
+                if (torchTimer <= 0) {
+                    dequipTorch();
+                } else {
+                    hud.updateTorchPercent(torchTimer / TORCH_DURATION);
+                }
             }
         }
 
         Labirinthan.level.playCreepySound(characterNode);
-
     }
 
     public void hpActions(float amount) {
@@ -250,69 +251,14 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
     }
 
     private void death() {
-        if (isDead) return;
-        isDead = true;
+        app.getFlyByCamera().setEnabled(false);
         dequipTorch();
+        isDead = true;
 
-        // Start death animation
-        new Thread(() -> {
-            float totalAnimationTime = 3.0f; // Total animation duration in seconds
-            float rotationTime = 1.5f; // Duration for rotation in seconds
-            float layDownTime = 1.5f; // Duration for laying down in seconds
-            float elapsedTime = 0.0f;
-            float frameTime = 0.1f; // 100 ms per frame
+        CameraControl cameraControl = new CameraControl(this.app.getCamera(), characterNode.getLocalTranslation().add(0, 0.2f, 0), new Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X).fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_Z), 15.0f, hud);
+        cameraNode.addControl(cameraControl);
 
-            while (elapsedTime < totalAnimationTime) {
-                try {
-                    Thread.sleep((long) (frameTime * 1000));
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                elapsedTime += frameTime;
-                final float t = elapsedTime / totalAnimationTime;
-
-                float finalElapsedTime = elapsedTime;
-                app.enqueue(() -> {
-                    if (finalElapsedTime <= rotationTime) {
-                        float rotationProgress = finalElapsedTime / rotationTime;
-                        updateRotationAnimation(rotationProgress);
-                    } else {
-                        float layDownProgress = (finalElapsedTime - rotationTime) / layDownTime;
-                        updateLayDownAnimation(layDownProgress);
-                    }
-                });
-            }
-
-            app.enqueue(() -> {
-                // Final camera state
-                app.getCamera().setLocation(characterNode.getLocalTranslation().add(0, 0.5f, 0));
-                app.getCamera().setRotation(new Quaternion().fromAngles(FastMath.PI / 2, 0, 0));
-                // Add code here if you want to transition to a game over screen or restart the level
-            });
-        }).start();
-    }
-
-    private void updateRotationAnimation(float progress) {
-        // Smoothly rotate the camera to face the ceiling
-        Quaternion startRotation = new Quaternion();
-        Quaternion endRotation = new Quaternion().fromAngles(FastMath.PI / 2, 0, 0);
-        Quaternion currentRotation = new Quaternion();
-        currentRotation.slerp(startRotation, endRotation, progress);
-        app.getCamera().setRotation(currentRotation);
-    }
-
-    private void updateLayDownAnimation(float progress) {
-        // Smoothly move the camera down to simulate laying down
-        Vector3f startPos = characterNode.getLocalTranslation().add(0, 1.8f, 0);
-        Vector3f endPos = characterNode.getLocalTranslation().add(0, 0.5f, 0);
-        Vector3f currentPos = FastMath.interpolateLinear(progress, startPos, endPos);
-        app.getCamera().setLocation(currentPos);
-
-        // Simulate closing eyes by reducing the field of view (optional)
-        float startFov = 45f;
-        float endFov = 5f;
-        float currentFov = FastMath.interpolateLinear(progress, startFov, endFov);
-        app.getCamera().setFrustumPerspective(currentFov, (float) settings.getWidth() / settings.getHeight(), 0.1f, 1000f);
+        app.getInputManager().setCursorVisible(false);
     }
 
     private void setInteractionText(boolean status, String... text) {

@@ -38,8 +38,6 @@ public class MainMenu {
         this.settings.putFloat("Music Volume", 0.5f);
         this.settings.putFloat("Sound Volume", 0.5f);
 
-        System.out.println(settings.getFloat("Master Volume"));
-
         mainFont = this.assetManager.loadFont("Interface/demi.fnt");
 
         click = new AudioNode(assetManager, "Sounds/button-click.wav", AudioData.DataType.Buffer);

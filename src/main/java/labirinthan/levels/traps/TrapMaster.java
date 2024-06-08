@@ -128,7 +128,6 @@ public class TrapMaster extends Node {
             case MINE -> {
                 this.detachChild(trapMesh);
                 float mineDamage = MainCharacter.characterNode.getWorldTranslation().distance(this.getWorldTranslation()) - MINE_RADIUS;
-                System.out.println(mineDamage);
                 if (mineDamage < 0) {
                     app.character.hpActions(mineDamage * MINE_DAMAGE);
                 }

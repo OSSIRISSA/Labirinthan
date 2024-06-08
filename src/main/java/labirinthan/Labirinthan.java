@@ -63,7 +63,7 @@ public class Labirinthan extends SimpleApplication {
         //bulletAppState.setDebugEnabled(true);
 
         //COMMENT THIS IF YOU WANT TO INTERACT WITH MAIN MENU
-        //startGame();
+        startGame();
         //THIS
 
         flyCam.setMoveSpeed(10);
