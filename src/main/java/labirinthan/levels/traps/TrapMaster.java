@@ -99,6 +99,7 @@ public class TrapMaster extends Node {
 
     public void startDropAnimation() {
         if (trapType == TrapType.SPIKE) {
+            Labirinthan.level.playSpikeSound(interactionAreaNode);
             this.isDropping = true;
         }
     }
@@ -138,10 +139,12 @@ public class TrapMaster extends Node {
     }
 
     public void startMineExplode() {
+        Labirinthan.level.playMineSound(interactionAreaNode);
         scheduler.schedule(() -> app.enqueue(this::explodeMine), 1, TimeUnit.SECONDS);
     }
 
     private void explodeMine() {
+        Labirinthan.level.playMineExplodeSound(interactionAreaNode);
         ParticleEmitter explosionEffect = createExplosionEffect();
         explosionEffect.setLocalTranslation(this.getWorldTranslation().add(0,-3,0));
         rootNode.attachChild(explosionEffect);

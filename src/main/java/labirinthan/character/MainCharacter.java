@@ -20,13 +20,13 @@ import labirinthan.GUI.PuzzlePyramid;
 import labirinthan.GUI.PuzzleSquareEncryption;
 import labirinthan.GUI.PuzzleSudoku;
 import labirinthan.Labirinthan;
+import labirinthan.levels.puzzles.PuzzleCabinet;
+import labirinthan.levels.puzzles.PuzzleInteractionArea;
 import labirinthan.levels.traps.TrapInteractionArea;
 import labirinthan.levels.traps.TrapMaster;
 import labirinthan.props.Torch;
 import labirinthan.props.TorchHolder;
 import labirinthan.props.TorchInteractionArea;
-import labirinthan.levels.puzzles.PuzzleCabinet;
-import labirinthan.levels.puzzles.PuzzleInteractionArea;
 
 public class MainCharacter extends AbstractAppState implements ActionListener, PhysicsCollisionListener {
 
@@ -54,6 +54,9 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
     private Node torchNode;
     private Node lightNode;
     private TorchHolder torchHolder;
+
+    private boolean isPlayedSound = false;
+
 
     private float torchTimer = 0f;
     private final float TORCH_DURATION = 30f;
@@ -88,6 +91,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         addCollisionListener();
 
         initKeys();
+
     }
 
     private void initKeys() {
@@ -226,6 +230,9 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
                 hud.updateTorchPercent(torchTimer / TORCH_DURATION);
             }
         }
+
+        Labirinthan.level.playCreepySound(characterNode);
+
     }
 
     public void hpActions(float amount) {
