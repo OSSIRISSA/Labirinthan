@@ -21,6 +21,10 @@ public class SettingsMenu {
     private TextField widthField;
     private TextField heightField;
     private Checkbox fullscreenCheckbox;
+    private Checkbox vsyncCheckbox;
+    private Slider volumeSlider;
+    private Slider musicSlider;
+    private Slider soundSlider;
 
     public SettingsMenu(Labirinthan mainApp, Node guiNode, AppSettings settings, AssetManager assetManager, MainMenu mainMenu, BitmapFont font){
         this.app = mainApp;
@@ -34,7 +38,7 @@ public class SettingsMenu {
     }
 
     public void createSettingsScreen() {
-        guiNode.detachAllChildren(); // Clear previous elements
+        guiNode.detachAllChildren();
 
         // Create a title label
         Label titleLabel = new Label("Settings");
@@ -51,7 +55,7 @@ public class SettingsMenu {
         backButton.setPreferredSize(new Vector3f(titleLabel.getPreferredSize().x/2.5f, backButton.getPreferredSize().y, 0));
         backButton.setLocalTranslation((settings.getWidth() - backButton.getPreferredSize().x)/2f - backButton.getPreferredSize().x*2, backButton.getPreferredSize().y*1.5f, 0);
         backButton.addClickCommands(source -> returnToMainMenu());
-        backButton.addClickCommands(source -> MainMenu.click.play());
+        backButton.addClickCommands(source -> MainMenu.playClickSound());
         backButton.addCommands(Button.ButtonAction.HighlightOn, source -> MainMenu.hover.play());
         guiNode.attachChild(backButton);
 
@@ -63,7 +67,7 @@ public class SettingsMenu {
         applyButton.setPreferredSize(new Vector3f(backButton.getPreferredSize().x, applyButton.getPreferredSize().y, 0));
         applyButton.setLocalTranslation((settings.getWidth() - applyButton.getPreferredSize().x) / 2f + applyButton.getPreferredSize().x*2f, applyButton.getPreferredSize().y*1.5f, 0);
         applyButton.addClickCommands(source -> applySettings());
-        applyButton.addClickCommands(source -> MainMenu.click.play());
+        applyButton.addClickCommands(source -> MainMenu.playClickSound());
         applyButton.addCommands(Button.ButtonAction.HighlightOn, source -> MainMenu.hover.play());
         guiNode.attachChild(applyButton);
 
@@ -98,18 +102,16 @@ public class SettingsMenu {
         fullscreenLabel.setFont(mainFont);
         graphicsTab.addChild(fullscreenLabel,0,0);
         fullscreenCheckbox = graphicsTab.addChild(new Checkbox(""),0,1);
-        fullscreenCheckbox.addClickCommands(source -> MainMenu.click.play());
+        fullscreenCheckbox.addClickCommands(source -> MainMenu.playClickSound());
         fullscreenCheckbox.setFont(mainFont);
         fullscreenCheckbox.setFontSize(48f);
         fullscreenCheckbox.setChecked(settings.isFullscreen());
-        fullscreenCheckbox.addClickCommands(source -> toggleFullscreen(fullscreenCheckbox.isChecked()));
 
         Label widthLabel = new Label("Resolution Width");
         widthLabel.setFontSize(48f);
         widthLabel.setFont(mainFont);
         graphicsTab.addChild(widthLabel,1,0);
         widthField = graphicsTab.addChild(new TextField(""),1,1);
-        //widthField.setFont(mainFont);
         widthField.setFontSize(48f);
         widthField.setText(String.valueOf(settings.getWidth()));
 
@@ -118,7 +120,6 @@ public class SettingsMenu {
         heightLabel.setFont(mainFont);
         graphicsTab.addChild(heightLabel,2,0);
         heightField = graphicsTab.addChild(new TextField(""),2,1);
-        //heightField.setFont(mainFont);
         heightField.setFontSize(48f);
         heightField.setText(String.valueOf(settings.getHeight()));
 
@@ -126,8 +127,8 @@ public class SettingsMenu {
         vsyncLabel.setFontSize(48f);
         vsyncLabel.setFont(mainFont);
         graphicsTab.addChild(vsyncLabel,3,0);
-        Checkbox vsyncCheckbox = graphicsTab.addChild(new Checkbox(""),3,1);
-        vsyncCheckbox.addClickCommands(source -> MainMenu.click.play());
+        vsyncCheckbox = graphicsTab.addChild(new Checkbox(""),3,1);
+        vsyncCheckbox.addClickCommands(source -> MainMenu.playClickSound());
         vsyncCheckbox.setFont(mainFont);
         vsyncCheckbox.setFontSize(48f);
         vsyncCheckbox.setChecked(settings.isVSync());
@@ -138,35 +139,30 @@ public class SettingsMenu {
         volumeLabel.setFontSize(48f);
         volumeLabel.setFont(mainFont);
         audioTab.addChild(volumeLabel,0,0);
-        Slider volumeSlider = audioTab.addChild(new Slider(new DefaultRangedValueModel(0, 100, 50)),0,1);
+        volumeSlider = audioTab.addChild(new Slider(new DefaultRangedValueModel(0, 100, settings.getFloat("Master Volume")*100)),0,1);
         volumeSlider.setPreferredSize(new Vector3f(300, 48, 0));
-        //volumeSlider.getModel().setValue(50); // Set initial value
+        System.out.println(settings.getFloat("Master Volume"));
 
         Label musicLabel = new Label("Music Volume");
         musicLabel.setFontSize(48f);
         musicLabel.setFont(mainFont);
         audioTab.addChild(musicLabel,1,0);
-        Slider musicSlider = audioTab.addChild(new Slider(new DefaultRangedValueModel(0, 100, 50)),1,1);
+        musicSlider = audioTab.addChild(new Slider(new DefaultRangedValueModel(0, 100, settings.getFloat("Music Volume")*100)),1,1);
         musicSlider.setPreferredSize(new Vector3f(300, 48, 0));
-        //musicSlider.getModel().setValue(50);
+        System.out.println(settings.getFloat("Music Volume"));
 
         Label soundLabel = new Label("Sound Volume");
         soundLabel.setFontSize(48f);
         soundLabel.setFont(mainFont);
         audioTab.addChild(soundLabel,2,0);
-        Slider soundSlider = audioTab.addChild(new Slider(new DefaultRangedValueModel(0, 100, 50)),2,1);
+        soundSlider = audioTab.addChild(new Slider(new DefaultRangedValueModel(0, 100, settings.getFloat("Sound Volume")*100)),2,1);
         soundSlider.setPreferredSize(new Vector3f(300, 48, 0));
-        //soundSlider.getModel().setValue(50);
+        System.out.println(settings.getFloat("Sound Volume"));
     }
 
     private void createControlsSettings(Container controlsTab) {
         // Add control settings here
         controlsTab.addChild(new Label("Control Settings Coming Soon")).setFontSize(48f);
-    }
-
-    private void toggleFullscreen(boolean fullscreen) {
-        settings.setFullscreen(fullscreen);
-        app.restart();
     }
 
     private void returnToMainMenu() {
@@ -175,7 +171,18 @@ public class SettingsMenu {
     }
 
     private void applySettings() {
-        // TODO: Implement logic
-        System.out.println("Settings are applied!");
+        settings.setFullscreen(fullscreenCheckbox.isChecked());
+        settings.setVSync(vsyncCheckbox.isChecked());
+        try {
+            int width = Integer.parseInt(widthField.getText());
+            int height = Integer.parseInt(heightField.getText());
+            settings.setWidth(width);
+            settings.setHeight(height);
+        } catch (NumberFormatException ignored) {
+        }
+        settings.putFloat("Master Volume", (float) (volumeSlider.getModel().getValue()/volumeSlider.getModel().getMaximum()));
+        settings.putFloat("Music Volume", (float) (musicSlider.getModel().getValue()/musicSlider.getModel().getMaximum()));
+        settings.putFloat("Sound Volume", (float) (soundSlider.getModel().getValue()/soundSlider.getModel().getMaximum()));
+        app.restart();
     }
 }

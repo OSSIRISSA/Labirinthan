@@ -43,6 +43,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
     private boolean left = false, right = false, forward = false, backward = false;
     public boolean isCarryingTorch = false;
     public boolean isPuzzleFound = false;
+    public boolean isDead = false; // Flag to check if the character is dead
 
     private InteractionType interactType = InteractionType.NONE;
 
@@ -111,7 +112,6 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         boolean interactWithTorch = (event.getObjectA() instanceof TorchInteractionArea || event.getObjectB() instanceof TorchInteractionArea) && !isCarryingTorch;
         boolean interactWithPuzzle = event.getObjectA() instanceof PuzzleInteractionArea || event.getObjectB() instanceof PuzzleInteractionArea;
         boolean interactWithTrap = event.getObjectA() instanceof TrapInteractionArea || event.getObjectB() instanceof TrapInteractionArea;
-        //System.out.println(event.getObjectA().getUserObject() + " + " + event.getObjectB());
         if (interactWithTorch) {
             if (event.getObjectA() instanceof TorchInteractionArea) {
                 interactionObject = event.getObjectA();
@@ -137,7 +137,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
 
     private void trapAction() {
         TrapMaster trapMaster = ((TrapInteractionArea) interactionObject).getParent();
-        switch (trapMaster.trapType){
+        switch (trapMaster.trapType) {
             case MINE -> {
                 trapMaster.startMineExplode();
             }
@@ -149,7 +149,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
 
     @Override
     public void onAction(String binding, boolean isPressed, float tpf) {
-        if (!isPuzzleFound) {
+        if (!isPuzzleFound && !isDead) { // Disable input if the character is dead
             switch (binding) {
                 case "Left":
                     left = isPressed;
@@ -182,6 +182,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
     @Override
     public void update(float tpf) {
         super.update(tpf);
+
         Vector3f camDir = this.app.getCamera().getDirection().clone().setY(0).normalizeLocal().multLocal(CHARACTER_SPEED);
         Vector3f camLeft = this.app.getCamera().getLeft().clone().setY(0).normalizeLocal().multLocal(CHARACTER_SPEED);
         walkDirection.set(0, 0, 0);
@@ -232,11 +233,78 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         health += amount;
         if (health < 0) {
             health = 0;
+            death();
         }
         if (health > 1.0f) {
             health = 1.0f;
         }
         hud.updateHealthPercent(health);
+    }
+
+    private void death() {
+        if (isDead) return;
+        isDead = true;
+        dequipTorch();
+
+        // Start death animation
+        new Thread(() -> {
+            float totalAnimationTime = 3.0f; // Total animation duration in seconds
+            float rotationTime = 1.5f; // Duration for rotation in seconds
+            float layDownTime = 1.5f; // Duration for laying down in seconds
+            float elapsedTime = 0.0f;
+            float frameTime = 0.1f; // 100 ms per frame
+
+            while (elapsedTime < totalAnimationTime) {
+                try {
+                    Thread.sleep((long) (frameTime * 1000));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                elapsedTime += frameTime;
+                final float t = elapsedTime / totalAnimationTime;
+
+                float finalElapsedTime = elapsedTime;
+                app.enqueue(() -> {
+                    if (finalElapsedTime <= rotationTime) {
+                        float rotationProgress = finalElapsedTime / rotationTime;
+                        updateRotationAnimation(rotationProgress);
+                    } else {
+                        float layDownProgress = (finalElapsedTime - rotationTime) / layDownTime;
+                        updateLayDownAnimation(layDownProgress);
+                    }
+                });
+            }
+
+            app.enqueue(() -> {
+                // Final camera state
+                app.getCamera().setLocation(characterNode.getLocalTranslation().add(0, 0.5f, 0));
+                app.getCamera().setRotation(new Quaternion().fromAngles(FastMath.PI / 2, 0, 0));
+                // Add code here if you want to transition to a game over screen or restart the level
+            });
+        }).start();
+    }
+
+    private void updateRotationAnimation(float progress) {
+        // Smoothly rotate the camera to face the ceiling
+        Quaternion startRotation = new Quaternion();
+        Quaternion endRotation = new Quaternion().fromAngles(FastMath.PI / 2, 0, 0);
+        Quaternion currentRotation = new Quaternion();
+        currentRotation.slerp(startRotation, endRotation, progress);
+        app.getCamera().setRotation(currentRotation);
+    }
+
+    private void updateLayDownAnimation(float progress) {
+        // Smoothly move the camera down to simulate laying down
+        Vector3f startPos = characterNode.getLocalTranslation().add(0, 1.8f, 0);
+        Vector3f endPos = characterNode.getLocalTranslation().add(0, 0.5f, 0);
+        Vector3f currentPos = FastMath.interpolateLinear(progress, startPos, endPos);
+        app.getCamera().setLocation(currentPos);
+
+        // Simulate closing eyes by reducing the field of view (optional)
+        float startFov = 45f;
+        float endFov = 5f;
+        float currentFov = FastMath.interpolateLinear(progress, startFov, endFov);
+        app.getCamera().setFrustumPerspective(currentFov, (float) settings.getWidth() / settings.getHeight(), 0.1f, 1000f);
     }
 
     private void setInteractionText(boolean status, String... text) {

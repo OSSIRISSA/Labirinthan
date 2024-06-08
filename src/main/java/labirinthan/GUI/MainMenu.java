@@ -14,7 +14,6 @@ import com.simsilica.lemur.Label;
 import com.simsilica.lemur.style.BaseStyles;
 import labirinthan.Labirinthan;
 
-
 public class MainMenu {
 
     private final Labirinthan app;
@@ -35,18 +34,24 @@ public class MainMenu {
         BaseStyles.loadGlassStyle();
         GuiGlobals.getInstance().getStyles().setDefaultStyle("glass");
 
+        this.settings.putFloat("Master Volume", 0.5f);
+        this.settings.putFloat("Music Volume", 0.5f);
+        this.settings.putFloat("Sound Volume", 0.5f);
+
+        System.out.println(settings.getFloat("Master Volume"));
+
         mainFont = this.assetManager.loadFont("Interface/demi.fnt");
 
         click = new AudioNode(assetManager, "Sounds/button-click.wav", AudioData.DataType.Buffer);
-        click.setPositional(false); // Use true for 3D sounds
-        click.setLooping(false); // Set to true if you want the sound to loop
-        click.setVolume(2); // Set the volume (1 is default, 0 is silent)
+        click.setPositional(false);
+        click.setLooping(false);
+        click.setVolume(8*settings.getFloat("Master Volume")*settings.getFloat("Sound Volume"));
         guiNode.attachChild(click);
 
         hover = new AudioNode(assetManager, "Sounds/button-hover.wav", AudioData.DataType.Buffer);
-        hover.setPositional(false); // Use true for 3D sounds
-        hover.setLooping(false); // Set to true if you want the sound to loop
-        hover.setVolume(2); // Set the volume (1 is default, 0 is silent)
+        hover.setPositional(false);
+        hover.setLooping(false);
+        hover.setVolume(8*settings.getFloat("Master Volume")*settings.getFloat("Sound Volume"));
         guiNode.attachChild(hover);
     }
 
@@ -67,7 +72,7 @@ public class MainMenu {
         playButton.setTextHAlignment(HAlignment.Center);
         playButton.setPreferredSize(new Vector3f(titleLabel.getPreferredSize().x/1.5f, playButton.getPreferredSize().y, 0));
         playButton.setLocalTranslation((settings.getWidth()-playButton.getPreferredSize().x) / 2f, (settings.getHeight()-playButton.getPreferredSize().y) / 2f + playButton.getPreferredSize().y, 1);
-        playButton.addClickCommands(source -> click.play());
+        playButton.addClickCommands(source -> playClickSound());
         playButton.addCommands(Button.ButtonAction.HighlightOn, source -> hover.play());
         playButton.addClickCommands(source -> app.startGame());
         guiNode.attachChild(playButton);
@@ -76,25 +81,30 @@ public class MainMenu {
         // Create a "Settings" button
         Button settingsButton = createDefaultButton(new Button("Settings"), yOffset, titleLabel);
         settingsButton.addClickCommands(source -> openSettingsMenu());
-        settingsButton.addClickCommands(source -> click.play());
+        settingsButton.addClickCommands(source -> playClickSound());
         settingsButton.addCommands(Button.ButtonAction.HighlightOn, source -> hover.play());
         guiNode.attachChild(settingsButton);
         yOffset = settingsButton.getLocalTranslation().y - settingsButton.getPreferredSize().y/2f;
 
         // Create a "Credits" button
         Button creditsButton = createDefaultButton(new Button("Credits"), yOffset, titleLabel);
-        creditsButton.addClickCommands(source -> System.out.println("Credits"));
-        creditsButton.addClickCommands(source -> click.play());
+        creditsButton.addClickCommands(source -> new CreditsPage(guiNode, settings, this, mainFont));
+        creditsButton.addClickCommands(source -> playClickSound());
         creditsButton.addCommands(Button.ButtonAction.HighlightOn, source -> hover.play());
         guiNode.attachChild(creditsButton);
         yOffset = creditsButton.getLocalTranslation().y - creditsButton.getPreferredSize().y/2f;
 
         // Create a "Quit" button
         Button quitButton = createDefaultButton(new Button("Quit"), yOffset, titleLabel);
-        quitButton.addClickCommands(source -> click.play());
+        quitButton.addClickCommands(source -> playClickSound());
         quitButton.addClickCommands(source -> app.stop());
         quitButton.addCommands(Button.ButtonAction.HighlightOn, source -> hover.play());
         guiNode.attachChild(quitButton);
+    }
+
+    static void playClickSound(){
+        click.stop();
+        click.play();
     }
 
     private void openSettingsMenu() {
