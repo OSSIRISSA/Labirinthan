@@ -7,6 +7,9 @@ import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 import labirinthan.Labirinthan;
 import labirinthan.levels.parts.Cross;
+import labirinthan.props.TorchHolder;
+
+import java.util.ArrayList;
 
 public class Level0 extends Level {
 
@@ -14,14 +17,16 @@ public class Level0 extends Level {
     public Level0(Labirinthan application, BulletAppState bulletAppState, Node guiNode, AppSettings settings) {
         super(application, "Level0", guiNode, settings);
         this.bulletAppState = bulletAppState;
+        this.allTorches = new ArrayList[1][1];
     }
 
     @Override
     public void initialize(AppStateManager sm, Application application) {
         super.initialize(sm, application);
+        allTorches[0][0]=new ArrayList<TorchHolder>();
 
         // Adding walls
-        blocksInfo.add(buildBlock1(0, 0, localRootNode));
+        blocksInfo.add(buildBlock1(0, 0, localRootNode,1, allTorches[0][0]));
         //makeFrameWalls(0,0);
 
         //addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, 0+(wallWidth * 3 + passageWidth * 6) / 2, wallHeight / 2, 0+wallWidth / 2);
