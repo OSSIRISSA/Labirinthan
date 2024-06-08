@@ -12,6 +12,8 @@ import com.jme3.shadow.PointLightShadowFilter;
 import com.jme3.shadow.PointLightShadowRenderer;
 import labirinthan.Labirinthan;
 
+import java.util.ArrayList;
+
 public class TorchHolder extends Node {
     public final Spatial torchHolderMesh;
     private final Labirinthan app;
@@ -28,7 +30,7 @@ public class TorchHolder extends Node {
 
     int SHADOW_MAP = 256;
 
-    public TorchHolder(Labirinthan application, AssetManager assetManager, Node rootNode, boolean isFirst) {
+    public TorchHolder(Labirinthan application, AssetManager assetManager, Node rootNode, boolean isFirst, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         this.app = application;
         this.rootNode = rootNode;
         this.isFirst = isFirst;
