@@ -239,6 +239,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
     public void hpActions(float amount) {
         health += amount;
         if (health < 0) {
+            Labirinthan.level.playDeathSound();
             health = 0;
             death();
         }

@@ -187,7 +187,7 @@ public class PuzzlePyramid {
         }
         if(win){
             guiNode.detachAllChildren();
-            app.startLevel1();
+            app.startLevel2();
         }
     }
 

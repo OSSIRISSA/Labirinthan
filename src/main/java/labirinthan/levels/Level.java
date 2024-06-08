@@ -74,7 +74,7 @@ public class Level extends AbstractAppState {
         AudioNode music = new AudioNode(assetManager, "Sounds/level-music.wav", AudioData.DataType.Buffer);
         music.setPositional(false); // Use true for 3D sounds
         music.setLooping(true); // Set to true if you want the sound to loop
-        music.setVolume(2); // Set the volume (1 is default, 0 is silent)
+        music.setVolume(2*4*settings.getFloat("Master Volume")*settings.getFloat("Music Volume")); // Set the volume (1 is default, 0 is silent)
         localRootNode.attachChild(music);
         music.play();
     }
@@ -541,7 +541,7 @@ public class Level extends AbstractAppState {
             creepySound = new AudioNode(assetManager, "Sounds/LevelSounds/" + rand.nextInt(1, 6) + ".wav", AudioData.DataType.Buffer);
             creepySound.setPositional(false); // Use true for 3D sounds
             creepySound.setLooping(false); // Set to true if you want the sound to loop
-            creepySound.setVolume(0.3f); // Set the volume (1 is default, 0 is silent)
+            creepySound.setVolume(0.3f*4*settings.getFloat("Master Volume")*settings.getFloat("Sound Volume")); // Set the volume (1 is default, 0 is silent)
             characterNode.attachChild(creepySound);
             creepySound.play();
         }
@@ -552,7 +552,7 @@ public class Level extends AbstractAppState {
         trapSound = new AudioNode(assetManager, "Sounds/countdown.wav", AudioData.DataType.Buffer);
         trapSound.setPositional(false); // Use true for 3D sounds
         trapSound.setLooping(false); // Set to true if you want the sound to loop
-        trapSound.setVolume(3); // Set the volume (1 is default, 0 is silent)
+        trapSound.setVolume(3*4*settings.getFloat("Master Volume")*settings.getFloat("Sound Volume")); // Set the volume (1 is default, 0 is silent)
         node.attachChild(trapSound);
         trapSound.play();
     }
@@ -561,7 +561,7 @@ public class Level extends AbstractAppState {
         trapSound = new AudioNode(assetManager, "Sounds/explosion.wav", AudioData.DataType.Buffer);
         trapSound.setPositional(false); // Use true for 3D sounds
         trapSound.setLooping(false); // Set to true if you want the sound to loop
-        trapSound.setVolume(3); // Set the volume (1 is default, 0 is silent)
+        trapSound.setVolume(3*4*settings.getFloat("Master Volume")*settings.getFloat("Sound Volume")); // Set the volume (1 is default, 0 is silent)
         node.attachChild(trapSound);
         trapSound.play();
     }
@@ -570,9 +570,29 @@ public class Level extends AbstractAppState {
         trapSound = new AudioNode(assetManager, "Sounds/metal.wav", AudioData.DataType.Buffer);
         trapSound.setPositional(false); // Use true for 3D sounds
         trapSound.setLooping(false); // Set to true if you want the sound to loop
-        trapSound.setVolume(3); // Set the volume (1 is default, 0 is silent)
+        trapSound.setVolume(3*4*settings.getFloat("Master Volume")*settings.getFloat("Sound Volume")); // Set the volume (1 is default, 0 is silent)
         node.attachChild(trapSound);
         trapSound.play();
+    }
+
+    public void playDeathSound() {
+        AudioNode deathSound = new AudioNode(assetManager, "Sounds/player-death.wav", AudioData.DataType.Buffer);
+        deathSound.setPositional(false); // Use true for 3D sounds
+        deathSound.setLooping(false); // Set to true if you want the sound to loop
+        deathSound.setVolume(7*4*settings.getFloat("Master Volume")*settings.getFloat("Sound Volume")); // Set the volume (1 is default, 0 is silent)
+        rootNode.attachChild(deathSound);
+        deathSound.play();
+    }
+
+    public void removeLight(){
+        for(int i=0;i<labyrinthSizeX;i++){
+            for(int j=0;j<labyrinthSizeZ;j++){
+                for(TorchHolder torch: allTorches[i][j]){
+                    torch.updateTorchStatus(false);
+                }
+            }
+        }
+
     }
 
 

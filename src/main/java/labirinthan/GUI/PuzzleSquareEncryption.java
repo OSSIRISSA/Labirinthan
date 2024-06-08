@@ -398,7 +398,7 @@ public class PuzzleSquareEncryption implements ActionListener {
         if (codeSquares.contains(chosenSquare)) {
             if ((codeSquares.get(0).getText().equals("2")) && (codeSquares.get(1).getText().equals("8")) && (codeSquares.get(2).getText().equals("7"))) {
                 guiNode.detachAllChildren();
-                app.startLevel1();
+                app.startLevel2();
             }
         }
     }

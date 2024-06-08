@@ -11,13 +11,13 @@ import labirinthan.levels.puzzles.PuzzleType;
 
 import java.util.ArrayList;
 
-public class Level1 extends Level {
+public class Level2 extends Level {
 
 
-    public Level1(Labirinthan application, BulletAppState bulletAppState, Node guiNode, AppSettings settings) {
-        super(application, "Level1", guiNode, settings);
-        this.labyrinthSizeX = 2;
-        this.labyrinthSizeZ = 2;
+    public Level2(Labirinthan application, BulletAppState bulletAppState, Node guiNode, AppSettings settings) {
+        super(application, "Level2", guiNode, settings);
+        this.labyrinthSizeX = 3;
+        this.labyrinthSizeZ = 3;
         this.currentLabyrinthSizeX = 1;
         this.currentLabyrinthSizeZ = 1;
         this.bulletAppState = bulletAppState;
@@ -28,7 +28,7 @@ public class Level1 extends Level {
     @Override
     public void initialize(AppStateManager sm, Application application) {
         super.initialize(sm, application);
-        clearSpan = 1;
+        clearSpan = 2;
 
         float currentX;
         float currentZ;
@@ -73,7 +73,7 @@ public class Level1 extends Level {
         //floor = new Floor(labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth, 0.1f, labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth, assetManager, localRootNode, (labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth)/2, -0.05f, (labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth)/2, bulletAppState);
         //ceiling = new Ceiling(labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth, 0.1f, labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth, assetManager, localRootNode, (labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth)/2, wallHeight-0.05f, (labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth)/2, bulletAppState);
         chooseCross = random.nextInt(blocksInfo.size());
-        cross = new PuzzleCabinet((Labirinthan) application, assetManager, localRootNode, blocksInfo.get(chooseCross).get(0), -0.05f, blocksInfo.get(chooseCross).get(1), PuzzleType.PYRAMID);
+        cross = new PuzzleCabinet((Labirinthan) application, assetManager, localRootNode, blocksInfo.get(chooseCross).get(0), -0.05f, blocksInfo.get(chooseCross).get(1), PuzzleType.ENCRYPTION);
 
         //for(int i=0;i<blocksDecorationInfo.size()-1;i+=3){
         //}

@@ -14,6 +14,7 @@ import labirinthan.character.MainCharacter;
 import labirinthan.levels.Level;
 import labirinthan.levels.Level0;
 import labirinthan.levels.Level1;
+import labirinthan.levels.Level2;
 
 public class Labirinthan extends SimpleApplication {
 
@@ -100,6 +101,7 @@ public class Labirinthan extends SimpleApplication {
     public void startLevel1() {
         guiNode.attachChild(level.localPuzzleNode);
         stateManager.detach(character);
+        level.removeLight();
         stateManager.detach(level);
         bulletAppState.cleanup();
         stateManager.detach(bulletAppState);
@@ -109,6 +111,27 @@ public class Labirinthan extends SimpleApplication {
         //bulletAppState.setDebugEnabled(true);
 
         level = new Level1(this, bulletAppState, guiNode, settings);
+        stateManager.attach(level);
+        stateManager.attach(character);
+
+        levelPreparation(false);
+
+        character.isPuzzleFound = false;
+    }
+
+    public void startLevel2() {
+        guiNode.attachChild(level.localPuzzleNode);
+        stateManager.detach(character);
+        level.removeLight();
+        stateManager.detach(level);
+        bulletAppState.cleanup();
+        stateManager.detach(bulletAppState);
+
+        bulletAppState = new BulletAppState();
+        stateManager.attach(bulletAppState);
+        //bulletAppState.setDebugEnabled(true);
+
+        level = new Level2(this, bulletAppState, guiNode, settings);
         stateManager.attach(level);
         stateManager.attach(character);
 
