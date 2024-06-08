@@ -51,6 +51,8 @@ public class SettingsMenu {
         backButton.setPreferredSize(new Vector3f(titleLabel.getPreferredSize().x/2.5f, backButton.getPreferredSize().y, 0));
         backButton.setLocalTranslation((settings.getWidth() - backButton.getPreferredSize().x)/2f - backButton.getPreferredSize().x*2, backButton.getPreferredSize().y*1.5f, 0);
         backButton.addClickCommands(source -> returnToMainMenu());
+        backButton.addClickCommands(source -> MainMenu.click.play());
+        backButton.addCommands(Button.ButtonAction.HighlightOn, source -> MainMenu.hover.play());
         guiNode.attachChild(backButton);
 
         // Apply button
@@ -61,6 +63,8 @@ public class SettingsMenu {
         applyButton.setPreferredSize(new Vector3f(backButton.getPreferredSize().x, applyButton.getPreferredSize().y, 0));
         applyButton.setLocalTranslation((settings.getWidth() - applyButton.getPreferredSize().x) / 2f + applyButton.getPreferredSize().x*2f, applyButton.getPreferredSize().y*1.5f, 0);
         applyButton.addClickCommands(source -> applySettings());
+        applyButton.addClickCommands(source -> MainMenu.click.play());
+        applyButton.addCommands(Button.ButtonAction.HighlightOn, source -> MainMenu.hover.play());
         guiNode.attachChild(applyButton);
 
         // Create a Tabs component
@@ -94,6 +98,7 @@ public class SettingsMenu {
         fullscreenLabel.setFont(mainFont);
         graphicsTab.addChild(fullscreenLabel,0,0);
         fullscreenCheckbox = graphicsTab.addChild(new Checkbox(""),0,1);
+        fullscreenCheckbox.addClickCommands(source -> MainMenu.click.play());
         fullscreenCheckbox.setFont(mainFont);
         fullscreenCheckbox.setFontSize(48f);
         fullscreenCheckbox.setChecked(settings.isFullscreen());
@@ -122,6 +127,7 @@ public class SettingsMenu {
         vsyncLabel.setFont(mainFont);
         graphicsTab.addChild(vsyncLabel,3,0);
         Checkbox vsyncCheckbox = graphicsTab.addChild(new Checkbox(""),3,1);
+        vsyncCheckbox.addClickCommands(source -> MainMenu.click.play());
         vsyncCheckbox.setFont(mainFont);
         vsyncCheckbox.setFontSize(48f);
         vsyncCheckbox.setChecked(settings.isVSync());

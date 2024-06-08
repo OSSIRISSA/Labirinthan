@@ -4,16 +4,20 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
+import com.jme3.audio.AudioData;
+import com.jme3.audio.AudioNode;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.math.FastMath;
 import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 import labirinthan.Labirinthan;
-import labirinthan.levels.parts.*;
-import labirinthan.levels.traps.TrapMaster;
-import labirinthan.levels.traps.TrapType;
-import labirinthan.props.TorchHolder;
+import labirinthan.levels.parts.Ceiling;
+import labirinthan.levels.parts.Decoration;
+import labirinthan.levels.parts.Floor;
+import labirinthan.levels.parts.Wall;
 import labirinthan.levels.puzzles.PuzzleCabinet;
+import labirinthan.levels.traps.TrapMaster;
+import labirinthan.props.TorchHolder;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -64,6 +68,13 @@ public class Level extends AbstractAppState {
         localRootNode = new Node(name);
         assetManager = application.getAssetManager();
         localPuzzleNode = new Node(name+"Puzzle");
+
+        AudioNode audioNode = new AudioNode(assetManager, "Sounds/level-music.wav", AudioData.DataType.Buffer);
+        audioNode.setPositional(false); // Use true for 3D sounds
+        audioNode.setLooping(false); // Set to true if you want the sound to loop
+        audioNode.setVolume(2); // Set the volume (1 is default, 0 is silent)
+        localRootNode.attachChild(audioNode);
+        audioNode.play();
     }
 
     @Override

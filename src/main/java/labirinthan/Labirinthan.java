@@ -59,10 +59,10 @@ public class Labirinthan extends SimpleApplication {
         stateManager.attach(bulletAppState);
 
         // Enable physics debug
-        bulletAppState.setDebugEnabled(true);
+        //bulletAppState.setDebugEnabled(true);
 
         //COMMENT THIS IF YOU WANT TO INTERACT WITH MAIN MENU
-        startGame();
+        //startGame();
         //THIS
 
         flyCam.setMoveSpeed(10);

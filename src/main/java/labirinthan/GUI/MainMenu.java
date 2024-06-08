@@ -1,6 +1,8 @@
 package labirinthan.GUI;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.audio.AudioData;
+import com.jme3.audio.AudioNode;
 import com.jme3.font.BitmapFont;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -19,8 +21,9 @@ public class MainMenu {
     private final Node guiNode;
     private final AppSettings settings;
     private final AssetManager assetManager;
-
     private final BitmapFont mainFont;
+    public static AudioNode click;
+    public static AudioNode hover;
 
     public MainMenu(Labirinthan mainApp, Node guiNode, AppSettings settings, AssetManager assetManager){
         this.app = mainApp;
@@ -33,6 +36,18 @@ public class MainMenu {
         GuiGlobals.getInstance().getStyles().setDefaultStyle("glass");
 
         mainFont = this.assetManager.loadFont("Interface/demi.fnt");
+
+        click = new AudioNode(assetManager, "Sounds/button-click.wav", AudioData.DataType.Buffer);
+        click.setPositional(false); // Use true for 3D sounds
+        click.setLooping(false); // Set to true if you want the sound to loop
+        click.setVolume(2); // Set the volume (1 is default, 0 is silent)
+        guiNode.attachChild(click);
+
+        hover = new AudioNode(assetManager, "Sounds/button-hover.wav", AudioData.DataType.Buffer);
+        hover.setPositional(false); // Use true for 3D sounds
+        hover.setLooping(false); // Set to true if you want the sound to loop
+        hover.setVolume(2); // Set the volume (1 is default, 0 is silent)
+        guiNode.attachChild(hover);
     }
 
     public void createHomeScreen() {
@@ -52,6 +67,8 @@ public class MainMenu {
         playButton.setTextHAlignment(HAlignment.Center);
         playButton.setPreferredSize(new Vector3f(titleLabel.getPreferredSize().x/1.5f, playButton.getPreferredSize().y, 0));
         playButton.setLocalTranslation((settings.getWidth()-playButton.getPreferredSize().x) / 2f, (settings.getHeight()-playButton.getPreferredSize().y) / 2f + playButton.getPreferredSize().y, 1);
+        playButton.addClickCommands(source -> click.play());
+        playButton.addCommands(Button.ButtonAction.HighlightOn, source -> hover.play());
         playButton.addClickCommands(source -> app.startGame());
         guiNode.attachChild(playButton);
         float yOffset = playButton.getLocalTranslation().y - playButton.getPreferredSize().y/2f;
@@ -59,18 +76,24 @@ public class MainMenu {
         // Create a "Settings" button
         Button settingsButton = createDefaultButton(new Button("Settings"), yOffset, titleLabel);
         settingsButton.addClickCommands(source -> openSettingsMenu());
+        settingsButton.addClickCommands(source -> click.play());
+        settingsButton.addCommands(Button.ButtonAction.HighlightOn, source -> hover.play());
         guiNode.attachChild(settingsButton);
         yOffset = settingsButton.getLocalTranslation().y - settingsButton.getPreferredSize().y/2f;
 
         // Create a "Credits" button
         Button creditsButton = createDefaultButton(new Button("Credits"), yOffset, titleLabel);
         creditsButton.addClickCommands(source -> System.out.println("Credits"));
+        creditsButton.addClickCommands(source -> click.play());
+        creditsButton.addCommands(Button.ButtonAction.HighlightOn, source -> hover.play());
         guiNode.attachChild(creditsButton);
         yOffset = creditsButton.getLocalTranslation().y - creditsButton.getPreferredSize().y/2f;
 
         // Create a "Quit" button
         Button quitButton = createDefaultButton(new Button("Quit"), yOffset, titleLabel);
+        quitButton.addClickCommands(source -> click.play());
         quitButton.addClickCommands(source -> app.stop());
+        quitButton.addCommands(Button.ButtonAction.HighlightOn, source -> hover.play());
         guiNode.attachChild(quitButton);
     }
 
