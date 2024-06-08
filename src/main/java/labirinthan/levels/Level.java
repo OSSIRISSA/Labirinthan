@@ -57,6 +57,8 @@ public class Level extends AbstractAppState {
     public int clearSpan;
     public int chooseCross;
 
+    public static AudioNode creepySound;
+    public static AudioNode trapSound;
 
     private boolean isFirstTorch = true;
 
@@ -67,55 +69,56 @@ public class Level extends AbstractAppState {
         this.application = application;
         localRootNode = new Node(name);
         assetManager = application.getAssetManager();
-        localPuzzleNode = new Node(name+"Puzzle");
+        localPuzzleNode = new Node(name + "Puzzle");
 
-        AudioNode audioNode = new AudioNode(assetManager, "Sounds/level-music.wav", AudioData.DataType.Buffer);
-        audioNode.setPositional(false); // Use true for 3D sounds
-        audioNode.setLooping(false); // Set to true if you want the sound to loop
-        audioNode.setVolume(2); // Set the volume (1 is default, 0 is silent)
-        localRootNode.attachChild(audioNode);
-        audioNode.play();
+        AudioNode music = new AudioNode(assetManager, "Sounds/level-music.wav", AudioData.DataType.Buffer);
+        music.setPositional(false); // Use true for 3D sounds
+        music.setLooping(true); // Set to true if you want the sound to loop
+        music.setVolume(2); // Set the volume (1 is default, 0 is silent)
+        localRootNode.attachChild(music);
+        music.play();
     }
 
     @Override
-    public void initialize(AppStateManager sm, Application application){
-        super.initialize(sm,application);
+    public void initialize(AppStateManager sm, Application application) {
+        super.initialize(sm, application);
         rootNode.attachChild(localRootNode);
         guiNode.attachChild(localPuzzleNode);
     }
 
     @Override
-    public void cleanup(){
+    public void cleanup() {
         super.cleanup();
         rootNode.detachChild(localRootNode);
         guiNode.detachChild(localPuzzleNode);
     }
+
     public void addWall(float x, float y, float z, float px, float py, float pz) {
-        if(x==wallWidth){
-            z-=0.01f;
+        if (x == wallWidth) {
+            z -= 0.01f;
         }
-        if(z==wallWidth){
-            x-=0.01f;
+        if (z == wallWidth) {
+            x -= 0.01f;
         }
         walls.add(new Wall(x, y, z, assetManager, currentNode, px, py, pz, bulletAppState));
     }
 
     public void addWallBorder(float x, float y, float z, float px, float py, float pz) {
-        if(x==wallWidth){
-            z-=0.01f;
+        if (x == wallWidth) {
+            z -= 0.01f;
         }
-        if(z==wallWidth){
-            x-=0.01f;
+        if (z == wallWidth) {
+            x -= 0.01f;
         }
         walls.add(new Wall(x, y, z, assetManager, localRootNode, px, py, pz, bulletAppState));
     }
 
     private void loadTorch(float x, float z, int direction, int roomsNumber, ArrayList<TorchHolder> allTorches) {
-        if(random.nextInt(10)!=0){
+        if (random.nextInt(10) != 0) {
             TorchHolder torchHolder = new TorchHolder(application, assetManager, rootNode, isFirstTorch, roomsNumber, allTorches);
             isFirstTorch = false;
             currentNode.attachChild(torchHolder);
-            switch (direction){
+            switch (direction) {
                 case 1 -> torchHolder.rotateTorch(0, -FastMath.HALF_PI, 0);
                 case 2 -> {
                     //x+=wallWidth/2;
@@ -129,405 +132,448 @@ public class Level extends AbstractAppState {
         }
     }
 
-    public ArrayList<Float> buildBlock1(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches){
+    public ArrayList<Float> buildBlock1(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches) {
 
         currentNode = node;
-        makeFloor(startX,startZ);
-        makeCeiling(startX,startZ);
+        makeFloor(startX, startZ);
+        makeCeiling(startX, startZ);
 
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX+wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ+(wallWidth * 2 + passageWidth) / 2);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX+wallWidth * 1.5f + passageWidth, wallHeight / 2, startZ+wallWidth * 2 + passageWidth * 1.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 4 + passageWidth * 3, startX+wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ+wallWidth * 3 + passageWidth * 2.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX+wallWidth * 1.5f + passageWidth, wallHeight / 2, startZ+wallWidth * 4 + passageWidth * 3.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX+wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ+wallWidth * 3 + passageWidth * 2.5f);
-        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX+wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
-        addWall(wallWidth * 4 + passageWidth * 3, wallHeight, wallWidth, startX+wallWidth * 3 + passageWidth * 2.5f, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth * 2);
-        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX+wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 1 + passageWidth * 0.5f, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 3 + passageWidth * 2.5f, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX + wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ + (wallWidth * 2 + passageWidth) / 2);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX + wallWidth * 1.5f + passageWidth, wallHeight / 2, startZ + wallWidth * 2 + passageWidth * 1.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 4 + passageWidth * 3, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth * 3 + passageWidth * 2.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX + wallWidth * 1.5f + passageWidth, wallHeight / 2, startZ + wallWidth * 4 + passageWidth * 3.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX + wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ + wallWidth * 3 + passageWidth * 2.5f);
+        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX + wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ + wallWidth * 1.5f + passageWidth * 1);
+        addWall(wallWidth * 4 + passageWidth * 3, wallHeight, wallWidth, startX + wallWidth * 3 + passageWidth * 2.5f, wallHeight / 2, startZ + wallWidth * 2.5f + passageWidth * 2);
+        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX + wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ + wallWidth * 1.5f + passageWidth * 1);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 1 + passageWidth * 0.5f, wallHeight / 2, startZ + wallWidth * 3.5f + passageWidth * 3);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 3 + passageWidth * 2.5f, wallHeight / 2, startZ + wallWidth * 3.5f + passageWidth * 3);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
 
-        loadTorch(startX+wallWidth+passageWidth,startZ+wallWidth+passageWidth*0,3, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*3+passageWidth*3,startZ+wallWidth*3+passageWidth*2.5f,4, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*4.5f+passageWidth*4,startZ+wallWidth,3, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*4+passageWidth*4, 1, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth+passageWidth,startZ+wallWidth*5+passageWidth*5, 1, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth + passageWidth, startZ + wallWidth + passageWidth * 0, 3, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 3 + passageWidth * 3, startZ + wallWidth * 3 + passageWidth * 2.5f, 4, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 4.5f + passageWidth * 4, startZ + wallWidth, 3, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 4 + passageWidth * 3.5f, startZ + wallWidth * 4 + passageWidth * 4, 1, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth + passageWidth, startZ + wallWidth * 5 + passageWidth * 5, 1, roomsNumber, allTorches);
 
-        makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f,1);
-        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*5+passageWidth*4.5f,1);
+        makeTrap(startX + wallWidth * 4 + passageWidth * 3.5f, startZ + wallWidth * 2 + passageWidth * 1.5f, 1);
+        makeTrap(startX + wallWidth * 3 + passageWidth * 2.5f, startZ + wallWidth * 5 + passageWidth * 4.5f, 1);
 
-        createDecor(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*3+passageWidth*2.5f,3f);
-        createDecor(startX+wallWidth*1+passageWidth*0.5f,startZ+wallWidth*4+passageWidth*3.5f,3f);
+        createDecor(startX + wallWidth * 4 + passageWidth * 3.5f, startZ + wallWidth * 3 + passageWidth * 2.5f, 3f);
+        createDecor(startX + wallWidth * 1 + passageWidth * 0.5f, startZ + wallWidth * 4 + passageWidth * 3.5f, 3f);
 
         ArrayList<Float> res = new ArrayList<>();
-        res.add(startX+wallWidth*3+passageWidth*2.5f);
-        res.add(startZ+wallWidth*2+passageWidth*1.5f);
+        res.add(startX + wallWidth * 3 + passageWidth * 2.5f);
+        res.add(startZ + wallWidth * 2 + passageWidth * 1.5f);
 
         return res;
     }
 
-    public ArrayList<Float> buildBlock2(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches){
+    public ArrayList<Float> buildBlock2(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         currentNode = node;
-        makeFloor(startX,startZ);
-        makeCeiling(startX,startZ);
+        makeFloor(startX, startZ);
+        makeCeiling(startX, startZ);
 
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX+wallWidth*2.5f+passageWidth*2, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX+wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ+wallWidth * 2 + passageWidth*1.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 4 + passageWidth * 3, startX+wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ+wallWidth * 2 + passageWidth * 1.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX+wallWidth * 1.5f + passageWidth * 1, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX+wallWidth*3.5f+passageWidth*3, wallHeight / 2, startZ+wallWidth * 4 + passageWidth * 3.5f);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
-        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX+wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth * 2);
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ + wallWidth * 1.5f + passageWidth * 1);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX + wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ + wallWidth * 2 + passageWidth * 1.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 4 + passageWidth * 3, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth * 2 + passageWidth * 1.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth * 1.5f + passageWidth * 1, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX + wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ + wallWidth * 4 + passageWidth * 3.5f);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ + wallWidth * 1.5f + passageWidth * 1);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ + wallWidth * 3.5f + passageWidth * 3);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ + wallWidth * 3.5f + passageWidth * 3);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
+        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX + wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ + wallWidth * 2.5f + passageWidth * 2);
 
-        loadTorch(startX+wallWidth+passageWidth*0.5f,startZ+wallWidth+passageWidth*0,3, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth,startZ+wallWidth*4+passageWidth*3.5f,2, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth,3, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*5+passageWidth*4,startZ+wallWidth*2+passageWidth*1.5f,2, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*5+passageWidth*5,1, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth + passageWidth * 0.5f, startZ + wallWidth + passageWidth * 0, 3, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth, startZ + wallWidth * 4 + passageWidth * 3.5f, 2, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 4 + passageWidth * 3.5f, startZ + wallWidth, 3, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 5 + passageWidth * 4, startZ + wallWidth * 2 + passageWidth * 1.5f, 2, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 4 + passageWidth * 3.5f, startZ + wallWidth * 5 + passageWidth * 5, 1, roomsNumber, allTorches);
 
-        makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f,1);
-        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*4+passageWidth*3.5f,1);
-        makeTrap(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*4+passageWidth*3.5f,1);
+        makeTrap(startX + wallWidth * 4 + passageWidth * 3.5f, startZ + wallWidth * 2 + passageWidth * 1.5f, 1);
+        makeTrap(startX + wallWidth * 3 + passageWidth * 2.5f, startZ + wallWidth * 4 + passageWidth * 3.5f, 1);
+        makeTrap(startX + wallWidth * 5 + passageWidth * 4.5f, startZ + wallWidth * 4 + passageWidth * 3.5f, 1);
 
-        createDecor(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*1+passageWidth*0.5f,4f);
-        createDecor(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*5+passageWidth*4.5f,2f);
-        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*1+passageWidth*0.5f,3f);
-        createDecor(startX+wallWidth*3+passageWidth*2.5f, startZ+wallWidth*2+passageWidth*1.5f,1f);
+        createDecor(startX + wallWidth * 2 + passageWidth * 1.5f, startZ + wallWidth * 1 + passageWidth * 0.5f, 4f);
+        createDecor(startX + wallWidth * 2 + passageWidth * 1.5f, startZ + wallWidth * 5 + passageWidth * 4.5f, 2f);
+        createDecor(startX + wallWidth * 5 + passageWidth * 4.5f, startZ + wallWidth * 1 + passageWidth * 0.5f, 3f);
+        createDecor(startX + wallWidth * 3 + passageWidth * 2.5f, startZ + wallWidth * 2 + passageWidth * 1.5f, 1f);
 
         ArrayList<Float> res = new ArrayList<>();
-        res.add(startX+wallWidth*4+passageWidth*3.5f);
-        res.add(startZ+wallWidth*4+passageWidth*3.5f);
+        res.add(startX + wallWidth * 4 + passageWidth * 3.5f);
+        res.add(startZ + wallWidth * 4 + passageWidth * 3.5f);
 
         return res;
     }
 
-    public ArrayList<Float> buildBlock3(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches){
+    public ArrayList<Float> buildBlock3(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         currentNode = node;
-        makeFloor(startX,startZ);
-        makeCeiling(startX,startZ);
+        makeFloor(startX, startZ);
+        makeCeiling(startX, startZ);
 
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX+wallWidth*1.5f+passageWidth* 1, wallHeight / 2, startZ+wallWidth * 2 + passageWidth * 1.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth*2, startX+wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth*2);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX+wallWidth * 3.5f + passageWidth *3, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX+wallWidth * 4.5f + passageWidth *4, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX+wallWidth * 4.5f + passageWidth *4, wallHeight / 2, startZ+wallWidth * 1 + passageWidth * 0.5f);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 1 + passageWidth * 0.5f, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 1 + passageWidth * 0.5f, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth * 2);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 3 + passageWidth * 2.5f, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 5 + passageWidth * 4.5f, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
-        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX+wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth, startX + wallWidth * 1.5f + passageWidth * 1, wallHeight / 2, startZ + wallWidth * 2 + passageWidth * 1.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ + wallWidth * 2.5f + passageWidth * 2);
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ + wallWidth * 3.5f + passageWidth * 3);
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth * 3.5f + passageWidth * 3);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth * 1 + passageWidth * 0.5f);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 1 + passageWidth * 0.5f, wallHeight / 2, startZ + wallWidth * 1.5f + passageWidth * 1);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 1 + passageWidth * 0.5f, wallHeight / 2, startZ + wallWidth * 3.5f + passageWidth * 3);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ + wallWidth * 2.5f + passageWidth * 2);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ + wallWidth * 1.5f + passageWidth * 1);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 3 + passageWidth * 2.5f, wallHeight / 2, startZ + wallWidth * 3.5f + passageWidth * 3);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 5 + passageWidth * 4.5f, wallHeight / 2, startZ + wallWidth * 3.5f + passageWidth * 3);
+        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX + wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
 
-        loadTorch(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth+passageWidth*0,3, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth+passageWidth*0.5f,startZ+wallWidth*2+passageWidth*1,3, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*5+passageWidth*5,startZ+wallWidth*2+passageWidth*0.5f,4, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth,startZ+wallWidth*4+passageWidth*3.5f,2, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*5+passageWidth*5,1, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 2 + passageWidth * 1.5f, startZ + wallWidth + passageWidth * 0, 3, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth + passageWidth * 0.5f, startZ + wallWidth * 2 + passageWidth * 1, 3, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 5 + passageWidth * 5, startZ + wallWidth * 2 + passageWidth * 0.5f, 4, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth, startZ + wallWidth * 4 + passageWidth * 3.5f, 2, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 4 + passageWidth * 3.5f, startZ + wallWidth * 5 + passageWidth * 5, 1, roomsNumber, allTorches);
 
-        makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f,5);
-        makeTrap(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*5+passageWidth*4.5f, 2);
+        makeTrap(startX + wallWidth * 4 + passageWidth * 3.5f, startZ + wallWidth * 2 + passageWidth * 1.5f, 5);
+        makeTrap(startX + wallWidth * 2 + passageWidth * 1.5f, startZ + wallWidth * 5 + passageWidth * 4.5f, 2);
 
-        createDecor(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*1+passageWidth*0.5f,4f);
-        createDecor(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*4+passageWidth*3.5f,4f);
-        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*4+passageWidth*3.5f,3f);
+        createDecor(startX + wallWidth * 4 + passageWidth * 3.5f, startZ + wallWidth * 1 + passageWidth * 0.5f, 4f);
+        createDecor(startX + wallWidth * 3 + passageWidth * 2.5f, startZ + wallWidth * 4 + passageWidth * 3.5f, 4f);
+        createDecor(startX + wallWidth * 5 + passageWidth * 4.5f, startZ + wallWidth * 4 + passageWidth * 3.5f, 3f);
 
         ArrayList<Float> res = new ArrayList<>();
-        res.add(startX+wallWidth*5+passageWidth*4.5f);
-        res.add(startZ+wallWidth+passageWidth*0.5f);
+        res.add(startX + wallWidth * 5 + passageWidth * 4.5f);
+        res.add(startZ + wallWidth + passageWidth * 0.5f);
         return res;
     }
 
-    public ArrayList<Float> buildBlock4(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches){
+    public ArrayList<Float> buildBlock4(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         currentNode = node;
-        makeFloor(startX,startZ);
-        makeCeiling(startX,startZ);
+        makeFloor(startX, startZ);
+        makeCeiling(startX, startZ);
 
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth *2, startX+wallWidth*1.5f+passageWidth* 1, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth*1, startX+wallWidth * 1.5f + passageWidth * 1, wallHeight / 2, startZ+wallWidth * 4 + passageWidth*3.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth*2, startX+wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth*3);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX+wallWidth * 2.5f + passageWidth *2, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth * 2);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 3 + passageWidth * 2.5f, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 3 + passageWidth * 2.5f, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth * 2);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 5 + passageWidth * 4.5f, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
-        addWall(wallWidth * 5 + passageWidth * 4, wallHeight, wallWidth, startX+wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
-        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX+wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth * 1.5f + passageWidth * 1, wallHeight / 2, startZ + wallWidth * 1.5f + passageWidth * 1);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 1.5f + passageWidth * 1, wallHeight / 2, startZ + wallWidth * 4 + passageWidth * 3.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth * 3.5f + passageWidth * 3);
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ + wallWidth * 2.5f + passageWidth * 2);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 3 + passageWidth * 2.5f, wallHeight / 2, startZ + wallWidth * 1.5f + passageWidth * 1);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 3 + passageWidth * 2.5f, wallHeight / 2, startZ + wallWidth * 2.5f + passageWidth * 2);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 5 + passageWidth * 4.5f, wallHeight / 2, startZ + wallWidth * 1.5f + passageWidth * 1);
+        addWall(wallWidth * 5 + passageWidth * 4, wallHeight, wallWidth, startX + wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ + wallWidth * 3.5f + passageWidth * 3);
+        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX + wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
 
-        loadTorch(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth+passageWidth*0,3, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*2+passageWidth*1,3, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth+passageWidth*0.5f,startZ+wallWidth*5+passageWidth*5,1, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 2 + passageWidth * 1.5f, startZ + wallWidth + passageWidth * 0, 3, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 5 + passageWidth * 4.5f, startZ + wallWidth * 2 + passageWidth * 1, 3, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth + passageWidth * 0.5f, startZ + wallWidth * 5 + passageWidth * 5, 1, roomsNumber, allTorches);
 
-        makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f, 5);
-        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*4+passageWidth*3.5f,4);
+        makeTrap(startX + wallWidth * 4 + passageWidth * 3.5f, startZ + wallWidth * 2 + passageWidth * 1.5f, 5);
+        makeTrap(startX + wallWidth * 3 + passageWidth * 2.5f, startZ + wallWidth * 4 + passageWidth * 3.5f, 4);
 
-        createDecor(startX+wallWidth*1+passageWidth*0.5f,startZ+wallWidth*1+passageWidth*0.5f,3f);
-        createDecor(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*3+passageWidth*2.5f,2f);
-        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*4+passageWidth*3.5f,3f);
+        createDecor(startX + wallWidth * 1 + passageWidth * 0.5f, startZ + wallWidth * 1 + passageWidth * 0.5f, 3f);
+        createDecor(startX + wallWidth * 3 + passageWidth * 2.5f, startZ + wallWidth * 3 + passageWidth * 2.5f, 2f);
+        createDecor(startX + wallWidth * 5 + passageWidth * 4.5f, startZ + wallWidth * 4 + passageWidth * 3.5f, 3f);
 
         ArrayList<Float> res = new ArrayList<>();
-        res.add(startX+wallWidth*4+passageWidth*3.5f);
-        res.add(startZ+wallWidth*4+passageWidth*3.5f);
+        res.add(startX + wallWidth * 4 + passageWidth * 3.5f);
+        res.add(startZ + wallWidth * 4 + passageWidth * 3.5f);
         return res;
     }
 
-    public ArrayList<Float> buildBlock5(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches){
+    public ArrayList<Float> buildBlock5(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         currentNode = node;
-        makeFloor(startX,startZ);
-        makeCeiling(startX,startZ);
+        makeFloor(startX, startZ);
+        makeCeiling(startX, startZ);
 
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 1 + passageWidth * 0.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 4 + passageWidth * 3.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*1.5f+passageWidth* 1, wallHeight / 2, startZ+wallWidth * 5 + passageWidth * 4.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*1.5f+passageWidth* 1, wallHeight / 2, startZ+wallWidth * 3 + passageWidth * 2.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*3.5f+passageWidth* 3, wallHeight / 2, startZ+wallWidth * 3 + passageWidth * 2.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*4.5f+passageWidth* 4, wallHeight / 2, startZ+wallWidth * 3 + passageWidth * 2.5f);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 1 + passageWidth * 0.5f, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
-        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX+wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
-        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX+wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
-        addWall(wallWidth * 5 + passageWidth * 4, wallHeight, wallWidth, startX+wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth * 2);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ + wallWidth * 1 + passageWidth * 0.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ + wallWidth * 4 + passageWidth * 3.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 1.5f + passageWidth * 1, wallHeight / 2, startZ + wallWidth * 5 + passageWidth * 4.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 1.5f + passageWidth * 1, wallHeight / 2, startZ + wallWidth * 3 + passageWidth * 2.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ + wallWidth * 3 + passageWidth * 2.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth * 3 + passageWidth * 2.5f);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 1 + passageWidth * 0.5f, wallHeight / 2, startZ + wallWidth * 1.5f + passageWidth * 1);
+        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth * 1.5f + passageWidth * 1);
+        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
+        addWall(wallWidth * 5 + passageWidth * 4, wallHeight, wallWidth, startX + wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ + wallWidth * 2.5f + passageWidth * 2);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
 
-        loadTorch(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*2+passageWidth*2,1, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*3+passageWidth*2,startZ+wallWidth*4+passageWidth*3.5f,2, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth+passageWidth*0.5f,startZ+wallWidth*5+passageWidth*5,1, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 2 + passageWidth * 1.5f, startZ + wallWidth * 2 + passageWidth * 2, 1, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 3 + passageWidth * 2, startZ + wallWidth * 4 + passageWidth * 3.5f, 2, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth + passageWidth * 0.5f, startZ + wallWidth * 5 + passageWidth * 5, 1, roomsNumber, allTorches);
 
-        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*2+passageWidth*1.5f,5);
-        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*5+passageWidth*4.5f,1);
+        makeTrap(startX + wallWidth * 3 + passageWidth * 2.5f, startZ + wallWidth * 2 + passageWidth * 1.5f, 5);
+        makeTrap(startX + wallWidth * 3 + passageWidth * 2.5f, startZ + wallWidth * 5 + passageWidth * 4.5f, 1);
 
-        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*1+passageWidth*0.5f,4f);
-        createDecor(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*3+passageWidth*2.5f,3f);
-        createDecor(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*5+passageWidth*4.5f,2f);
+        createDecor(startX + wallWidth * 5 + passageWidth * 4.5f, startZ + wallWidth * 1 + passageWidth * 0.5f, 4f);
+        createDecor(startX + wallWidth * 4 + passageWidth * 3.5f, startZ + wallWidth * 3 + passageWidth * 2.5f, 3f);
+        createDecor(startX + wallWidth * 2 + passageWidth * 1.5f, startZ + wallWidth * 5 + passageWidth * 4.5f, 2f);
 
         ArrayList<Float> res = new ArrayList<>();
-        res.add(startX+wallWidth*5+passageWidth*4.5f);
-        res.add(startZ+wallWidth*2+passageWidth*1.5f);
+        res.add(startX + wallWidth * 5 + passageWidth * 4.5f);
+        res.add(startZ + wallWidth * 2 + passageWidth * 1.5f);
         return res;
     }
 
-    public ArrayList<Float> buildBlock6(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches){
+    public ArrayList<Float> buildBlock6(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         currentNode = node;
-        makeFloor(startX,startZ);
-        makeCeiling(startX,startZ);
+        makeFloor(startX, startZ);
+        makeCeiling(startX, startZ);
 
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 1 + passageWidth * 0.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*4.5f+passageWidth* 4, wallHeight / 2, startZ+wallWidth * 1 + passageWidth * 0.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*4.5f+passageWidth* 4, wallHeight / 2, startZ+wallWidth * 5 + passageWidth * 4.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*1.5f+passageWidth* 1, wallHeight / 2, startZ+wallWidth * 5 + passageWidth * 4.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*3.5f+passageWidth* 3, wallHeight / 2, startZ+wallWidth * 2 + passageWidth * 1.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth *2, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 1 + passageWidth * 0.5f, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
-        addWall(wallWidth * 5 + passageWidth * 4, wallHeight, wallWidth, startX+wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth * 2);
-        addWall(wallWidth * 4 + passageWidth * 3, wallHeight, wallWidth, startX+wallWidth * 3 + passageWidth * 2.5f, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 3 + passageWidth * 2.5f, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ + wallWidth * 1 + passageWidth * 0.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth * 1 + passageWidth * 0.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth * 5 + passageWidth * 4.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 1.5f + passageWidth * 1, wallHeight / 2, startZ + wallWidth * 5 + passageWidth * 4.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ + wallWidth * 2 + passageWidth * 1.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ + wallWidth * 3.5f + passageWidth * 3);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 1 + passageWidth * 0.5f, wallHeight / 2, startZ + wallWidth * 1.5f + passageWidth * 1);
+        addWall(wallWidth * 5 + passageWidth * 4, wallHeight, wallWidth, startX + wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ + wallWidth * 2.5f + passageWidth * 2);
+        addWall(wallWidth * 4 + passageWidth * 3, wallHeight, wallWidth, startX + wallWidth * 3 + passageWidth * 2.5f, wallHeight / 2, startZ + wallWidth * 3.5f + passageWidth * 3);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 3 + passageWidth * 2.5f, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
 
-        loadTorch(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*2+passageWidth*2,1, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*2+passageWidth*2,1, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*5+passageWidth*5,1, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*5+passageWidth*5,startZ+wallWidth*4+passageWidth*3.5f,4, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 2 + passageWidth * 1.5f, startZ + wallWidth * 2 + passageWidth * 2, 1, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 5 + passageWidth * 4.5f, startZ + wallWidth * 2 + passageWidth * 2, 1, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 2 + passageWidth * 1.5f, startZ + wallWidth * 5 + passageWidth * 5, 1, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 5 + passageWidth * 5, startZ + wallWidth * 4 + passageWidth * 3.5f, 4, roomsNumber, allTorches);
 
-        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*2+passageWidth*1.5f,5);
-        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*1+passageWidth*0.5f,5);
-        makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*4+passageWidth*3.5f,5);
+        makeTrap(startX + wallWidth * 3 + passageWidth * 2.5f, startZ + wallWidth * 2 + passageWidth * 1.5f, 5);
+        makeTrap(startX + wallWidth * 3 + passageWidth * 2.5f, startZ + wallWidth * 1 + passageWidth * 0.5f, 5);
+        makeTrap(startX + wallWidth * 4 + passageWidth * 3.5f, startZ + wallWidth * 4 + passageWidth * 3.5f, 5);
 
-        createDecor(startX+wallWidth*1+passageWidth*0.5f,startZ+wallWidth*1+passageWidth*0.5f,2f);
-        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*1+passageWidth*0.5f,3f);
-        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*5+passageWidth*4.5f,1f);
-        createDecor(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*3+passageWidth*2.5f,4f);
+        createDecor(startX + wallWidth * 1 + passageWidth * 0.5f, startZ + wallWidth * 1 + passageWidth * 0.5f, 2f);
+        createDecor(startX + wallWidth * 5 + passageWidth * 4.5f, startZ + wallWidth * 1 + passageWidth * 0.5f, 3f);
+        createDecor(startX + wallWidth * 5 + passageWidth * 4.5f, startZ + wallWidth * 5 + passageWidth * 4.5f, 1f);
+        createDecor(startX + wallWidth * 2 + passageWidth * 1.5f, startZ + wallWidth * 3 + passageWidth * 2.5f, 4f);
 
         ArrayList<Float> res = new ArrayList<>();
-        res.add(startX+wallWidth*3+passageWidth*2.5f);
-        res.add(startZ+wallWidth*4+passageWidth*3.5f);
+        res.add(startX + wallWidth * 3 + passageWidth * 2.5f);
+        res.add(startZ + wallWidth * 4 + passageWidth * 3.5f);
         return res;
     }
 
-    public ArrayList<Float> buildBlock7(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches){
+    public ArrayList<Float> buildBlock7(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         currentNode = node;
-        makeFloor(startX,startZ);
-        makeCeiling(startX,startZ);
+        makeFloor(startX, startZ);
+        makeCeiling(startX, startZ);
 
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*4.5f+passageWidth* 4, wallHeight / 2, startZ+wallWidth * 2 + passageWidth * 1.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*4.5f+passageWidth* 4, wallHeight / 2, startZ+wallWidth * 5 + passageWidth * 4.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 5 + passageWidth * 4.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 3 + passageWidth * 2.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*1.5f+passageWidth* 1, wallHeight / 2, startZ+wallWidth * 4 + passageWidth * 3.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth *2, startX+wallWidth*3.5f+passageWidth* 3, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
-        addWall(wallWidth * 4 + passageWidth * 3, wallHeight, wallWidth, startX+wallWidth * 3 + passageWidth * 2.5f, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
-        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX+wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth * 2);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth * 2);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth * 2 + passageWidth * 1.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth * 5 + passageWidth * 4.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ + wallWidth * 5 + passageWidth * 4.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ + wallWidth * 3 + passageWidth * 2.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 1.5f + passageWidth * 1, wallHeight / 2, startZ + wallWidth * 4 + passageWidth * 3.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ + wallWidth * 3.5f + passageWidth * 3);
+        addWall(wallWidth * 4 + passageWidth * 3, wallHeight, wallWidth, startX + wallWidth * 3 + passageWidth * 2.5f, wallHeight / 2, startZ + wallWidth * 1.5f + passageWidth * 1);
+        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth * 2.5f + passageWidth * 2);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ + wallWidth * 2.5f + passageWidth * 2);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ + wallWidth * 3.5f + passageWidth * 3);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ + wallWidth * 3.5f + passageWidth * 3);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
 
-        loadTorch(startX+wallWidth*5+passageWidth*5,startZ+wallWidth*1+passageWidth*0.5f,4, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth,startZ+wallWidth*4+passageWidth*3.5f,2, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*3+passageWidth*2,startZ+wallWidth*3+passageWidth*2.5f,2, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*5+passageWidth*5,startZ+wallWidth*4+passageWidth*3.5f,4, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 5 + passageWidth * 5, startZ + wallWidth * 1 + passageWidth * 0.5f, 4, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth, startZ + wallWidth * 4 + passageWidth * 3.5f, 2, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 3 + passageWidth * 2, startZ + wallWidth * 3 + passageWidth * 2.5f, 2, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 5 + passageWidth * 5, startZ + wallWidth * 4 + passageWidth * 3.5f, 4, roomsNumber, allTorches);
 
-        makeTrap(startX+wallWidth*1+passageWidth*0.5f,startZ+wallWidth*2+passageWidth*1.5f,5);
-        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*5+passageWidth*4.5f,5);
+        makeTrap(startX + wallWidth * 1 + passageWidth * 0.5f, startZ + wallWidth * 2 + passageWidth * 1.5f, 5);
+        makeTrap(startX + wallWidth * 3 + passageWidth * 2.5f, startZ + wallWidth * 5 + passageWidth * 4.5f, 5);
 
-        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*2+passageWidth*1.5f,1f);
-        createDecor(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*3+passageWidth*2.5f,2f);
-        createDecor(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*4+passageWidth*3.5f,2f);
+        createDecor(startX + wallWidth * 5 + passageWidth * 4.5f, startZ + wallWidth * 2 + passageWidth * 1.5f, 1f);
+        createDecor(startX + wallWidth * 4 + passageWidth * 3.5f, startZ + wallWidth * 3 + passageWidth * 2.5f, 2f);
+        createDecor(startX + wallWidth * 2 + passageWidth * 1.5f, startZ + wallWidth * 4 + passageWidth * 3.5f, 2f);
 
 
         ArrayList<Float> res = new ArrayList<>();
-        res.add(startX+wallWidth*4+passageWidth*3.5f);
-        res.add(startZ+wallWidth*2+passageWidth*1.5f);
+        res.add(startX + wallWidth * 4 + passageWidth * 3.5f);
+        res.add(startZ + wallWidth * 2 + passageWidth * 1.5f);
         return res;
     }
 
-    public ArrayList<Float> buildBlock8(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches){
+    public ArrayList<Float> buildBlock8(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         currentNode = node;
-        makeFloor(startX,startZ);
-        makeCeiling(startX,startZ);
+        makeFloor(startX, startZ);
+        makeCeiling(startX, startZ);
 
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth *2, startX+wallWidth*1.5f+passageWidth* 1, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth *2, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 1 + passageWidth * 0.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth *2, startX+wallWidth*3.5f+passageWidth* 3, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth * 2);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*4.5f+passageWidth* 4, wallHeight / 2, startZ+wallWidth * 2 + passageWidth * 1.5f);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 1 + passageWidth * 0.5f, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
-        addWall(wallWidth * 4 + passageWidth * 3, wallHeight, wallWidth, startX+wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
-        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX+wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth * 2);
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth * 1.5f + passageWidth * 1, wallHeight / 2, startZ + wallWidth * 3.5f + passageWidth * 3);
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ + wallWidth * 3.5f + passageWidth * 3);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ + wallWidth * 1 + passageWidth * 0.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ + wallWidth * 2.5f + passageWidth * 2);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth * 2 + passageWidth * 1.5f);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 2 + passageWidth * 1.5f, wallHeight / 2, startZ + wallWidth * 1.5f + passageWidth * 1);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 1 + passageWidth * 0.5f, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
+        addWall(wallWidth * 4 + passageWidth * 3, wallHeight, wallWidth, startX + wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
+        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth * 3.5f + passageWidth * 3);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ + wallWidth * 2.5f + passageWidth * 2);
 
-        loadTorch(startX+wallWidth+passageWidth*0.5f,startZ+wallWidth,3, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth,3, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*3+passageWidth*2,startZ+wallWidth*4+passageWidth*3.5f,2, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*5+passageWidth*5,1, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth + passageWidth * 0.5f, startZ + wallWidth, 3, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 4 + passageWidth * 3.5f, startZ + wallWidth, 3, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 3 + passageWidth * 2, startZ + wallWidth * 4 + passageWidth * 3.5f, 2, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 2 + passageWidth * 1.5f, startZ + wallWidth * 5 + passageWidth * 5, 1, roomsNumber, allTorches);
 
-        makeTrap(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*4+passageWidth*3.5f,1);
-        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*2+passageWidth*1.5f,5);
+        makeTrap(startX + wallWidth * 2 + passageWidth * 1.5f, startZ + wallWidth * 4 + passageWidth * 3.5f, 1);
+        makeTrap(startX + wallWidth * 3 + passageWidth * 2.5f, startZ + wallWidth * 2 + passageWidth * 1.5f, 5);
 
-        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*5+passageWidth*4.5f,4f);
-        createDecor(startX+wallWidth*1+passageWidth*0.5f,startZ+wallWidth*4+passageWidth*3.5f,1f);
-        createDecor(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*2+passageWidth*1.5f,1f);
+        createDecor(startX + wallWidth * 5 + passageWidth * 4.5f, startZ + wallWidth * 5 + passageWidth * 4.5f, 4f);
+        createDecor(startX + wallWidth * 1 + passageWidth * 0.5f, startZ + wallWidth * 4 + passageWidth * 3.5f, 1f);
+        createDecor(startX + wallWidth * 4 + passageWidth * 3.5f, startZ + wallWidth * 2 + passageWidth * 1.5f, 1f);
 
         ArrayList<Float> res = new ArrayList<>();
-        res.add(startX+wallWidth*5+passageWidth*4.5f);
-        res.add(startZ+wallWidth*4+passageWidth*3.5f);
+        res.add(startX + wallWidth * 5 + passageWidth * 4.5f);
+        res.add(startZ + wallWidth * 4 + passageWidth * 3.5f);
         return res;
     }
 
-    public ArrayList<Float> buildBlock9(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches){
+    public ArrayList<Float> buildBlock9(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         currentNode = node;
-        makeFloor(startX,startZ);
-        makeCeiling(startX,startZ);
+        makeFloor(startX, startZ);
+        makeCeiling(startX, startZ);
 
-        addWall(wallWidth, wallHeight, wallWidth * 4 + passageWidth *3, startX+wallWidth*1.5f+passageWidth* 1, wallHeight / 2, startZ+wallWidth * 3 + passageWidth * 2.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 3 + passageWidth * 2.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 5 + passageWidth * 4.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth *2, startX+wallWidth*4.5f+passageWidth* 4, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth * 2);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 1 + passageWidth * 0.5f, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
-        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX+wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
-        addWall(wallWidth * 4 + passageWidth * 3, wallHeight, wallWidth, startX+wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth * 2);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
+        addWall(wallWidth, wallHeight, wallWidth * 4 + passageWidth * 3, startX + wallWidth * 1.5f + passageWidth * 1, wallHeight / 2, startZ + wallWidth * 3 + passageWidth * 2.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ + wallWidth * 3 + passageWidth * 2.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ + wallWidth * 5 + passageWidth * 4.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth * 2.5f + passageWidth * 2);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 1 + passageWidth * 0.5f, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
+        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
+        addWall(wallWidth * 4 + passageWidth * 3, wallHeight, wallWidth, startX + wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ + wallWidth * 2.5f + passageWidth * 2);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ + wallWidth * 1.5f + passageWidth * 1);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ + wallWidth * 3.5f + passageWidth * 3);
 
-        loadTorch(startX+wallWidth*1+passageWidth*0.5f,startZ+wallWidth,3, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*4+passageWidth*4,startZ+wallWidth*2+passageWidth*1.5f,4, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*5+passageWidth*4,startZ+wallWidth*3+passageWidth*2.5f,2, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*2+passageWidth*1,startZ+wallWidth*4+passageWidth*3.5f,2, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 1 + passageWidth * 0.5f, startZ + wallWidth, 3, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 4 + passageWidth * 4, startZ + wallWidth * 2 + passageWidth * 1.5f, 4, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 5 + passageWidth * 4, startZ + wallWidth * 3 + passageWidth * 2.5f, 2, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 2 + passageWidth * 1, startZ + wallWidth * 4 + passageWidth * 3.5f, 2, roomsNumber, allTorches);
 
-        makeTrap(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*3+passageWidth*2.5f,1);
-        makeTrap(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*4+passageWidth*3.5f,5);
+        makeTrap(startX + wallWidth * 2 + passageWidth * 1.5f, startZ + wallWidth * 3 + passageWidth * 2.5f, 1);
+        makeTrap(startX + wallWidth * 3 + passageWidth * 2.5f, startZ + wallWidth * 4 + passageWidth * 3.5f, 5);
 
-        createDecor(startX+wallWidth*1+passageWidth*0.5f,startZ+wallWidth*4+passageWidth*3.5f,1f);
-        createDecor(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*3+passageWidth*2.5f,4f);
-        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*2+passageWidth*1.5f,1f);
+        createDecor(startX + wallWidth * 1 + passageWidth * 0.5f, startZ + wallWidth * 4 + passageWidth * 3.5f, 1f);
+        createDecor(startX + wallWidth * 4 + passageWidth * 3.5f, startZ + wallWidth * 3 + passageWidth * 2.5f, 4f);
+        createDecor(startX + wallWidth * 5 + passageWidth * 4.5f, startZ + wallWidth * 2 + passageWidth * 1.5f, 1f);
 
         ArrayList<Float> res = new ArrayList<>();
-        res.add(startX+wallWidth*1+passageWidth*0.5f);
-        res.add(startZ+wallWidth*5+passageWidth*4.5f);
+        res.add(startX + wallWidth * 1 + passageWidth * 0.5f);
+        res.add(startZ + wallWidth * 5 + passageWidth * 4.5f);
         return res;
     }
 
-    public ArrayList<Float> buildBlock10(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches){
+    public ArrayList<Float> buildBlock10(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         currentNode = node;
-        makeFloor(startX,startZ);
-        makeCeiling(startX,startZ);
+        makeFloor(startX, startZ);
+        makeCeiling(startX, startZ);
 
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth *2, startX+wallWidth*1.5f+passageWidth* 1, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
-        addWall(wallWidth, wallHeight, wallWidth * 4 + passageWidth *3, startX+wallWidth*2.5f+passageWidth* 2, wallHeight / 2, startZ+wallWidth * 3 + passageWidth * 2.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*3.5f+passageWidth* 3, wallHeight / 2, startZ+wallWidth * 5 + passageWidth * 4.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*3.5f+passageWidth* 3, wallHeight / 2, startZ+wallWidth * 2 + passageWidth * 1.5f);
-        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth *1, startX+wallWidth*4.5f+passageWidth* 4, wallHeight / 2, startZ+wallWidth * 2 + passageWidth * 1.5f);
-        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX+wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 5 + passageWidth * 4.5f, wallHeight / 2, startZ+wallWidth * 1.5f + passageWidth * 1);
-        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX+wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ+wallWidth * 3.5f + passageWidth * 3);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth * 2);
-        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX+wallWidth * 1 + passageWidth * 0.5f, wallHeight / 2, startZ+wallWidth * 2.5f + passageWidth * 2);
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth * 1.5f + passageWidth * 1, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
+        addWall(wallWidth, wallHeight, wallWidth * 4 + passageWidth * 3, startX + wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ + wallWidth * 3 + passageWidth * 2.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ + wallWidth * 5 + passageWidth * 4.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 3.5f + passageWidth * 3, wallHeight / 2, startZ + wallWidth * 2 + passageWidth * 1.5f);
+        addWall(wallWidth, wallHeight, wallWidth * 2 + passageWidth * 1, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth * 2 + passageWidth * 1.5f);
+        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX + wallWidth * 2.5f + passageWidth * 2, wallHeight / 2, startZ + wallWidth * 1.5f + passageWidth * 1);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 5 + passageWidth * 4.5f, wallHeight / 2, startZ + wallWidth * 1.5f + passageWidth * 1);
+        addWall(wallWidth * 3 + passageWidth * 2, wallHeight, wallWidth, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth * 3.5f + passageWidth * 3);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 4 + passageWidth * 3.5f, wallHeight / 2, startZ + wallWidth * 2.5f + passageWidth * 2);
+        addWall(wallWidth * 2 + passageWidth * 1, wallHeight, wallWidth, startX + wallWidth * 1 + passageWidth * 0.5f, wallHeight / 2, startZ + wallWidth * 2.5f + passageWidth * 2);
 
-        loadTorch(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth,3, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*1+passageWidth*0.5f,startZ+wallWidth*5+passageWidth*5,1, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*3+passageWidth*3,1, roomsNumber, allTorches);
-        loadTorch(startX+wallWidth*5+passageWidth*5,startZ+wallWidth*4+passageWidth*3.5f,4, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 2 + passageWidth * 1.5f, startZ + wallWidth, 3, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 1 + passageWidth * 0.5f, startZ + wallWidth * 5 + passageWidth * 5, 1, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 4 + passageWidth * 3.5f, startZ + wallWidth * 3 + passageWidth * 3, 1, roomsNumber, allTorches);
+        loadTorch(startX + wallWidth * 5 + passageWidth * 5, startZ + wallWidth * 4 + passageWidth * 3.5f, 4, roomsNumber, allTorches);
 
-        makeTrap(startX+wallWidth*2+passageWidth*1.5f,startZ+wallWidth*3+passageWidth*2.5f,5);
-        makeTrap(startX+wallWidth*4+passageWidth*3.5f,startZ+wallWidth*4+passageWidth*3.5f,4);
+        makeTrap(startX + wallWidth * 2 + passageWidth * 1.5f, startZ + wallWidth * 3 + passageWidth * 2.5f, 5);
+        makeTrap(startX + wallWidth * 4 + passageWidth * 3.5f, startZ + wallWidth * 4 + passageWidth * 3.5f, 4);
 
-        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*1+passageWidth*0.5f,4f);
-        createDecor(startX+wallWidth*3+passageWidth*2.5f,startZ+wallWidth*2+passageWidth*1.5f,3f);
-        createDecor(startX+wallWidth*5+passageWidth*4.5f,startZ+wallWidth*2+passageWidth*1.5f,3f);
+        createDecor(startX + wallWidth * 5 + passageWidth * 4.5f, startZ + wallWidth * 1 + passageWidth * 0.5f, 4f);
+        createDecor(startX + wallWidth * 3 + passageWidth * 2.5f, startZ + wallWidth * 2 + passageWidth * 1.5f, 3f);
+        createDecor(startX + wallWidth * 5 + passageWidth * 4.5f, startZ + wallWidth * 2 + passageWidth * 1.5f, 3f);
 
         ArrayList<Float> res = new ArrayList<>();
-        res.add(startX+wallWidth*4+passageWidth*3.5f);
-        res.add(startZ+wallWidth*5+passageWidth*4.5f);
+        res.add(startX + wallWidth * 4 + passageWidth * 3.5f);
+        res.add(startZ + wallWidth * 5 + passageWidth * 4.5f);
         return res;
     }
-    public void makeFrameWalls(float startX, float startZ){
-        addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, startX+(wallWidth * 3 + passageWidth * 2) / 2, wallHeight / 2, startZ+wallWidth / 2);
-        addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, startX+wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ+wallWidth / 2);
-        addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, startX+(wallWidth * 3 + passageWidth * 2) / 2, wallHeight / 2, startZ+wallWidth * 5.5f + passageWidth * 5);
-        addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, startX+wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ+wallWidth * 5.5f + passageWidth * 5);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX+wallWidth / 2, wallHeight / 2, startZ+(wallWidth * 3 + passageWidth * 2) / 2);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX+wallWidth * 5.5f + passageWidth * 5, wallHeight / 2, startZ+(wallWidth * 3 + passageWidth * 2) / 2);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX+wallWidth * 5.5f + passageWidth * 5, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX+wallWidth / 2, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
+
+    public void makeFrameWalls(float startX, float startZ) {
+        addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, startX + (wallWidth * 3 + passageWidth * 2) / 2, wallHeight / 2, startZ + wallWidth / 2);
+        addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth / 2);
+        addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, startX + (wallWidth * 3 + passageWidth * 2) / 2, wallHeight / 2, startZ + wallWidth * 5.5f + passageWidth * 5);
+        addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth * 5.5f + passageWidth * 5);
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth / 2, wallHeight / 2, startZ + (wallWidth * 3 + passageWidth * 2) / 2);
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth * 5.5f + passageWidth * 5, wallHeight / 2, startZ + (wallWidth * 3 + passageWidth * 2) / 2);
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth * 5.5f + passageWidth * 5, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth / 2, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
     }
 
-    public void makeZWall(float startX, float startZ){
-        addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, startX+(wallWidth * 3 + passageWidth * 2) / 2, wallHeight / 2, startZ+wallWidth / 2);
-        addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, startX+wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ+wallWidth / 2);
+    public void makeZWall(float startX, float startZ) {
+        addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, startX + (wallWidth * 3 + passageWidth * 2) / 2, wallHeight / 2, startZ + wallWidth / 2);
+        addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth / 2);
     }
 
-    public void makeXWall(float startX, float startZ){
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX+wallWidth / 2, wallHeight / 2, startZ+(wallWidth * 3 + passageWidth * 2) / 2);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX+wallWidth / 2, wallHeight / 2, startZ+wallWidth * 4.5f + passageWidth * 4);
+    public void makeXWall(float startX, float startZ) {
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth / 2, wallHeight / 2, startZ + (wallWidth * 3 + passageWidth * 2) / 2);
+        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth / 2, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
     }
 
-    public void makeFloor(float startX, float startZ){
-        floor = new Floor((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, currentNode, startX+((wallWidth * 5 + passageWidth * 5)*0.25f), -0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.25f), bulletAppState);
-        floor = new Floor((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, currentNode, startX+((wallWidth * 5 + passageWidth * 5)*0.75f), -0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.75f), bulletAppState);
-        floor = new Floor((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, currentNode, startX+((wallWidth * 5 + passageWidth * 5)*0.75f), -0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.25f), bulletAppState);
-        floor = new Floor((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, currentNode, startX+((wallWidth * 5 + passageWidth * 5)*0.25f), -0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.75f), bulletAppState);
+    public void makeFloor(float startX, float startZ) {
+        floor = new Floor((wallWidth * 5 + passageWidth * 5) / 2, 0.1f, (wallWidth * 5 + passageWidth * 5) / 2, assetManager, currentNode, startX + ((wallWidth * 5 + passageWidth * 5) * 0.25f), -0.05f, startZ + ((wallWidth * 5 + passageWidth * 5) * 0.25f), bulletAppState);
+        floor = new Floor((wallWidth * 5 + passageWidth * 5) / 2, 0.1f, (wallWidth * 5 + passageWidth * 5) / 2, assetManager, currentNode, startX + ((wallWidth * 5 + passageWidth * 5) * 0.75f), -0.05f, startZ + ((wallWidth * 5 + passageWidth * 5) * 0.75f), bulletAppState);
+        floor = new Floor((wallWidth * 5 + passageWidth * 5) / 2, 0.1f, (wallWidth * 5 + passageWidth * 5) / 2, assetManager, currentNode, startX + ((wallWidth * 5 + passageWidth * 5) * 0.75f), -0.05f, startZ + ((wallWidth * 5 + passageWidth * 5) * 0.25f), bulletAppState);
+        floor = new Floor((wallWidth * 5 + passageWidth * 5) / 2, 0.1f, (wallWidth * 5 + passageWidth * 5) / 2, assetManager, currentNode, startX + ((wallWidth * 5 + passageWidth * 5) * 0.25f), -0.05f, startZ + ((wallWidth * 5 + passageWidth * 5) * 0.75f), bulletAppState);
     }
 
-    public void makeCeiling(float startX, float startZ){
-        ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, currentNode, startX+((wallWidth * 5 + passageWidth * 5)*0.25f), wallHeight-0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.75f), bulletAppState);
-        ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, currentNode, startX+((wallWidth * 5 + passageWidth * 5)*0.75f), wallHeight-0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.75f), bulletAppState);
-        ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, currentNode, startX+((wallWidth * 5 + passageWidth * 5)*0.25f), wallHeight-0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.25f), bulletAppState);
-        ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5)/2, 0.1f, (wallWidth * 5 + passageWidth * 5)/2, assetManager, currentNode, startX+((wallWidth * 5 + passageWidth * 5)*0.75f), wallHeight-0.05f, startZ+((wallWidth * 5 + passageWidth * 5)*0.25f), bulletAppState);
+    public void makeCeiling(float startX, float startZ) {
+        ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5) / 2, 0.1f, (wallWidth * 5 + passageWidth * 5) / 2, assetManager, currentNode, startX + ((wallWidth * 5 + passageWidth * 5) * 0.25f), wallHeight - 0.05f, startZ + ((wallWidth * 5 + passageWidth * 5) * 0.75f), bulletAppState);
+        ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5) / 2, 0.1f, (wallWidth * 5 + passageWidth * 5) / 2, assetManager, currentNode, startX + ((wallWidth * 5 + passageWidth * 5) * 0.75f), wallHeight - 0.05f, startZ + ((wallWidth * 5 + passageWidth * 5) * 0.75f), bulletAppState);
+        ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5) / 2, 0.1f, (wallWidth * 5 + passageWidth * 5) / 2, assetManager, currentNode, startX + ((wallWidth * 5 + passageWidth * 5) * 0.25f), wallHeight - 0.05f, startZ + ((wallWidth * 5 + passageWidth * 5) * 0.25f), bulletAppState);
+        ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5) / 2, 0.1f, (wallWidth * 5 + passageWidth * 5) / 2, assetManager, currentNode, startX + ((wallWidth * 5 + passageWidth * 5) * 0.75f), wallHeight - 0.05f, startZ + ((wallWidth * 5 + passageWidth * 5) * 0.25f), bulletAppState);
     }
 
-    public void makeTrap(float x, float z, int direction){
+    public void makeTrap(float x, float z, int direction) {
         trap = new TrapMaster(application, assetManager, currentNode, x, -0.05f, z, direction);
     }
 
-    public void createDecor(float x, float z, float direction){
-        Decoration decoration = new Decoration(direction,assetManager, currentNode, x, -0.05f, z, bulletAppState);
+    public void createDecor(float x, float z, float direction) {
+        Decoration decoration = new Decoration(direction, assetManager, currentNode, x, -0.05f, z, bulletAppState);
     }
 
     public void updateBlocks(float x, float z) {
-        int xPlacement = (int) (x/(wallWidth * 5 + passageWidth * 5));
-        int zPlacement = (int) (z/(wallWidth * 5 + passageWidth * 5));
+        int xPlacement = (int) (x / (wallWidth * 5 + passageWidth * 5));
+        int zPlacement = (int) (z / (wallWidth * 5 + passageWidth * 5));
     }
+
+    public void playCreepySound(Node characterNode) {
+        Random rand = new Random();
+        if (rand.nextInt(100) == 0) {
+            creepySound = new AudioNode(assetManager, "Sounds/LevelSounds/" + rand.nextInt(1, 6) + ".wav", AudioData.DataType.Buffer);
+            creepySound.setPositional(false); // Use true for 3D sounds
+            creepySound.setLooping(false); // Set to true if you want the sound to loop
+            creepySound.setVolume(0.3f); // Set the volume (1 is default, 0 is silent)
+            characterNode.attachChild(creepySound);
+            creepySound.play();
+        }
+
+    }
+
+    public void playMineSound(Node node) {
+        trapSound = new AudioNode(assetManager, "Sounds/countdown.wav", AudioData.DataType.Buffer);
+        trapSound.setPositional(false); // Use true for 3D sounds
+        trapSound.setLooping(false); // Set to true if you want the sound to loop
+        trapSound.setVolume(3); // Set the volume (1 is default, 0 is silent)
+        node.attachChild(trapSound);
+        trapSound.play();
+    }
+
+    public void playMineExplodeSound(Node node) {
+        trapSound = new AudioNode(assetManager, "Sounds/explosion.wav", AudioData.DataType.Buffer);
+        trapSound.setPositional(false); // Use true for 3D sounds
+        trapSound.setLooping(false); // Set to true if you want the sound to loop
+        trapSound.setVolume(3); // Set the volume (1 is default, 0 is silent)
+        node.attachChild(trapSound);
+        trapSound.play();
+    }
+
+    public void playSpikeSound(Node node) {
+        trapSound = new AudioNode(assetManager, "Sounds/metal.wav", AudioData.DataType.Buffer);
+        trapSound.setPositional(false); // Use true for 3D sounds
+        trapSound.setLooping(false); // Set to true if you want the sound to loop
+        trapSound.setVolume(3); // Set the volume (1 is default, 0 is silent)
+        node.attachChild(trapSound);
+        trapSound.play();
+    }
+
+
 }
