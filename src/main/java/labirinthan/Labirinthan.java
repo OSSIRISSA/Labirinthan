@@ -4,16 +4,17 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.StatsAppState;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.light.AmbientLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.FogFilter;
 import com.jme3.system.AppSettings;
 import labirinthan.GUI.MainHUD;
 import labirinthan.GUI.MainMenu;
+import labirinthan.character.MainCharacter;
 import labirinthan.levels.Level;
 import labirinthan.levels.Level0;
 import labirinthan.levels.Level1;
+import labirinthan.puzzles.PuzzleCabinet;
 
 public class Labirinthan extends SimpleApplication {
 
@@ -35,7 +36,7 @@ public class Labirinthan extends SimpleApplication {
 
         // Set the game to fullscreen
         AppSettings settings = new AppSettings(true);
-        settings.setFullscreen(false);
+        settings.setFullscreen(true);
         settings.setResolution(1920, 1080);
         settings.setTitle("Labirinthan");
         app.setSettings(settings);
@@ -73,7 +74,7 @@ public class Labirinthan extends SimpleApplication {
 
         startLevel0();
 
-        mainHUD = new MainHUD(this, guiNode, settings, assetManager);
+        mainHUD = new MainHUD(guiNode, settings, assetManager);
         mainHUD.createMainHUD();
         character = new MainCharacter(mainHUD);
         stateManager.attach(character);

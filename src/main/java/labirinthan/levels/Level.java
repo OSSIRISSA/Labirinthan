@@ -12,6 +12,7 @@ import labirinthan.GUI.PuzzleSudoku;
 import labirinthan.Labirinthan;
 import labirinthan.levels.parts.*;
 import labirinthan.props.TorchHolder;
+import labirinthan.puzzles.PuzzleCabinet;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -31,7 +32,7 @@ public class Level extends AbstractAppState {
     public static float passageWidth = 4;
     public Floor floor;
     public Ceiling ceiling;
-    public Cross cross;
+    public PuzzleCabinet cross;
     public Trap trap;
 
     protected ArrayList<Wall> walls = new ArrayList<>();
@@ -68,9 +69,9 @@ public class Level extends AbstractAppState {
 
     @Override
     public void cleanup(){
+        super.cleanup();
         rootNode.detachChild(localRootNode);
         guiNode.detachChild(localPuzzleNode);
-        super.cleanup();
     }
     public void addWall(float x, float y, float z, float px, float py, float pz) {
         if(x==wallWidth){

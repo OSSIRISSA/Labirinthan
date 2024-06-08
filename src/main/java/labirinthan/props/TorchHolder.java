@@ -3,6 +3,7 @@ package labirinthan.props;
 import com.jme3.asset.AssetManager;
 import com.jme3.light.PointLight;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -10,7 +11,6 @@ import com.jme3.scene.Spatial;
 import com.jme3.shadow.PointLightShadowFilter;
 import com.jme3.shadow.PointLightShadowRenderer;
 import labirinthan.Labirinthan;
-import labirinthan.TorchInteractionArea;
 
 public class TorchHolder extends Node {
     public final Spatial torchHolderMesh;
@@ -24,26 +24,27 @@ public class TorchHolder extends Node {
     private PointLightShadowFilter plsf;
     private PointLightShadowRenderer plsr;
     private final TorchInteractionArea interactionArea;
+    public boolean isFirst;
 
     int SHADOW_MAP = 256;
 
     public TorchHolder(Labirinthan application, AssetManager assetManager, Node rootNode, boolean isFirst) {
         this.app = application;
         this.rootNode = rootNode;
+        this.isFirst = isFirst;
 
         torchNode = new Node("TorchNode");
         new Torch(assetManager, torchNode);
         this.attachChild(torchNode);
 
         this.torchHolderMesh = assetManager.loadModel("Models/TorchHolder/torchholder.fbx");
-        torchHolderMesh.rotate(0, -Torch.TORCH_MESH_ROTATION_Y, 0);
+        torchHolderMesh.rotate(0, FastMath.PI/2, 0);
         this.attachChild(torchHolderMesh);
 
         lightNode = new Node("LightNode");
         this.attachChild(lightNode);
         lightNode.move(-0.5f, 1, 0);
-        this.light = createLight(this.getWorldTranslation());
-        //this.rootNode.addLight(this.light);
+        this.light = createLight(this.getWorldTranslation(), assetManager);
 
         updateLight();
 
@@ -51,25 +52,19 @@ public class TorchHolder extends Node {
         this.attachChild(interactionAreaNode);
         interactionAreaNode.move(-0.65f, 0, 0);
         interactionArea = new TorchInteractionArea(this, new Vector3f(0.6f, 1f, 1f));
-
-        if (isFirst) {
-            createShadowRenderer(assetManager, SHADOW_MAP);
-        } else {
-            createShadowFilter(assetManager, SHADOW_MAP);
-        }
     }
 
     private void createShadowRenderer(AssetManager assetManager, int shadowMapSize) {
         plsr = new PointLightShadowRenderer(assetManager, shadowMapSize);
         plsr.setLight(light);
-        plsr.setShadowIntensity(0.3f);
+        plsr.setShadowIntensity(0.1f/9);
         app.getViewPort().addProcessor(plsr);
     }
 
     private void createShadowFilter(AssetManager assetManager, int shadowMapSize) {
         plsf = new PointLightShadowFilter(assetManager, shadowMapSize);
         plsf.setLight(light);
-        plsf.setShadowIntensity(0.3f);
+        plsf.setShadowIntensity(0.1f/9);
         plsf.setEnabled(true);
         app.filterPostProcessor.addFilter(plsf);
     }
@@ -81,11 +76,16 @@ public class TorchHolder extends Node {
         }
     }
 
-    private PointLight createLight(Vector3f lightSourcePosition) {
+    public PointLight createLight(Vector3f lightSourcePosition, AssetManager assetManager) {
         PointLight torchLight = new PointLight();
         torchLight.setColor(ColorRGBA.Orange.mult(10f));
         torchLight.setRadius(15f);
         torchLight.setPosition(lightSourcePosition);
+        if (isFirst) {
+            createShadowRenderer(assetManager, SHADOW_MAP);
+        } else {
+            createShadowFilter(assetManager, SHADOW_MAP);
+        }
         return torchLight;
     }
 
@@ -127,7 +127,7 @@ public class TorchHolder extends Node {
         }
     }
 
-    private void cleanupShadows() {
+    public void cleanupShadows() {
         if (plsr != null) {
             app.getViewPort().removeProcessor(plsr);
             plsr = null;

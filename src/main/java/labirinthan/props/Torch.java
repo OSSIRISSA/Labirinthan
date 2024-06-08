@@ -16,10 +16,11 @@ public class Torch {
     public final Spatial torchMesh;
     private final AssetManager assetManager;
     public final ParticleEmitter fire;
+    public final Node fireNode;
 
     final Vector3f TORCH_MESH_LOCATION = new Vector3f(-0.11f, 0.1f, 0);
-    final float TORCH_MESH_ROTATION_X = (-FastMath.PI/2)/90*73;
-    final static float TORCH_MESH_ROTATION_Y = -FastMath.PI/2;
+    final float TORCH_MESH_ROTATION_X = (FastMath.PI/2)/90*-10;
+    final static float TORCH_MESH_ROTATION_Y = (FastMath.PI/2)/90*-42;
     final Vector3f FIRE_LOCATION = new Vector3f(-0.25f, 0.7f, 0);
 
     public Torch(AssetManager assetManager, Node torchNode){
@@ -32,9 +33,11 @@ public class Torch {
 
         torchNode.attachChild(this.torchMesh);
 
+        fireNode = new Node("Fire");
         fire = createFire();
-        torchNode.attachChild(fire);
-        fire.setLocalTranslation(FIRE_LOCATION);
+        fireNode.attachChild(fire);
+        fireNode.setLocalTranslation(FIRE_LOCATION);
+        torchNode.attachChild(fireNode);
     }
 
     private ParticleEmitter createFire(){
