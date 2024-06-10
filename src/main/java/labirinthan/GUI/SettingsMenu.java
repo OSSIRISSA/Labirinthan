@@ -17,6 +17,10 @@ public class SettingsMenu {
     private final AssetManager assetManager;
     private final MainMenu mainMenu;
 
+    private Container graphicsTab;
+    private Container audioTab;
+    private Container controlsTab;
+
     private final BitmapFont mainFont;
     private TextField widthField;
     private TextField heightField;
@@ -81,19 +85,29 @@ public class SettingsMenu {
         tabsContainer.addChild(tabs);
 
         // Graphics Tab
-        Container graphicsTab = new Container(new SpringGridLayout(Axis.Y, Axis.X, FillMode.None, FillMode.Even));
+        graphicsTab = new Container(new SpringGridLayout(Axis.Y, Axis.X, FillMode.None, FillMode.Even));
         createGraphicsSettings(graphicsTab);
         tabs.addTab("Graphics", graphicsTab);
 
         // Audio Tab
-        Container audioTab = new Container(new SpringGridLayout(Axis.Y, Axis.X, FillMode.None, FillMode.Even));
+        audioTab = new Container(new SpringGridLayout(Axis.Y, Axis.X, FillMode.None, FillMode.Even));
         createAudioSettings(audioTab);
         tabs.addTab("Audio", audioTab);
 
         // Controls Tab
-        Container controlsTab = new Container(new SpringGridLayout(Axis.Y, Axis.X, FillMode.None, FillMode.Even));
+        controlsTab = new Container(new SpringGridLayout(Axis.Y, Axis.X, FillMode.None, FillMode.Even));
         createControlsSettings(controlsTab);
         tabs.addTab("Controls", controlsTab);
+    }
+
+    private void redrawSettings(){
+        graphicsTab.detachAllChildren();
+        audioTab.detachAllChildren();
+        controlsTab.detachAllChildren();
+
+        createGraphicsSettings(graphicsTab);
+        createAudioSettings(audioTab);
+        createControlsSettings(controlsTab);
     }
 
     private void createGraphicsSettings(Container graphicsTab) {
@@ -141,7 +155,6 @@ public class SettingsMenu {
         audioTab.addChild(volumeLabel,0,0);
         volumeSlider = audioTab.addChild(new Slider(new DefaultRangedValueModel(0, 100, settings.getFloat("Master Volume")*100)),0,1);
         volumeSlider.setPreferredSize(new Vector3f(300, 48, 0));
-        System.out.println(settings.getFloat("Master Volume"));
 
         Label musicLabel = new Label("Music Volume");
         musicLabel.setFontSize(48f);
@@ -149,7 +162,6 @@ public class SettingsMenu {
         audioTab.addChild(musicLabel,1,0);
         musicSlider = audioTab.addChild(new Slider(new DefaultRangedValueModel(0, 100, settings.getFloat("Music Volume")*100)),1,1);
         musicSlider.setPreferredSize(new Vector3f(300, 48, 0));
-        System.out.println(settings.getFloat("Music Volume"));
 
         Label soundLabel = new Label("Sound Volume");
         soundLabel.setFontSize(48f);
@@ -157,11 +169,9 @@ public class SettingsMenu {
         audioTab.addChild(soundLabel,2,0);
         soundSlider = audioTab.addChild(new Slider(new DefaultRangedValueModel(0, 100, settings.getFloat("Sound Volume")*100)),2,1);
         soundSlider.setPreferredSize(new Vector3f(300, 48, 0));
-        System.out.println(settings.getFloat("Sound Volume"));
     }
 
     private void createControlsSettings(Container controlsTab) {
-        // Add control settings here
         controlsTab.addChild(new Label("Control Settings Coming Soon")).setFontSize(48f);
     }
 
@@ -184,5 +194,6 @@ public class SettingsMenu {
         settings.putFloat("Music Volume", (float) (musicSlider.getModel().getValue()/musicSlider.getModel().getMaximum()));
         settings.putFloat("Sound Volume", (float) (soundSlider.getModel().getValue()/soundSlider.getModel().getMaximum()));
         app.restart();
+        createSettingsScreen();
     }
 }

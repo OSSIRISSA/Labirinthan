@@ -40,24 +40,23 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
     private PointLight light;
 
     private final Vector3f walkDirection = new Vector3f();
+    private static Quaternion defaultCameraRotation;
     private boolean left = false, right = false, forward = false, backward = false;
     public boolean isCarryingTorch = false;
     public boolean isPuzzleFound = false;
-    public boolean isDead = false; // Flag to check if the character is dead
+    public static boolean isDead = false;
+    private static boolean isKeyInitialized = false;
 
     private InteractionType interactType = InteractionType.NONE;
 
     final float CHARACTER_SPEED = 10f;
     final float JUMP_FORCE = 400f;
 
-    private float health = 1.0f;
+    public float health = 1.0f;
 
     private Node torchNode;
     private Node lightNode;
     private TorchHolder torchHolder;
-
-    private boolean isPlayedSound = false;
-
 
     private float torchTimer = 0f;
     private final float TORCH_DURATION = 30f;
@@ -89,10 +88,18 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         float aspect = (float) this.app.getCamera().getWidth() / this.app.getCamera().getHeight();
         this.app.getCamera().setFrustumPerspective(45f, aspect, 0.1f, 1000f);
 
+        if (defaultCameraRotation==null){
+            defaultCameraRotation = this.app.getCamera().getRotation();
+        } else this.app.getCamera().setRotation(defaultCameraRotation);
+
+        //this.app.getCamera().setRotation(new Quaternion().fromAngleAxis(FastMath.HALF_PI, Vector3f.UNIT_Z));
+
         addCollisionListener();
 
-        initKeys();
-
+        if (!isKeyInitialized) {
+            initKeys();
+            isKeyInitialized = true;
+        }
     }
 
     private void initKeys() {
@@ -142,12 +149,8 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
     private void trapAction() {
         TrapMaster trapMaster = ((TrapInteractionArea) interactionObject).getParent();
         switch (trapMaster.trapType) {
-            case MINE -> {
-                trapMaster.startMineExplode();
-            }
-            case SPIKE -> {
-                trapMaster.startDropAnimation();
-            }
+            case MINE -> trapMaster.startMineExplode();
+            case SPIKE -> trapMaster.startDropAnimation();
         }
     }
 
@@ -250,12 +253,16 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         hud.updateHealthPercent(health);
     }
 
+    public void newLevelHPActions() {
+        hpActions(health / 2f);
+    }
+
     private void death() {
         app.getFlyByCamera().setEnabled(false);
         dequipTorch();
         isDead = true;
 
-        CameraControl cameraControl = new CameraControl(this.app.getCamera(), characterNode.getLocalTranslation().add(0, 0.2f, 0), new Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X).fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_Z), 15.0f, hud);
+        CameraControl cameraControl = new CameraControl(app, this.app.getCamera(), characterNode.getLocalTranslation().add(0, 0.2f, 0), new Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X).fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_Z), 15.0f, hud);
         cameraNode.addControl(cameraControl);
 
         app.getInputManager().setCursorVisible(false);

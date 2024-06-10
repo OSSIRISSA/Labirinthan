@@ -35,7 +35,8 @@ public class TrapMaster extends Node {
     private boolean isDropping;
     private final Vector3f endPosition;
     private float speed;
-    private boolean isTriggered;
+    private boolean isTriggered = false;
+    private boolean isSoundPlayed = false;
 
     public TrapMaster(Labirinthan application, AssetManager assetManager, Node localRootNode, float px, float py, float pz, int direction) {
         this.app = application;
@@ -78,7 +79,6 @@ public class TrapMaster extends Node {
                     this.attachChild(decoration);
                 }
 
-                // Initialize drop animation parameters
                 Vector3f startPosition = this.getLocalTranslation();
                 this.speed = 10f;
                 this.isDropping = false;
@@ -99,7 +99,10 @@ public class TrapMaster extends Node {
 
     public void startDropAnimation() {
         if (trapType == TrapType.SPIKE) {
-            Labirinthan.level.playSpikeSound(interactionAreaNode);
+            if (!isSoundPlayed) {
+                Labirinthan.level.playSpikeSound(interactionAreaNode);
+                isSoundPlayed = true;
+            }
             this.isDropping = true;
         }
     }
@@ -138,7 +141,10 @@ public class TrapMaster extends Node {
     }
 
     public void startMineExplode() {
-        Labirinthan.level.playMineSound(interactionAreaNode);
+        if (!isSoundPlayed) {
+            Labirinthan.level.playMineSound(interactionAreaNode);
+            isSoundPlayed = true;
+        }
         scheduler.schedule(() -> app.enqueue(this::explodeMine), 1, TimeUnit.SECONDS);
     }
 

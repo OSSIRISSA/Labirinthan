@@ -4,9 +4,11 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.StatsAppState;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.input.FlyByCamera;
 import com.jme3.math.ColorRGBA;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.FogFilter;
+import com.jme3.renderer.Camera;
 import com.jme3.system.AppSettings;
 import labirinthan.GUI.MainHUD;
 import labirinthan.GUI.MainMenu;
@@ -22,6 +24,7 @@ public class Labirinthan extends SimpleApplication {
     public MainCharacter character;
     private MainHUD mainHUD;
     public FilterPostProcessor filterPostProcessor;
+    private FogFilter fog;
 
     public static final float X = Level.wallWidth * 1 + Level.passageWidth * 0.5f;
     public static final float Y = 0;
@@ -29,7 +32,6 @@ public class Labirinthan extends SimpleApplication {
     public static Level level;
 
     public static boolean isFlying = false;
-
 
     public static void main(String[] args) {
         Labirinthan app = new Labirinthan();
@@ -55,15 +57,8 @@ public class Labirinthan extends SimpleApplication {
         MainMenu mainMenu = new MainMenu(this, guiNode, settings, assetManager);
         mainMenu.createHomeScreen();
 
-        //init Physics
-        bulletAppState = new BulletAppState();
-        stateManager.attach(bulletAppState);
-
-        // Enable physics debug
-        //bulletAppState.setDebugEnabled(true);
-
         //COMMENT THIS IF YOU WANT TO INTERACT WITH MAIN MENU
-        startGame();
+        //startGame();
         //THIS
 
         flyCam.setMoveSpeed(10);
@@ -72,16 +67,39 @@ public class Labirinthan extends SimpleApplication {
     public void startGame() {
         guiNode.detachAllChildren();
 
-        level = new Level0(this, bulletAppState, guiNode, settings);
-        stateManager.attach(level);
-        addFog();
+        MainMenu.LoadingScreen.show(guiNode, assetManager, settings);
+        enqueue(() -> {
+            if (fog!=null) {
+                filterPostProcessor.removeFilter(fog);
+            }
+            if (level != null) {
+                level.removeLight();
+                stateManager.detach(level);
+            }
+            if (character != null) {
+                stateManager.detach(character);
+            }
 
-        mainHUD = new MainHUD(guiNode, settings, assetManager);
-        mainHUD.createMainHUD();
-        character = new MainCharacter(mainHUD, settings);
-        stateManager.attach(character);
+            if (bulletAppState != null) {
+                bulletAppState.cleanup();
+                stateManager.detach(bulletAppState);
+            }
+            bulletAppState = new BulletAppState();
+            stateManager.attach(bulletAppState);
+            bulletAppState.setDebugEnabled(false);
+            level = new Level0(this, bulletAppState, guiNode, settings);
+            stateManager.attach(level);
+            addFog();
 
-        levelPreparation(false);
+            mainHUD = new MainHUD(guiNode, settings, assetManager);
+            mainHUD.createMainHUD();
+            character = new MainCharacter(mainHUD, settings);
+            stateManager.attach(character);
+
+            levelPreparation(false);
+            MainMenu.LoadingScreen.hide(guiNode);
+            return null;
+        });
     }
 
     public void levelPreparation(boolean toTurnOff) {
@@ -90,7 +108,7 @@ public class Labirinthan extends SimpleApplication {
     }
 
     private void addFog() {
-        FogFilter fog = new FogFilter();
+        fog = new FogFilter();
         fog.setFogColor(new ColorRGBA(0.01f, 0.01f, 0.01f, 1f));
         fog.setFogDistance(600f);
         fog.setFogDensity(4.0f);
@@ -99,44 +117,55 @@ public class Labirinthan extends SimpleApplication {
     }
 
     public void startLevel1() {
-        guiNode.attachChild(level.localPuzzleNode);
-        stateManager.detach(character);
-        level.removeLight();
-        stateManager.detach(level);
-        bulletAppState.cleanup();
-        stateManager.detach(bulletAppState);
+        //guiNode.attachChild(level.localPuzzleNode);
+        MainMenu.LoadingScreen.show(guiNode, assetManager, settings);
+        enqueue(() -> {
+            stateManager.detach(character);
+            level.removeLight();
+            stateManager.detach(level);
+            bulletAppState.cleanup();
+            stateManager.detach(bulletAppState);
 
-        bulletAppState = new BulletAppState();
-        stateManager.attach(bulletAppState);
-        //bulletAppState.setDebugEnabled(true);
+            bulletAppState = new BulletAppState();
+            stateManager.attach(bulletAppState);
+            //bulletAppState.setDebugEnabled(true);
 
-        level = new Level1(this, bulletAppState, guiNode, settings);
-        stateManager.attach(level);
-        stateManager.attach(character);
+            level = new Level1(this, bulletAppState, guiNode, settings);
+            stateManager.attach(level);
+            stateManager.attach(character);
+            character.newLevelHPActions();
 
-        levelPreparation(false);
 
-        character.isPuzzleFound = false;
+            levelPreparation(false);
+            character.isPuzzleFound = false;
+            MainMenu.LoadingScreen.hide(guiNode);
+            return null;
+        });
     }
 
     public void startLevel2() {
-        guiNode.attachChild(level.localPuzzleNode);
-        stateManager.detach(character);
-        level.removeLight();
-        stateManager.detach(level);
-        bulletAppState.cleanup();
-        stateManager.detach(bulletAppState);
+        //guiNode.attachChild(level.localPuzzleNode);
+        MainMenu.LoadingScreen.show(guiNode, assetManager, settings);
+        enqueue(() -> {
+            stateManager.detach(character);
+            level.removeLight();
+            stateManager.detach(level);
+            bulletAppState.cleanup();
+            stateManager.detach(bulletAppState);
 
-        bulletAppState = new BulletAppState();
-        stateManager.attach(bulletAppState);
-        //bulletAppState.setDebugEnabled(true);
+            bulletAppState = new BulletAppState();
+            stateManager.attach(bulletAppState);
+            //bulletAppState.setDebugEnabled(true);
 
-        level = new Level2(this, bulletAppState, guiNode, settings);
-        stateManager.attach(level);
-        stateManager.attach(character);
+            level = new Level2(this, bulletAppState, guiNode, settings);
+            stateManager.attach(level);
+            stateManager.attach(character);
+            character.newLevelHPActions();
 
-        levelPreparation(false);
-
-        character.isPuzzleFound = false;
+            levelPreparation(false);
+            character.isPuzzleFound = false;
+            MainMenu.LoadingScreen.hide(guiNode);
+            return null;
+        });
     }
 }

@@ -20,7 +20,7 @@ public class PuzzleCabinet extends Node {
     private float animationTime = 0;
     private boolean movingUp = true;
 
-    public PuzzleCabinet(Labirinthan application, AssetManager assetManager, Node localRootNode, float px, float py, float pz, PuzzleType puzzleType) {
+    public PuzzleCabinet(Labirinthan application, AssetManager assetManager, Node localRootNode, float px, float py, float pz, PuzzleType puzzleType, float direction) {
         this.app = application;
         this.rootNode = localRootNode;
         this.puzzleType = puzzleType;
@@ -54,6 +54,12 @@ public class PuzzleCabinet extends Node {
             }
         }
         this.attachChild(bookMesh);
+
+        switch ((int) direction) {
+            case 1 -> this.rotate(0, -FastMath.HALF_PI, 0);
+            case 4 -> this.rotate(0, FastMath.PI, 0);
+            case 3 -> this.rotate(0, FastMath.HALF_PI, 0);
+        }
 
         interactionAreaNode = new Node("InteractionArea");
         this.attachChild(interactionAreaNode);

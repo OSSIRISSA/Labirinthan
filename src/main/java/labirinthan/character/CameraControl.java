@@ -5,9 +5,11 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.control.AbstractControl;
 import labirinthan.GUI.MainHUD;
+import labirinthan.Labirinthan;
 
 public class CameraControl extends AbstractControl {
 
+    private final Labirinthan game;
     private final Camera camera;
     private final Vector3f targetPosition;
     private final Quaternion targetRotation;
@@ -15,7 +17,8 @@ public class CameraControl extends AbstractControl {
     private final MainHUD hud;
     private float elapsedTime = 0f;
 
-    public CameraControl(Camera camera, Vector3f targetPosition, Quaternion targetRotation, float duration, MainHUD hud) {
+    public CameraControl(Labirinthan game, Camera camera, Vector3f targetPosition, Quaternion targetRotation, float duration, MainHUD hud) {
+        this.game = game;
         this.camera = camera;
         this.targetPosition = targetPosition;
         this.targetRotation = targetRotation;
@@ -39,14 +42,17 @@ public class CameraControl extends AbstractControl {
             Quaternion newRotation = new Quaternion().slerp(camera.getRotation(), targetRotation, progress);
             camera.setRotation(newRotation);
 
-            if (progress<0.5) hud.updateLidOverlay(progress);
-        } else {
-            spatial.removeControl(this);
+            if (progress<0.4f) hud.updateLidOverlay(progress);
+            if (progress>0.8f){
+                MainCharacter.isDead = false;
+                spatial.removeControl(this);
+                game.stop();
+
+            }
         }
     }
 
     @Override
     protected void controlRender(com.jme3.renderer.RenderManager rm, com.jme3.renderer.ViewPort vp) {
-        // No rendering needed
     }
 }

@@ -166,6 +166,7 @@ public class Level extends AbstractAppState {
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX + wallWidth * 3 + passageWidth * 2.5f);
         res.add(startZ + wallWidth * 2 + passageWidth * 1.5f);
+        res.add(2f);
 
         return res;
     }
@@ -205,6 +206,7 @@ public class Level extends AbstractAppState {
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX + wallWidth * 4 + passageWidth * 3.5f);
         res.add(startZ + wallWidth * 4 + passageWidth * 3.5f);
+        res.add(2f);
 
         return res;
     }
@@ -243,6 +245,7 @@ public class Level extends AbstractAppState {
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX + wallWidth * 5 + passageWidth * 4.5f);
         res.add(startZ + wallWidth + passageWidth * 0.5f);
+        res.add(3f);
         return res;
     }
 
@@ -275,6 +278,7 @@ public class Level extends AbstractAppState {
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX + wallWidth * 4 + passageWidth * 3.5f);
         res.add(startZ + wallWidth * 4 + passageWidth * 3.5f);
+        res.add(4f);
         return res;
     }
 
@@ -309,6 +313,7 @@ public class Level extends AbstractAppState {
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX + wallWidth * 5 + passageWidth * 4.5f);
         res.add(startZ + wallWidth * 2 + passageWidth * 1.5f);
+        res.add(4f);
         return res;
     }
 
@@ -345,6 +350,7 @@ public class Level extends AbstractAppState {
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX + wallWidth * 3 + passageWidth * 2.5f);
         res.add(startZ + wallWidth * 4 + passageWidth * 3.5f);
+        res.add(2f);
         return res;
     }
 
@@ -382,6 +388,7 @@ public class Level extends AbstractAppState {
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX + wallWidth * 4 + passageWidth * 3.5f);
         res.add(startZ + wallWidth * 2 + passageWidth * 1.5f);
+        res.add(4f);
         return res;
     }
 
@@ -416,6 +423,7 @@ public class Level extends AbstractAppState {
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX + wallWidth * 5 + passageWidth * 4.5f);
         res.add(startZ + wallWidth * 4 + passageWidth * 3.5f);
+        res.add(4f);
         return res;
     }
 
@@ -449,6 +457,7 @@ public class Level extends AbstractAppState {
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX + wallWidth * 1 + passageWidth * 0.5f);
         res.add(startZ + wallWidth * 5 + passageWidth * 4.5f);
+        res.add(2f);
         return res;
     }
 
@@ -484,6 +493,7 @@ public class Level extends AbstractAppState {
         ArrayList<Float> res = new ArrayList<>();
         res.add(startX + wallWidth * 4 + passageWidth * 3.5f);
         res.add(startZ + wallWidth * 5 + passageWidth * 4.5f);
+        res.add(2f);
         return res;
     }
 
@@ -537,7 +547,7 @@ public class Level extends AbstractAppState {
 
     public void playCreepySound(Node characterNode) {
         Random rand = new Random();
-        if (rand.nextInt(100) == 0) {
+        if (rand.nextInt(250) == 0) {
             creepySound = new AudioNode(assetManager, "Sounds/LevelSounds/" + rand.nextInt(1, 6) + ".wav", AudioData.DataType.Buffer);
             creepySound.setPositional(false); // Use true for 3D sounds
             creepySound.setLooping(false); // Set to true if you want the sound to loop
@@ -545,7 +555,6 @@ public class Level extends AbstractAppState {
             characterNode.attachChild(creepySound);
             creepySound.play();
         }
-
     }
 
     public void playMineSound(Node node) {
@@ -579,7 +588,7 @@ public class Level extends AbstractAppState {
         AudioNode deathSound = new AudioNode(assetManager, "Sounds/player-death.wav", AudioData.DataType.Buffer);
         deathSound.setPositional(false); // Use true for 3D sounds
         deathSound.setLooping(false); // Set to true if you want the sound to loop
-        deathSound.setVolume(7*4*settings.getFloat("Master Volume")*settings.getFloat("Sound Volume")); // Set the volume (1 is default, 0 is silent)
+        deathSound.setVolume(10*4*settings.getFloat("Master Volume")*settings.getFloat("Sound Volume")); // Set the volume (1 is default, 0 is silent)
         rootNode.attachChild(deathSound);
         deathSound.play();
     }

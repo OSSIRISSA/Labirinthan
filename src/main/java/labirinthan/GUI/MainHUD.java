@@ -27,6 +27,7 @@ public class MainHUD {
     private Panel interactionPanel;
     private Geometry topLid;
     private Geometry bottomLid;
+    private Label deathText;
     private final Node mainHUDNode = new Node("Main HUD");
 
     private static final String DEFAULT_INTERACTION_TEXT = "  Press 'E' to ";
@@ -44,7 +45,7 @@ public class MainHUD {
     }
 
     public void createMainHUD() {
-        guiNode.detachAllChildren();
+        //guiNode.detachAllChildren();
 
         // HP Bar
         hpBar = new ProgressBar();
@@ -83,12 +84,18 @@ public class MainHUD {
         topLid = createLidOverlay();
         bottomLid = createLidOverlay();
         bottomLid.rotate(0,0,FastMath.PI);
-
         topLid.setLocalTranslation(0, settings.getHeight(), 3);
         bottomLid.setLocalTranslation(settings.getWidth(), 0, 3);
-
         mainHUDNode.attachChild(topLid);
         mainHUDNode.attachChild(bottomLid);
+
+        deathText = new Label("Letum non? omnia finiT");
+        deathText.setFont(mainFont);
+        deathText.setFontSize(72);
+        deathText.setColor(ColorRGBA.Red);
+        deathText.setAlpha(0);
+        deathText.setLocalTranslation((settings.getWidth() - deathText.getPreferredSize().x) / 2f, (settings.getHeight() + deathText.getPreferredSize().y) / 2f, 4);
+        mainHUDNode.attachChild(deathText);
 
         guiNode.attachChild(mainHUDNode);
     }
@@ -105,9 +112,10 @@ public class MainHUD {
     }
 
     public void updateLidOverlay(float progress) {
-        float lidPosition = settings.getHeight() * (1 - 2*progress);
+        float lidPosition = settings.getHeight() * (1 - 2.5f*progress);
         topLid.setLocalTranslation(0, lidPosition, 3);
         bottomLid.setLocalTranslation(settings.getWidth(), settings.getHeight()-lidPosition, 3);
+        deathText.setAlpha(1.25f*progress);
     }
 
     public void detachAllExceptLids(){

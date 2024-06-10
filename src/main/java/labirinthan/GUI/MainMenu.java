@@ -4,8 +4,12 @@ import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioData;
 import com.jme3.audio.AudioNode;
 import com.jme3.font.BitmapFont;
+import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.shape.Quad;
 import com.jme3.system.AppSettings;
 import com.simsilica.lemur.Button;
 import com.simsilica.lemur.GuiGlobals;
@@ -72,7 +76,10 @@ public class MainMenu {
         playButton.setLocalTranslation((settings.getWidth()-playButton.getPreferredSize().x) / 2f, (settings.getHeight()-playButton.getPreferredSize().y) / 2f + playButton.getPreferredSize().y, 1);
         playButton.addClickCommands(source -> playClickSound());
         playButton.addCommands(Button.ButtonAction.HighlightOn, source -> hover.play());
-        playButton.addClickCommands(source -> app.startGame());
+        playButton.addClickCommands(source -> {
+            guiNode.detachAllChildren();
+            app.startGame();
+        });
         guiNode.attachChild(playButton);
         float yOffset = playButton.getLocalTranslation().y - playButton.getPreferredSize().y/2f;
 
@@ -117,5 +124,47 @@ public class MainMenu {
         button.setPreferredSize(new Vector3f(lableToMatch.getPreferredSize().x/1.5f, button.getPreferredSize().y, 0));
         button.setLocalTranslation((settings.getWidth()-button.getPreferredSize().x) / 2f, yOffset - button.getPreferredSize().y, 1);
         return button;
+    }
+
+    public static class LoadingScreen {
+        private static Label loadingLabel;
+        private static Geometry background;
+
+        public static void show(Node guiNode, AssetManager assetManager, AppSettings settings) {
+            // Create black background quad if not already created
+            if (background == null) {
+                Quad quad = new Quad(settings.getWidth(), settings.getHeight());
+                background = new Geometry("Background", quad);
+                Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+                mat.setColor("Color", ColorRGBA.Black);
+                background.setMaterial(mat);
+                background.setLocalTranslation(0, 0, 2); // Ensure it is rendered behind the loading label
+            }
+            guiNode.attachChild(background);
+
+            // Create loading label if not already created
+            if (loadingLabel == null) {
+                BitmapFont font = assetManager.loadFont("Interface/demi.fnt");
+                loadingLabel = new Label("Loading...");
+                loadingLabel.setFont(font);
+                loadingLabel.setFontSize(72f);
+                loadingLabel.setLocalTranslation(
+                        (settings.getWidth() - loadingLabel.getPreferredSize().x) / 2f,
+                        (settings.getHeight() + loadingLabel.getPreferredSize().y) / 2f,
+                        3); // Ensure it is rendered in front of the background
+            }
+            guiNode.attachChild(loadingLabel);
+        }
+
+        public static void hide(Node guiNode) {
+            if (loadingLabel != null) {
+                guiNode.detachChild(loadingLabel);
+                loadingLabel = null;
+            }
+            if (background != null) {
+                guiNode.detachChild(background);
+                background = null;
+            }
+        }
     }
 }
