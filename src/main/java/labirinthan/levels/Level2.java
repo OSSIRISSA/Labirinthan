@@ -1,3 +1,9 @@
+/**
+ * Task: Game
+ * File: Level2.java
+ *
+ *  @author Iryna Hryshchenko
+ */
 package labirinthan.levels;
 
 import com.jme3.app.Application;
@@ -14,6 +20,13 @@ import java.util.ArrayList;
 public class Level2 extends Level {
 
 
+    /**
+     * Level2 constructor
+     * @param application - Labirinthan app
+     * @param bulletAppState - bulletAppState
+     * @param guiNode - guiNode
+     * @param settings - settings
+     */
     public Level2(Labirinthan application, BulletAppState bulletAppState, Node guiNode, AppSettings settings) {
         super(application, "Level2", guiNode, settings);
         this.labyrinthSizeX = 3;
@@ -69,14 +82,8 @@ public class Level2 extends Level {
             }
         }
 
-
-        //floor = new Floor(labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth, 0.1f, labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth, assetManager, localRootNode, (labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth)/2, -0.05f, (labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth)/2, bulletAppState);
-        //ceiling = new Ceiling(labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth, 0.1f, labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth, assetManager, localRootNode, (labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth)/2, wallHeight-0.05f, (labyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth)/2, bulletAppState);
         chooseCross = random.nextInt(blocksInfo.size());
         cross = new PuzzleCabinet((Labirinthan) application, assetManager, localRootNode, blocksInfo.get(chooseCross).get(0), -0.05f, blocksInfo.get(chooseCross).get(1), PuzzleType.SUDOKU, blocksInfo.get(chooseCross).get(2));
-
-        //for(int i=0;i<blocksDecorationInfo.size()-1;i+=3){
-        //}
 
         //Closing extras
         addWall(labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth, wallHeight, wallWidth, (labyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth) / 2, wallHeight / 2, wallWidth / 2);
@@ -87,45 +94,4 @@ public class Level2 extends Level {
 
         this.application.getViewPort().addProcessor(this.application.filterPostProcessor);
     }
-    /*@Override
-    public void updateBlocks(float x, float z) {
-        currentLabyrinthSizeX = 1;
-        currentLabyrinthSizeZ = 1;
-        localRootNode.detachAllChildren();
-        int xPlacement = (int) (x/(wallWidth * 5 + passageWidth * 5));
-        int zPlacement = (int) (z/(wallWidth * 5 + passageWidth * 5));
-        localRootNode.attachChild(blocks[xPlacement][zPlacement]);
-        if(x/(wallWidth * 5 + passageWidth * 5)-xPlacement>0.5f){
-            if(xPlacement+1<labyrinthSizeX){
-                localRootNode.attachChild(blocks[xPlacement+1][zPlacement]);
-                makeXWall((xPlacement+1)*5*(wallWidth+passageWidth), zPlacement*5*(wallWidth+passageWidth));
-                currentLabyrinthSizeX++;
-            }
-        }
-        else {
-            if(xPlacement-1>-1) {
-                localRootNode.attachChild(blocks[xPlacement - 1][zPlacement]);
-                makeXWall(xPlacement*5*(wallWidth+passageWidth), zPlacement*5*(wallWidth+passageWidth));
-                currentLabyrinthSizeX++;
-            }
-        }
-        if(z/(wallWidth * 5 + passageWidth * 5)-zPlacement>0.5f){
-            if(zPlacement+1<labyrinthSizeZ){
-                localRootNode.attachChild(blocks[xPlacement][zPlacement+1]);
-                makeZWall(xPlacement*5*(wallWidth+passageWidth), (zPlacement+1)*5*(wallWidth+passageWidth));
-                currentLabyrinthSizeZ++;
-            }
-        }
-        else {
-            if(zPlacement-1>-1){
-                localRootNode.attachChild(blocks[xPlacement][zPlacement-1]);
-                makeZWall(xPlacement*5*(wallWidth+passageWidth), zPlacement*5*(wallWidth+passageWidth));
-                currentLabyrinthSizeZ++;
-            }
-        }
-        addWallBorder(currentLabyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth, wallHeight, wallWidth, xPlacement+(currentLabyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth) / 2, wallHeight / 2, zPlacement+wallWidth / 2);
-        addWallBorder(wallWidth, wallHeight, currentLabyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth, xPlacement+wallWidth / 2, wallHeight / 2, zPlacement+(currentLabyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth) / 2);
-        addWallBorder(currentLabyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth, wallHeight, wallWidth, xPlacement+(currentLabyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth) / 2, wallHeight / 2, zPlacement+currentLabyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth*0.5f);
-        addWallBorder(wallWidth, wallHeight, currentLabyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth, xPlacement+currentLabyrinthSizeX*5*(wallWidth+passageWidth)+wallWidth*0.5f, wallHeight / 2, zPlacement+(currentLabyrinthSizeZ*5*(wallWidth+passageWidth)+wallWidth) / 2);
-    }*/
 }

@@ -1,3 +1,9 @@
+/**
+ * Task: Game
+ * File: Level.java
+ *
+ *  @author Iryna Hryshchenko
+ */
 package labirinthan.levels;
 
 import com.jme3.app.Application;
@@ -39,10 +45,10 @@ public class Level extends AbstractAppState {
     public Ceiling ceiling;
     public PuzzleCabinet cross;
     public TrapMaster trap;
+    public Decoration decoration;
 
     protected ArrayList<Wall> walls = new ArrayList<>();
     public ArrayList<ArrayList<Float>> blocksInfo = new ArrayList<>();
-    protected ArrayList<Float> blocksDecorationInfo = new ArrayList<>();
     protected Node[][] blocks;
 
     public ArrayList<TorchHolder>[][] allTorches;
@@ -62,6 +68,13 @@ public class Level extends AbstractAppState {
 
     private boolean isFirstTorch = true;
 
+    /**
+     * Level constructor
+     * @param application - Labirinthan app
+     * @param name - level name
+     * @param guiNode - guiNode
+     * @param settings - settings
+     */
     public Level(Labirinthan application, String name, Node guiNode, AppSettings settings) {
         this.rootNode = application.getRootNode();
         this.guiNode = guiNode;
@@ -93,6 +106,15 @@ public class Level extends AbstractAppState {
         guiNode.detachChild(localPuzzleNode);
     }
 
+    /**
+     * Adding Wall
+     * @param x - size x
+     * @param y - size y
+     * @param z - size z
+     * @param px - x
+     * @param py - y
+     * @param pz - z
+     */
     public void addWall(float x, float y, float z, float px, float py, float pz) {
         if (x == wallWidth) {
             z -= 0.01f;
@@ -103,16 +125,14 @@ public class Level extends AbstractAppState {
         walls.add(new Wall(x, y, z, assetManager, currentNode, px, py, pz, bulletAppState));
     }
 
-    public void addWallBorder(float x, float y, float z, float px, float py, float pz) {
-        if (x == wallWidth) {
-            z -= 0.01f;
-        }
-        if (z == wallWidth) {
-            x -= 0.01f;
-        }
-        walls.add(new Wall(x, y, z, assetManager, localRootNode, px, py, pz, bulletAppState));
-    }
-
+    /**
+     * Loading torch
+     * @param x - x
+     * @param z - z
+     * @param direction - facing direction
+     * @param roomsNumber - number of rooms
+     * @param allTorches - array of all torches
+     */
     private void loadTorch(float x, float z, int direction, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         if (random.nextInt(10) != 0) {
             TorchHolder torchHolder = new TorchHolder(application, assetManager, rootNode, isFirstTorch, roomsNumber, allTorches);
@@ -120,10 +140,7 @@ public class Level extends AbstractAppState {
             currentNode.attachChild(torchHolder);
             switch (direction) {
                 case 1 -> torchHolder.rotateTorch(0, -FastMath.HALF_PI, 0);
-                case 2 -> {
-                    //x+=wallWidth/2;
-                    torchHolder.rotateTorch(0, FastMath.PI, 0);
-                }
+                case 2 -> torchHolder.rotateTorch(0, FastMath.PI, 0);
                 case 3 -> torchHolder.rotateTorch(0, FastMath.HALF_PI, 0);
             }
             torchHolder.moveTorch(x, 2.5f, z);
@@ -132,6 +149,15 @@ public class Level extends AbstractAppState {
         }
     }
 
+    /**
+     * Creating Block1
+     * @param startX - startX
+     * @param startZ - startZ
+     * @param node - node
+     * @param roomsNumber - number of rooms
+     * @param allTorches - array of all torches
+     * @return - possible cross' coords
+     */
     public ArrayList<Float> buildBlock1(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches) {
 
         currentNode = node;
@@ -171,6 +197,15 @@ public class Level extends AbstractAppState {
         return res;
     }
 
+    /**
+     * Creating Block2
+     * @param startX - startX
+     * @param startZ - startZ
+     * @param node - node
+     * @param roomsNumber - number of rooms
+     * @param allTorches - array of all torches
+     * @return - possible cross' coords
+     */
     public ArrayList<Float> buildBlock2(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         currentNode = node;
         makeFloor(startX, startZ);
@@ -211,6 +246,15 @@ public class Level extends AbstractAppState {
         return res;
     }
 
+    /**
+     * Creating Block3
+     * @param startX - startX
+     * @param startZ - startZ
+     * @param node - node
+     * @param roomsNumber - number of rooms
+     * @param allTorches - array of all torches
+     * @return - possible cross' coords
+     */
     public ArrayList<Float> buildBlock3(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         currentNode = node;
         makeFloor(startX, startZ);
@@ -249,6 +293,15 @@ public class Level extends AbstractAppState {
         return res;
     }
 
+    /**
+     * Creating Block4
+     * @param startX - startX
+     * @param startZ - startZ
+     * @param node - node
+     * @param roomsNumber - number of rooms
+     * @param allTorches - array of all torches
+     * @return - possible cross' coords
+     */
     public ArrayList<Float> buildBlock4(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         currentNode = node;
         makeFloor(startX, startZ);
@@ -282,6 +335,15 @@ public class Level extends AbstractAppState {
         return res;
     }
 
+    /**
+     * Creating Block5
+     * @param startX - startX
+     * @param startZ - startZ
+     * @param node - node
+     * @param roomsNumber - number of rooms
+     * @param allTorches - array of all torches
+     * @return - possible cross' coords
+     */
     public ArrayList<Float> buildBlock5(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         currentNode = node;
         makeFloor(startX, startZ);
@@ -317,6 +379,15 @@ public class Level extends AbstractAppState {
         return res;
     }
 
+    /**
+     * Creating Block6
+     * @param startX - startX
+     * @param startZ - startZ
+     * @param node - node
+     * @param roomsNumber - number of rooms
+     * @param allTorches - array of all torches
+     * @return - possible cross' coords
+     */
     public ArrayList<Float> buildBlock6(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         currentNode = node;
         makeFloor(startX, startZ);
@@ -354,6 +425,15 @@ public class Level extends AbstractAppState {
         return res;
     }
 
+    /**
+     * Creating Block7
+     * @param startX - startX
+     * @param startZ - startZ
+     * @param node - node
+     * @param roomsNumber - number of rooms
+     * @param allTorches - array of all torches
+     * @return - possible cross' coords
+     */
     public ArrayList<Float> buildBlock7(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         currentNode = node;
         makeFloor(startX, startZ);
@@ -392,6 +472,15 @@ public class Level extends AbstractAppState {
         return res;
     }
 
+    /**
+     * Creating Block8
+     * @param startX - startX
+     * @param startZ - startZ
+     * @param node - node
+     * @param roomsNumber - number of rooms
+     * @param allTorches - array of all torches
+     * @return - possible cross' coords
+     */
     public ArrayList<Float> buildBlock8(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         currentNode = node;
         makeFloor(startX, startZ);
@@ -427,6 +516,15 @@ public class Level extends AbstractAppState {
         return res;
     }
 
+    /**
+     * Creating Block9
+     * @param startX - startX
+     * @param startZ - startZ
+     * @param node - node
+     * @param roomsNumber - number of rooms
+     * @param allTorches - array of all torches
+     * @return - possible cross' coords
+     */
     public ArrayList<Float> buildBlock9(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         currentNode = node;
         makeFloor(startX, startZ);
@@ -461,6 +559,15 @@ public class Level extends AbstractAppState {
         return res;
     }
 
+    /**
+     * Creating Block10
+     * @param startX - startX
+     * @param startZ - startZ
+     * @param node - node
+     * @param roomsNumber - number of rooms
+     * @param allTorches - array of all torches
+     * @return - possible cross' coords
+     */
     public ArrayList<Float> buildBlock10(float startX, float startZ, Node node, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         currentNode = node;
         makeFloor(startX, startZ);
@@ -497,27 +604,32 @@ public class Level extends AbstractAppState {
         return res;
     }
 
-    public void makeFrameWalls(float startX, float startZ) {
-        addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, startX + (wallWidth * 3 + passageWidth * 2) / 2, wallHeight / 2, startZ + wallWidth / 2);
-        addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth / 2);
-        addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, startX + (wallWidth * 3 + passageWidth * 2) / 2, wallHeight / 2, startZ + wallWidth * 5.5f + passageWidth * 5);
-        addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth * 5.5f + passageWidth * 5);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth / 2, wallHeight / 2, startZ + (wallWidth * 3 + passageWidth * 2) / 2);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth * 5.5f + passageWidth * 5, wallHeight / 2, startZ + (wallWidth * 3 + passageWidth * 2) / 2);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth * 5.5f + passageWidth * 5, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
-        addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth / 2, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
-    }
 
+    /**
+     * Making long Z-Wall
+     * @param startX - startX
+     * @param startZ - startZ
+     */
     public void makeZWall(float startX, float startZ) {
         addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, startX + (wallWidth * 3 + passageWidth * 2) / 2, wallHeight / 2, startZ + wallWidth / 2);
         addWall((wallWidth * 3 + passageWidth * 2), wallHeight, wallWidth, startX + wallWidth * 4.5f + passageWidth * 4, wallHeight / 2, startZ + wallWidth / 2);
     }
 
+    /**
+     * Making long X-Wall
+     * @param startX - startX
+     * @param startZ - startZ
+     */
     public void makeXWall(float startX, float startZ) {
         addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth / 2, wallHeight / 2, startZ + (wallWidth * 3 + passageWidth * 2) / 2);
         addWall(wallWidth, wallHeight, wallWidth * 3 + passageWidth * 2, startX + wallWidth / 2, wallHeight / 2, startZ + wallWidth * 4.5f + passageWidth * 4);
     }
 
+    /**
+     * Making floor
+     * @param startX - startX
+     * @param startZ - startZ
+     */
     public void makeFloor(float startX, float startZ) {
         floor = new Floor((wallWidth * 5 + passageWidth * 5) / 2, 0.1f, (wallWidth * 5 + passageWidth * 5) / 2, assetManager, currentNode, startX + ((wallWidth * 5 + passageWidth * 5) * 0.25f), -0.05f, startZ + ((wallWidth * 5 + passageWidth * 5) * 0.25f), bulletAppState);
         floor = new Floor((wallWidth * 5 + passageWidth * 5) / 2, 0.1f, (wallWidth * 5 + passageWidth * 5) / 2, assetManager, currentNode, startX + ((wallWidth * 5 + passageWidth * 5) * 0.75f), -0.05f, startZ + ((wallWidth * 5 + passageWidth * 5) * 0.75f), bulletAppState);
@@ -525,6 +637,11 @@ public class Level extends AbstractAppState {
         floor = new Floor((wallWidth * 5 + passageWidth * 5) / 2, 0.1f, (wallWidth * 5 + passageWidth * 5) / 2, assetManager, currentNode, startX + ((wallWidth * 5 + passageWidth * 5) * 0.25f), -0.05f, startZ + ((wallWidth * 5 + passageWidth * 5) * 0.75f), bulletAppState);
     }
 
+    /**
+     * Making ceiling
+     * @param startX - startX
+     * @param startZ - startZ
+     */
     public void makeCeiling(float startX, float startZ) {
         ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5) / 2, 0.1f, (wallWidth * 5 + passageWidth * 5) / 2, assetManager, currentNode, startX + ((wallWidth * 5 + passageWidth * 5) * 0.25f), wallHeight - 0.05f, startZ + ((wallWidth * 5 + passageWidth * 5) * 0.75f), bulletAppState);
         ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5) / 2, 0.1f, (wallWidth * 5 + passageWidth * 5) / 2, assetManager, currentNode, startX + ((wallWidth * 5 + passageWidth * 5) * 0.75f), wallHeight - 0.05f, startZ + ((wallWidth * 5 + passageWidth * 5) * 0.75f), bulletAppState);
@@ -532,19 +649,30 @@ public class Level extends AbstractAppState {
         ceiling = new Ceiling((wallWidth * 5 + passageWidth * 5) / 2, 0.1f, (wallWidth * 5 + passageWidth * 5) / 2, assetManager, currentNode, startX + ((wallWidth * 5 + passageWidth * 5) * 0.75f), wallHeight - 0.05f, startZ + ((wallWidth * 5 + passageWidth * 5) * 0.25f), bulletAppState);
     }
 
+    /**
+     * Making trap
+     * @param x - x
+     * @param z - z
+     * @param direction - face direction
+     */
     public void makeTrap(float x, float z, int direction) {
         trap = new TrapMaster(application, assetManager, currentNode, x, -0.05f, z, direction);
     }
 
+    /**
+     * Creating decor
+     * @param x - x
+     * @param z - z
+     * @param direction - face direction
+     */
     public void createDecor(float x, float z, float direction) {
-        Decoration decoration = new Decoration(direction, assetManager, currentNode, x, -0.05f, z, bulletAppState);
+        decoration = new Decoration(direction, assetManager, currentNode, x, -0.05f, z, bulletAppState);
     }
 
-    public void updateBlocks(float x, float z) {
-        int xPlacement = (int) (x / (wallWidth * 5 + passageWidth * 5));
-        int zPlacement = (int) (z / (wallWidth * 5 + passageWidth * 5));
-    }
-
+    /**
+     * Playing random creepy sound
+     * @param characterNode - node to attach sound
+     */
     public void playCreepySound(Node characterNode) {
         Random rand = new Random();
         if (rand.nextInt(250) == 0) {
@@ -557,6 +685,10 @@ public class Level extends AbstractAppState {
         }
     }
 
+    /**
+     * Playing mine sound
+     * @param node - node to attach sound
+     */
     public void playMineSound(Node node) {
         trapSound = new AudioNode(assetManager, "Sounds/countdown.wav", AudioData.DataType.Buffer);
         trapSound.setPositional(false); // Use true for 3D sounds
@@ -566,6 +698,10 @@ public class Level extends AbstractAppState {
         trapSound.play();
     }
 
+    /**
+     * Playing mine explosion sound
+     * @param node - node to attach sound
+     */
     public void playMineExplodeSound(Node node) {
         trapSound = new AudioNode(assetManager, "Sounds/explosion.wav", AudioData.DataType.Buffer);
         trapSound.setPositional(false); // Use true for 3D sounds
@@ -575,6 +711,10 @@ public class Level extends AbstractAppState {
         trapSound.play();
     }
 
+    /**
+     * Playing spike sound
+     * @param node - node to attach sound
+     */
     public void playSpikeSound(Node node) {
         trapSound = new AudioNode(assetManager, "Sounds/metal.wav", AudioData.DataType.Buffer);
         trapSound.setPositional(false); // Use true for 3D sounds
@@ -584,6 +724,9 @@ public class Level extends AbstractAppState {
         trapSound.play();
     }
 
+    /**
+     * Playing death sound
+     */
     public void playDeathSound() {
         AudioNode deathSound = new AudioNode(assetManager, "Sounds/player-death.wav", AudioData.DataType.Buffer);
         deathSound.setPositional(false); // Use true for 3D sounds
@@ -593,6 +736,9 @@ public class Level extends AbstractAppState {
         deathSound.play();
     }
 
+    /**
+     * Removing torches light
+     */
     public void removeLight(){
         for(int i=0;i<labyrinthSizeX;i++){
             for(int j=0;j<labyrinthSizeZ;j++){

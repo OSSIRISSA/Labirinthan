@@ -1,7 +1,12 @@
+/**
+ * Task: Game
+ * File: PuzzleSudoku.java
+ *
+ *  @author Iryna Hryshchenko
+ */
 package labirinthan.GUI;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.font.BitmapFont;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
@@ -26,11 +31,17 @@ public class PuzzleSudoku implements ActionListener {
     private final Node guiNode;
     private final AppSettings settings;
     private final AssetManager assetManager;
-    private final BitmapFont mainFont;
     public ArrayList<Button> sudokuSquares = new ArrayList<>();
     public ArrayList<Button> codeSquares = new ArrayList<>();
     public Button chosenSquare;
 
+    /**
+     * PuzzleSudoku constructor
+     * @param application - app
+     * @param guiNode - gui node
+     * @param settings - settings
+     * @param assetManager - asset manager
+     */
     public PuzzleSudoku(Labirinthan application, Node guiNode, AppSettings settings, AssetManager assetManager) {
         this.app = application;
         this.guiNode = guiNode;
@@ -40,10 +51,11 @@ public class PuzzleSudoku implements ActionListener {
         GuiGlobals.initialize(application);
         BaseStyles.loadGlassStyle();
         GuiGlobals.getInstance().getStyles().setDefaultStyle("glass");
-
-        mainFont = this.assetManager.loadFont("Interface/demi.fnt");
     }
 
+    /**
+     * Creating puzzle screen
+     */
     public void createScreen() {
 
         float startPosX = settings.getWidth() / 2f;
@@ -180,6 +192,9 @@ public class PuzzleSudoku implements ActionListener {
         initKeys();
     }
 
+    /**
+     * Number keys initialization
+     */
     private void initKeys() {
         this.app.getInputManager().addMapping("1", new KeyTrigger(KeyInput.KEY_1));
         this.app.getInputManager().addMapping("2", new KeyTrigger(KeyInput.KEY_2));
@@ -206,6 +221,10 @@ public class PuzzleSudoku implements ActionListener {
         }
     }
 
+    /**
+     * Choosing button
+     * @param source - source button
+     */
     private void choose(Button source) {
         if(sudokuSquares.contains(chosenSquare)){
             chosenSquare.setBackground(new QuadBackgroundComponent(ColorRGBA.fromRGBA255(126, 117, 108, 255)));

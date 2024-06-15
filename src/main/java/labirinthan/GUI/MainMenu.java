@@ -1,3 +1,9 @@
+/**
+ * Task: Game
+ * File: MainMenu.java
+ *
+ *  @author Max Mormil
+ */
 package labirinthan.GUI;
 
 import com.jme3.asset.AssetManager;
@@ -28,6 +34,13 @@ public class MainMenu {
     public static AudioNode click;
     public static AudioNode hover;
 
+    /**
+     * Main menu constructor
+     * @param mainApp - Labirinthan app
+     * @param guiNode - gui node
+     * @param settings - settings
+     * @param assetManager - asset manager
+     */
     public MainMenu(Labirinthan mainApp, Node guiNode, AppSettings settings, AssetManager assetManager){
         this.app = mainApp;
         this.guiNode = guiNode;
@@ -57,6 +70,9 @@ public class MainMenu {
         guiNode.attachChild(hover);
     }
 
+    /**
+     * Creating menu screen
+     */
     public void createHomeScreen() {
         guiNode.detachAllChildren();
 
@@ -107,16 +123,29 @@ public class MainMenu {
         guiNode.attachChild(quitButton);
     }
 
+    /**
+     * Playing sound on click
+     */
     static void playClickSound(){
         click.stop();
         click.play();
     }
 
+    /**
+     * Opening settings menu
+     */
     private void openSettingsMenu() {
         guiNode.detachAllChildren();
         new SettingsMenu(app, guiNode, settings, assetManager, this, mainFont);
     }
 
+    /**
+     * Default button creation
+     * @param button - button
+     * @param yOffset - yOffset
+     * @param lableToMatch - lableToMatch
+     * @return - button
+     */
     private Button createDefaultButton(Button button, float yOffset, Label lableToMatch) {
         button.setFont(mainFont);
         button.setFontSize(48f);
@@ -126,10 +155,19 @@ public class MainMenu {
         return button;
     }
 
+    /**
+     * Loading Screen
+     */
     public static class LoadingScreen {
         private static Label loadingLabel;
         private static Geometry background;
 
+        /**
+         * Showing loading screen
+         * @param guiNode - gui node
+         * @param assetManager - asset manager
+         * @param settings - settings
+         */
         public static void show(Node guiNode, AssetManager assetManager, AppSettings settings) {
             // Create black background quad if not already created
             if (background == null) {
@@ -156,6 +194,10 @@ public class MainMenu {
             guiNode.attachChild(loadingLabel);
         }
 
+        /**
+         * Hiding loading screen
+         * @param guiNode - gui node
+         */
         public static void hide(Node guiNode) {
             if (loadingLabel != null) {
                 guiNode.detachChild(loadingLabel);

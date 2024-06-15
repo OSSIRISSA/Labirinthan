@@ -1,3 +1,9 @@
+/**
+ * Task: Game
+ * File: TrapInteractionArea.java
+ *
+ *  @author Max Mormil
+ */
 package labirinthan.levels.traps;
 
 import com.jme3.bullet.PhysicsSpace;
@@ -10,12 +16,21 @@ public class TrapInteractionArea extends PhysicsGhostObject {
     private Vector3f boxDimensions;
     private final TrapMaster parent;
 
+    /**
+     * TrapInteractionArea constructor
+     * @param parent - parent
+     * @param dimensions - dimensions vector
+     */
     public TrapInteractionArea(TrapMaster parent, Vector3f dimensions) {
         super(parent, new BoxCollisionShape(dimensions));
         this.parent = parent;
         this.boxDimensions = dimensions;
     }
 
+    /**
+     * Setting position of area
+     * @param position - needed position
+     */
     public void setPosition(Vector3f position) {
         this.setPhysicsLocation(position);
     }
@@ -28,6 +43,10 @@ public class TrapInteractionArea extends PhysicsGhostObject {
         physicsSpace.add(this);
     }
 
+    /**
+     * Parent getter
+     * @return - parent
+     */
     public TrapMaster getParent() {
         return parent;
     }

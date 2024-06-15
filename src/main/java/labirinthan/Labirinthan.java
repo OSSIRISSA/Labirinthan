@@ -1,3 +1,9 @@
+/**
+ * Task: Game
+ * File: Labirinthan.java
+ *
+ * @author Max Mormil
+ */
 package labirinthan;
 
 import com.jme3.app.SimpleApplication;
@@ -34,9 +40,12 @@ public class Labirinthan extends SimpleApplication {
 
     public static boolean isFlying = false;
 
+    /**
+     * Starting the Labirinthan app
+     * @param args -
+     */
     public static void main(String[] args) {
         Labirinthan app = new Labirinthan();
-
         // Set the game to fullscreen
         AppSettings settings = new AppSettings(true);
         settings.setFullscreen(true);
@@ -65,6 +74,9 @@ public class Labirinthan extends SimpleApplication {
         flyCam.setMoveSpeed(10);
     }
 
+    /**
+     * Starting the game (Level 0)
+     */
     public void startGame() {
         guiNode.detachAllChildren();
 
@@ -94,9 +106,10 @@ public class Labirinthan extends SimpleApplication {
 
             mainHUD = new MainHUD(guiNode, settings, assetManager);
             mainHUD.createMainHUD();
-            character = new MainCharacter(mainHUD, settings);
+            if(character==null){
+                character = new MainCharacter(mainHUD, settings);
+            }
             stateManager.attach(character);
-
             levelPreparation(false);
             MainMenu.LoadingScreen.hide(guiNode);
             character.hud.showInstructionSign(true);
@@ -104,11 +117,18 @@ public class Labirinthan extends SimpleApplication {
         });
     }
 
+    /**
+     * Switch cursor and cam moving
+     * @param toTurnOff - switcher position
+     */
     public void levelPreparation(boolean toTurnOff) {
         inputManager.setCursorVisible(toTurnOff);
         flyCam.setEnabled(!toTurnOff);
     }
 
+    /**
+     * Adding for to a level
+     */
     private void addFog() {
         fog = new FogFilter();
         fog.setFogColor(new ColorRGBA(0.01f, 0.01f, 0.01f, 1f));
@@ -118,6 +138,9 @@ public class Labirinthan extends SimpleApplication {
         filterPostProcessor.addFilter(fog);
     }
 
+    /**
+     * Starting Level 1
+     */
     public void startLevel1() {
         //guiNode.attachChild(level.localPuzzleNode);
         MainMenu.LoadingScreen.show(guiNode, assetManager, settings);
@@ -145,6 +168,9 @@ public class Labirinthan extends SimpleApplication {
         });
     }
 
+    /**
+     * Starting Level 2
+     */
     public void startLevel2() {
         //guiNode.attachChild(level.localPuzzleNode);
         MainMenu.LoadingScreen.show(guiNode, assetManager, settings);
@@ -170,6 +196,10 @@ public class Labirinthan extends SimpleApplication {
             return null;
         });
     }
+
+    /**
+     * Opening final screen
+     */
     public void gameFinal() {
         stateManager.detach(character);
         level.removeLight();

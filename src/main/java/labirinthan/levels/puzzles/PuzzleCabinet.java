@@ -1,3 +1,9 @@
+/**
+ * Task: Game
+ * File: PuzzleCabinet.java
+ *
+ *  @author Max Mormil
+ */
 package labirinthan.levels.puzzles;
 
 import com.jme3.asset.AssetManager;
@@ -20,6 +26,17 @@ public class PuzzleCabinet extends Node {
     private float animationTime = 0;
     private boolean movingUp = true;
 
+    /**
+     * PuzzleCabinet constructor
+     * @param application - Labirinthan app
+     * @param assetManager - assetManager
+     * @param localRootNode - localRootNode
+     * @param px - x
+     * @param py - y
+     * @param pz - z
+     * @param puzzleType - type of puzzle
+     * @param direction - facing direction
+     */
     public PuzzleCabinet(Labirinthan application, AssetManager assetManager, Node localRootNode, float px, float py, float pz, PuzzleType puzzleType, float direction) {
         this.app = application;
         this.rootNode = localRootNode;
@@ -68,6 +85,9 @@ public class PuzzleCabinet extends Node {
         app.bulletAppState.getPhysicsSpace().add(interactionArea);
     }
 
+    /**
+     * Removing interaction zone
+     */
     public void removeInteractionZone(){
         app.bulletAppState.getPhysicsSpace().remove(interactionArea);
     }
@@ -78,6 +98,10 @@ public class PuzzleCabinet extends Node {
         animateBook(tpf);
     }
 
+    /**
+     * Puzzle book animation
+     * @param tpf - tpf
+     */
     private void animateBook(float tpf) {
         float amplitude = 0.1f; // Height of the movement
         float speed = 1f; // Speed of the movement

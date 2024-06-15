@@ -1,3 +1,9 @@
+/**
+ * Task: Game
+ * File: TrapMaster.java
+ *
+ *  @author Max Mormil
+ */
 package labirinthan.levels.traps;
 
 import com.jme3.asset.AssetManager;
@@ -38,6 +44,16 @@ public class TrapMaster extends Node {
     private boolean isTriggered = false;
     private boolean isSoundPlayed = false;
 
+    /**
+     * TrapMaster constructor
+     * @param application - application
+     * @param assetManager - assetManager
+     * @param localRootNode - localRootNode
+     * @param px - x
+     * @param py - y
+     * @param pz - z
+     * @param direction - facing direction
+     */
     public TrapMaster(Labirinthan application, AssetManager assetManager, Node localRootNode, float px, float py, float pz, int direction) {
         this.app = application;
         this.rootNode = localRootNode;
@@ -97,6 +113,9 @@ public class TrapMaster extends Node {
         afterExplosion = Executors.newScheduledThreadPool(1);
     }
 
+    /**
+     * Starting SPIKE drop animation
+     */
     public void startDropAnimation() {
         if (trapType == TrapType.SPIKE) {
             if (!isSoundPlayed) {
@@ -123,6 +142,9 @@ public class TrapMaster extends Node {
         }
     }
 
+    /**
+     * Damage the player
+     */
     private void damagePlayer() {
         if (isTriggered) return;
         isTriggered = true;
@@ -140,6 +162,9 @@ public class TrapMaster extends Node {
         removeInteractionZone();
     }
 
+    /**
+     * Start MINE explosion countdown
+     */
     public void startMineExplode() {
         if (!isSoundPlayed) {
             Labirinthan.level.playMineSound(interactionAreaNode);
@@ -148,6 +173,9 @@ public class TrapMaster extends Node {
         scheduler.schedule(() -> app.enqueue(this::explodeMine), 1, TimeUnit.SECONDS);
     }
 
+    /**
+     * Explode MINE
+     */
     private void explodeMine() {
         Labirinthan.level.playMineExplodeSound(interactionAreaNode);
         ParticleEmitter explosionEffect = createExplosionEffect();
@@ -163,6 +191,10 @@ public class TrapMaster extends Node {
         }), 2, TimeUnit.SECONDS);
     }
 
+    /**
+     * Createing explosion effect
+     * @return - ParticleEmitter
+     */
     private ParticleEmitter createExplosionEffect() {
         ParticleEmitter emitter = new ParticleEmitter("Explosion", ParticleMesh.Type.Triangle, 30);
         emitter.setShape(new EmitterSphereShape(Vector3f.ZERO, 1f));
@@ -185,6 +217,9 @@ public class TrapMaster extends Node {
         return emitter;
     }
 
+    /**
+     * Removing interaction zone
+     */
     public void removeInteractionZone() {
         if (interactionAreaNode != null) {
             app.bulletAppState.getPhysicsSpace().remove(interactionArea);

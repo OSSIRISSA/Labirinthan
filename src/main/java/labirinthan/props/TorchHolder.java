@@ -1,3 +1,9 @@
+/**
+ * Task: Game
+ * File: TorchHolder.java
+ *
+ *  @author Max Mormil
+ */
 package labirinthan.props;
 
 import com.jme3.asset.AssetManager;
@@ -30,6 +36,15 @@ public class TorchHolder extends Node {
 
     int SHADOW_MAP = 256;
 
+    /**
+     * TorchHolder constructor
+     * @param application - Labirinthan app
+     * @param assetManager - assetManager
+     * @param rootNode - rootNode
+     * @param isFirst - if this TorchHolder is first
+     * @param roomsNumber - number of rooms
+     * @param allTorches - array of all torches
+     */
     public TorchHolder(Labirinthan application, AssetManager assetManager, Node rootNode, boolean isFirst, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         this.app = application;
         this.rootNode = rootNode;
@@ -56,6 +71,11 @@ public class TorchHolder extends Node {
         interactionArea = new TorchInteractionArea(this, new Vector3f(0.6f, 1f, 1f));
     }
 
+    /**
+     * Creating shadow renderer
+     * @param assetManager - assetManager
+     * @param shadowMapSize - shadowMapSize int
+     */
     private void createShadowRenderer(AssetManager assetManager, int shadowMapSize) {
         plsr = new PointLightShadowRenderer(assetManager, shadowMapSize);
         plsr.setLight(light);
@@ -63,6 +83,11 @@ public class TorchHolder extends Node {
         app.getViewPort().addProcessor(plsr);
     }
 
+    /**
+     * Creating shadow filter
+     * @param assetManager - assetManager
+     * @param shadowMapSize - shadowMapSize int
+     */
     private void createShadowFilter(AssetManager assetManager, int shadowMapSize) {
         plsf = new PointLightShadowFilter(assetManager, shadowMapSize);
         plsf.setLight(light);
@@ -71,6 +96,9 @@ public class TorchHolder extends Node {
         app.filterPostProcessor.addFilter(plsf);
     }
 
+    /**
+     * Updating the light
+     */
     private void updateLight() {
         light.setPosition(lightNode.getWorldTranslation());
         if (interactionArea != null && interactionAreaNode != null) {
@@ -78,6 +106,12 @@ public class TorchHolder extends Node {
         }
     }
 
+    /**
+     * Creating the light
+     * @param lightSourcePosition - light source position
+     * @param assetManager - assetManager
+     * @return - torchLight
+     */
     public PointLight createLight(Vector3f lightSourcePosition, AssetManager assetManager) {
         PointLight torchLight = new PointLight();
         torchLight.setColor(ColorRGBA.Orange.mult(10f));
@@ -91,17 +125,33 @@ public class TorchHolder extends Node {
         return torchLight;
     }
 
+    /**
+     * Rotating the torch
+     * @param x - x
+     * @param y - y
+     * @param z - z
+     */
     public void rotateTorch(float x, float y, float z) {
         this.rotate(x, y, z);
         updateLight();
         interactionArea.setPhysicsRotation(new Quaternion().fromAngleAxis(y, Vector3f.UNIT_Y));
     }
 
+    /**
+     * Moving the torch
+     * @param x - x
+     * @param y - y
+     * @param z - z
+     */
     public void moveTorch(float x, float y, float z) {
         this.move(x, y, z);
         updateLight();
     }
 
+    /**
+     * Updating status of the torch
+     * @param status - needed status of the torch
+     */
     public void updateTorchStatus(boolean status) {
         if (status && !this.torchEnabled) {
             this.attachChild(torchNode);
@@ -118,6 +168,9 @@ public class TorchHolder extends Node {
         }
     }
 
+    /**
+     * Refreshing shadows
+     */
     private void refreshShadows() {
         if (plsr != null) {
             app.getViewPort().removeProcessor(plsr);
@@ -129,6 +182,9 @@ public class TorchHolder extends Node {
         }
     }
 
+    /**
+     * Shadows cleanup
+     */
     public void cleanupShadows() {
         if (plsr != null) {
             app.getViewPort().removeProcessor(plsr);

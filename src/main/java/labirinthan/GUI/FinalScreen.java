@@ -1,3 +1,9 @@
+/**
+ * Task: Game
+ * File: FinalScreen.java
+ *
+ *  @author Iryna Hryshchenko
+ */
 package labirinthan.GUI;
 
 import com.jme3.asset.AssetManager;
@@ -5,9 +11,12 @@ import com.jme3.audio.AudioData;
 import com.jme3.audio.AudioNode;
 import com.jme3.font.BitmapFont;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
+import com.simsilica.lemur.Button;
 import com.simsilica.lemur.GuiGlobals;
+import com.simsilica.lemur.HAlignment;
 import com.simsilica.lemur.Label;
 import com.simsilica.lemur.style.BaseStyles;
 import labirinthan.Labirinthan;
@@ -22,6 +31,13 @@ public class FinalScreen {
     public static AudioNode click;
     public static AudioNode hover;
 
+    /**
+     * Final screen constructor
+     * @param mainApp - Labirinthan app
+     * @param guiNode - gui node
+     * @param settings - settings
+     * @param assetManager - asset manager
+     */
     public FinalScreen(Labirinthan mainApp, Node guiNode, AppSettings settings, AssetManager assetManager){
         this.app = mainApp;
         this.guiNode = guiNode;
@@ -51,6 +67,9 @@ public class FinalScreen {
         guiNode.attachChild(hover);
     }
 
+    /**
+     * Creating final screen
+     */
     public void createHomeScreen() {
         guiNode.detachAllChildren();
 
@@ -62,7 +81,7 @@ public class FinalScreen {
         titleLabel.setColor(ColorRGBA.Red);
         guiNode.attachChild(titleLabel);
 
-        /*Button playButton = new Button("Main menu");
+        Button playButton = new Button("Main menu");
         playButton.setFont(mainFont);
         playButton.setFontSize(48f);
         playButton.setTextHAlignment(HAlignment.Center);
@@ -74,15 +93,21 @@ public class FinalScreen {
             guiNode.detachAllChildren();
             app.mainMenu.createHomeScreen();
         });
-        guiNode.attachChild(playButton);*/
+        guiNode.attachChild(playButton);
 
     }
 
+    /**
+     * Playing sound on click
+     */
     static void playClickSound(){
         click.stop();
         click.play();
     }
 
+    /**
+     * Playing death sound
+     */
     public void playDeathSound() {
         AudioNode deathSound = new AudioNode(assetManager, "Sounds/player-death.wav", AudioData.DataType.Buffer);
         deathSound.setPositional(false); // Use true for 3D sounds

@@ -1,7 +1,12 @@
+/**
+ * Task: Game
+ * File: PuzzlePyramid.java
+ *
+ *  @author Iryna Hryshchenko
+ */
 package labirinthan.GUI;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.font.BitmapFont;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -21,12 +26,9 @@ public class PuzzlePyramid {
     private final Labirinthan app;
     private final Node guiNode;
     private final AppSettings settings;
-    private final AssetManager assetManager;
-    private final BitmapFont mainFont;
     public ArrayList<Button> squares = new ArrayList<>();
     public ArrayList<Button> chosenSquares = new ArrayList<>();
     public ArrayList<Button> answerSquares = new ArrayList<>();
-    public Button chosenSquare;
     public float size = 30;
 
     public ColorRGBA chooseColor = ColorRGBA.fromRGBA255(186, 0, 7, 255);
@@ -34,19 +36,27 @@ public class PuzzlePyramid {
     public ColorRGBA drawColor = ColorRGBA.fromRGBA255(25, 72, 72, 255);
 
 
+    /**
+     * PuzzlePyramid constructor
+     * @param application - app
+     * @param guiNode - gui node
+     * @param settings - settings
+     * @param assetManager - asset manager
+     */
     public PuzzlePyramid(Labirinthan application, Node guiNode, AppSettings settings, AssetManager assetManager) {
         this.app = application;
         this.guiNode = guiNode;
         this.settings = settings;
-        this.assetManager = assetManager;
 
         GuiGlobals.initialize(application);
+
         BaseStyles.loadGlassStyle();
         GuiGlobals.getInstance().getStyles().setDefaultStyle("glass");
-
-        mainFont = this.assetManager.loadFont("Interface/demi.fnt");
     }
 
+    /**
+     * Creating puzzle screen
+     */
     public void createScreen() {
 
         float startPosX = settings.getWidth() / 2f - size * 11.5f;
@@ -146,31 +156,11 @@ public class PuzzlePyramid {
             }
         }
 
-
-
-        /*for(int i=0;i<4;i++){
-            square = new Button("?");
-            square.setColor(ColorRGBA.Black);
-            square.addClickCommands(this::choose);
-            square.setBackground(new QuadBackgroundComponent(ColorRGBA.Black));
-            square.setFontSize(48f);
-            square.setTextHAlignment(HAlignment.Center);
-            square.setPreferredSize(new Vector3f(square.getPreferredSize().y, square.getPreferredSize().y, 0));
-            square.setLocalTranslation(190+i*square.getPreferredSize().y, 190*3, 1);
-            switch (i){
-                case 0 -> square.setShadowColor(ColorRGBA.Blue);
-                case 1 -> square.setShadowColor(ColorRGBA.Yellow);
-                case 2 -> square.setShadowColor(ColorRGBA.Green);
-                case 3 -> square.setShadowColor(ColorRGBA.Magenta);
-            }
-            square.setHighlightColor(ColorRGBA.White);
-            square.setFocusColor(ColorRGBA.White);
-            codeSquares.add(square);
-            guiNode.attachChild(square);
-        }*/
-
     }
 
+    /**
+     * Check answers
+     */
     public void check() {
         boolean win = true;
         for(Button s:chosenSquares){
@@ -191,6 +181,10 @@ public class PuzzlePyramid {
         }
     }
 
+    /**
+     * Choosing button
+     * @param source - source button
+     */
     private void choose(Button source) {
         if (chosenSquares.contains(source)) {
             source.setBackground(new QuadBackgroundComponent(defaultColor));

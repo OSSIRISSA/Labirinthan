@@ -1,3 +1,9 @@
+/**
+ * Task: Game
+ * File: MainCharacter.java
+ *
+ *  @author Max Mormil
+ */
 package labirinthan.character;
 
 import com.jme3.app.Application;
@@ -61,6 +67,11 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
     private float torchTimer = 0f;
     private final float TORCH_DURATION = 30f;
 
+    /**
+     * Main Character constructor
+     * @param hud - current hud
+     * @param settings - settings
+     */
     public MainCharacter(MainHUD hud, AppSettings settings) {
         this.hud = hud;
         this.settings = settings;
@@ -102,6 +113,9 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         }
     }
 
+    /**
+     * Game keys initialization
+     */
     private void initKeys() {
         this.app.getInputManager().addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
         this.app.getInputManager().addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
@@ -114,6 +128,9 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         this.app.getInputManager().addListener(this, "Left", "Right", "Forward", "Backward", "Jump", "Interact", "DropTorch");
     }
 
+    /**
+     * Adding collision listener
+     */
     private void addCollisionListener() {
         this.app.bulletAppState.getPhysicsSpace().addCollisionListener(this);
     }
@@ -146,6 +163,9 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         }
     }
 
+    /**
+     * Starting different traps actions
+     */
     private void trapAction() {
         TrapMaster trapMaster = ((TrapInteractionArea) interactionObject).getParent();
         switch (trapMaster.trapType) {
@@ -243,6 +263,10 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         Labirinthan.level.playCreepySound(characterNode);
     }
 
+    /**
+     * HP control
+     * @param amount - hp amount
+     */
     public void hpActions(float amount) {
         health += amount;
         if (health < 0) {
@@ -256,10 +280,16 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         hud.updateHealthPercent(health);
     }
 
+    /**
+     * HP change at the start of level
+     */
     public void newLevelHPActions() {
         hpActions(health / 2f);
     }
 
+    /**
+     * Death actions
+     */
     private void death() {
         app.getFlyByCamera().setEnabled(false);
         dequipTorch();
@@ -271,10 +301,18 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         app.getInputManager().setCursorVisible(false);
     }
 
+    /**
+     * Setting interaction text
+     * @param status - if interaction text needed
+     * @param text - text
+     */
     private void setInteractionText(boolean status, String... text) {
         hud.showInteractionSign(status, text.length > 0 ? text[0] : "");
     }
 
+    /**
+     * Character interaction with objects
+     */
     private void interact() {
         switch (interactType) {
             case TORCH:
@@ -296,6 +334,10 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         }
     }
 
+    /**
+     * Starting a puzzle
+     * @param puzzleCab - puzzle cabinet
+     */
     private void startPuzzle(PuzzleCabinet puzzleCab) {
         puzzleCab.removeInteractionZone();
         this.app.getRootNode().detachChild(characterNode);
@@ -310,6 +352,9 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         }
     }
 
+    /**
+     * Carrying a torch
+     */
     private void carryTorch() {
         if (torchNode == null) {
             torchNode = new Node("Torch Node");
@@ -325,6 +370,9 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         }
     }
 
+    /**
+     * Loosing a torch
+     */
     private void dequipTorch() {
         if (torchNode != null) {
             torchNode.removeFromParent();

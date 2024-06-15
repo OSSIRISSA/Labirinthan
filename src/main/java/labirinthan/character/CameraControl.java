@@ -1,3 +1,9 @@
+/**
+ * Task: Game
+ * File: CameraControl.java
+ *
+ *  @author Max Mormil
+ */
 package labirinthan.character;
 
 import com.jme3.math.Quaternion;
@@ -17,6 +23,15 @@ public class CameraControl extends AbstractControl {
     private final MainHUD hud;
     private float elapsedTime = 0f;
 
+    /**
+     * CameraControl init
+     * @param game - Labirinthan app
+     * @param camera - cam
+     * @param targetPosition - demanded position
+     * @param targetRotation - demanded rotation
+     * @param duration - duration
+     * @param hud - current hud
+     */
     public CameraControl(Labirinthan game, Camera camera, Vector3f targetPosition, Quaternion targetRotation, float duration, MainHUD hud) {
         this.game = game;
         this.camera = camera;

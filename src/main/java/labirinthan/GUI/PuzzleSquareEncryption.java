@@ -1,3 +1,9 @@
+/**
+ * Task: Game
+ * File: PuzzleSquareEncryption.java
+ *
+ *  @author Iryna Hryshchenko
+ */
 package labirinthan.GUI;
 
 import com.jme3.asset.AssetManager;
@@ -22,9 +28,7 @@ public class PuzzleSquareEncryption implements ActionListener {
     private final Labirinthan app;
     private final Node guiNode;
     private final AppSettings settings;
-    private final AssetManager assetManager;
     private final BitmapFont mainFont;
-    public ArrayList<Button> sudokuSquares = new ArrayList<>();
     public ArrayList<Button> codeSquares = new ArrayList<>();
     public Button chosenSquare;
     public ColorRGBA chooseColor = ColorRGBA.fromRGBA255(186, 0, 7, 255);
@@ -33,19 +37,28 @@ public class PuzzleSquareEncryption implements ActionListener {
     private float startPosX;
     private float startPosY;
 
+    /**
+     * PuzzleSquareEncryption constructor
+     * @param application - app
+     * @param guiNode - gui node
+     * @param settings - settings
+     * @param assetManager - asset manager
+     */
     public PuzzleSquareEncryption(Labirinthan application, Node guiNode, AppSettings settings, AssetManager assetManager) {
         this.app = application;
         this.guiNode = guiNode;
         this.settings = settings;
-        this.assetManager = assetManager;
 
         GuiGlobals.initialize(application);
         BaseStyles.loadGlassStyle();
         GuiGlobals.getInstance().getStyles().setDefaultStyle("glass");
 
-        mainFont = this.assetManager.loadFont("Interface/demi.fnt");
+        mainFont = assetManager.loadFont("Interface/demi.fnt");
     }
 
+    /**
+     * Creating puzzle screen
+     */
     public void createScreen() {
 
         startPosX = settings.getWidth() * 0.5f - 150;
@@ -377,6 +390,9 @@ public class PuzzleSquareEncryption implements ActionListener {
         next();
     }
 
+    /**
+     * Number keys initialization
+     */
     private void initKeys() {
         this.app.getInputManager().addMapping("1", new KeyTrigger(KeyInput.KEY_1));
         this.app.getInputManager().addMapping("2", new KeyTrigger(KeyInput.KEY_2));
@@ -399,10 +415,15 @@ public class PuzzleSquareEncryption implements ActionListener {
             if ((codeSquares.get(0).getText().equals("2")) && (codeSquares.get(1).getText().equals("8")) && (codeSquares.get(2).getText().equals("7"))) {
                 guiNode.detachAllChildren();
                 app.startLevel1();
+                //app.gameFinal();
             }
         }
     }
 
+    /**
+     * Choosing button
+     * @param source - source button
+     */
     private void choose(Button source) {
         if (chosenSquare != null) {
             chosenSquare.setBackground(new QuadBackgroundComponent(defaultColor));
@@ -411,6 +432,9 @@ public class PuzzleSquareEncryption implements ActionListener {
         chosenSquare.setBackground(new QuadBackgroundComponent(chooseColor));
     }
 
+    /**
+     * Draw topLine
+     */
     private void topLine() {
         Panel line = new Panel(size, 5);
         line.setLocalTranslation(startPosX, startPosY, 1);
@@ -418,6 +442,9 @@ public class PuzzleSquareEncryption implements ActionListener {
         guiNode.attachChild(line);
     }
 
+    /**
+     * Draw bottomLine
+     */
     private void bottomLine() {
         Panel line = new Panel(size, 5);
         line.setLocalTranslation(startPosX, startPosY - size + 5, 1);
@@ -425,6 +452,9 @@ public class PuzzleSquareEncryption implements ActionListener {
         guiNode.attachChild(line);
     }
 
+    /**
+     * Draw leftLine
+     */
     private void leftLine() {
         Panel line = new Panel(5, size);
         line.setLocalTranslation(startPosX, startPosY, 1);
@@ -432,6 +462,9 @@ public class PuzzleSquareEncryption implements ActionListener {
         guiNode.attachChild(line);
     }
 
+    /**
+     * Draw rightLine
+     */
     private void rightLine() {
         Panel line = new Panel(5, size);
         line.setLocalTranslation(startPosX + size - 5, startPosY, 1);
@@ -439,6 +472,9 @@ public class PuzzleSquareEncryption implements ActionListener {
         guiNode.attachChild(line);
     }
 
+    /**
+     * Draw dot
+     */
     private void dot() {
         Panel line = new Panel(5, 5);
         line.setLocalTranslation(startPosX + size / 2 - 2.5f, startPosY - size / 2 + 2.5f, 1);
@@ -446,6 +482,9 @@ public class PuzzleSquareEncryption implements ActionListener {
         guiNode.attachChild(line);
     }
 
+    /**
+     * Draw two dots
+     */
     private void dots() {
         Panel line = new Panel(5, 5);
         line.setLocalTranslation(startPosX + size / 2 - 2.5f - (5), startPosY - size / 2 + 2.5f, 1);
@@ -457,14 +496,23 @@ public class PuzzleSquareEncryption implements ActionListener {
         guiNode.attachChild(line);
     }
 
+    /**
+     * Go to next char
+     */
     private void next() {
         startPosX += size + 5;
     }
 
+    /**
+     * Go to next word
+     */
     private void space() {
         startPosX += size + 5 + size / 2;
     }
 
+    /**
+     * Go to next line
+     */
     private void enter() {
         startPosX = settings.getWidth() * 0.25f - size*2;
         startPosY -= (size + 10) * 2;

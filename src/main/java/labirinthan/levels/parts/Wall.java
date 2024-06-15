@@ -1,3 +1,9 @@
+/**
+ * Task: Game
+ * File: Wall.java
+ *
+ *  @author Iryna Hryshchenko
+ */
 package labirinthan.levels.parts;
 
 import com.jme3.asset.AssetManager;
@@ -19,6 +25,18 @@ import java.nio.FloatBuffer;
 
 public class Wall extends Box {
 
+    /**
+     * Wall constructor
+     * @param x - size x
+     * @param y - size y
+     * @param z - size z
+     * @param assetManager - asset manager
+     * @param localRootNode - localRootNode
+     * @param px - x
+     * @param py - y
+     * @param pz - z
+     * @param bulletAppState - bulletAppState
+     */
     public Wall(float x, float y, float z, AssetManager assetManager, Node localRootNode, float px, float py, float pz, BulletAppState bulletAppState) {
         super(x / 2, y / 2, z / 2);
         Geometry geom = new Geometry("Wall", this);
@@ -52,6 +70,12 @@ public class Wall extends Box {
         bulletAppState.getPhysicsSpace().add(wallPhysics);
     }
 
+    /**
+     * Scaling texture
+     * @param x - x
+     * @param y - y
+     * @param z - z
+     */
     private void scaleTextureCoordinates(float x, float y, float z) {
         FloatBuffer texCoords = BufferUtils.createFloatBuffer(
                 // Front face

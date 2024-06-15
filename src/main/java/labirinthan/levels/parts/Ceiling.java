@@ -1,3 +1,9 @@
+/**
+ * Task: Game
+ * File: Ceiling.java
+ *
+ *  @author Iryna Hryshchenko
+ */
 package labirinthan.levels.parts;
 
 import com.jme3.asset.AssetManager;
@@ -13,6 +19,18 @@ import com.jme3.texture.Texture;
 
 public class Ceiling extends Box {
 
+    /**
+     * Ceiling constructor
+     * @param x - size x
+     * @param y - size y
+     * @param z - size z
+     * @param assetManager - asset manager
+     * @param localRootNode - localRootNode
+     * @param px - x
+     * @param py - y
+     * @param pz - z
+     * @param bulletAppState - bulletAppState
+     */
     public Ceiling(float x, float y, float z, AssetManager assetManager, Node localRootNode, float px, float py, float pz, BulletAppState bulletAppState) {
         super(x / 2, y / 2, z / 2);
         Geometry geom = new Geometry("Ceiling", this);

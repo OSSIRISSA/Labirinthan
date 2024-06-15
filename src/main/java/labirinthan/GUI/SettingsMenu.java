@@ -1,3 +1,9 @@
+/**
+ * Task: Game
+ * File: SettingsMenu.java
+ *
+ *  @author Max Mormil
+*/
 package labirinthan.GUI;
 
 import com.jme3.asset.AssetManager;
@@ -14,7 +20,6 @@ public class SettingsMenu {
     private final Labirinthan app;
     private final Node guiNode;
     private final AppSettings settings;
-    private final AssetManager assetManager;
     private final MainMenu mainMenu;
 
     private Container graphicsTab;
@@ -30,17 +35,28 @@ public class SettingsMenu {
     private Slider musicSlider;
     private Slider soundSlider;
 
+    /**
+     * SettingsMenu constructor
+     * @param mainApp - mainApp
+     * @param guiNode - gui node
+     * @param settings - settings
+     * @param assetManager - asset manager
+     * @param mainMenu - main menu
+     * @param font - font
+     */
     public SettingsMenu(Labirinthan mainApp, Node guiNode, AppSettings settings, AssetManager assetManager, MainMenu mainMenu, BitmapFont font){
         this.app = mainApp;
         this.guiNode = guiNode;
         this.settings = settings;
-        this.assetManager = assetManager;
         this.mainMenu = mainMenu;
         this.mainFont = font;
 
         createSettingsScreen();
     }
 
+    /**
+     * Creating settings screen
+     */
     public void createSettingsScreen() {
         guiNode.detachAllChildren();
 
@@ -110,6 +126,10 @@ public class SettingsMenu {
         createControlsSettings(controlsTab);
     }
 
+    /**
+     * Creating graphics settings screen
+     * @param graphicsTab - graphics tab
+     */
     private void createGraphicsSettings(Container graphicsTab) {
         Label fullscreenLabel = new Label("Fullscreen");
         fullscreenLabel.setFontSize(48f);
@@ -148,6 +168,10 @@ public class SettingsMenu {
         vsyncCheckbox.setChecked(settings.isVSync());
     }
 
+    /**
+     * Creating audio settings screen
+     * @param audioTab - audio tab
+     */
     private void createAudioSettings(Container audioTab) {
         Label volumeLabel = new Label("Master Volume");
         volumeLabel.setFontSize(48f);
@@ -171,15 +195,25 @@ public class SettingsMenu {
         soundSlider.setPreferredSize(new Vector3f(300, 48, 0));
     }
 
+    /**
+     * Creating controls settings screen
+     * @param controlsTab - controls tab
+     */
     private void createControlsSettings(Container controlsTab) {
         controlsTab.addChild(new Label("Control Settings Coming Soon")).setFontSize(48f);
     }
 
+    /**
+     * Returning to main menu
+     */
     private void returnToMainMenu() {
         guiNode.detachAllChildren();
         mainMenu.createHomeScreen();
     }
 
+    /**
+     * Applying chosen settings
+     */
     private void applySettings() {
         settings.setFullscreen(fullscreenCheckbox.isChecked());
         settings.setVSync(vsyncCheckbox.isChecked());

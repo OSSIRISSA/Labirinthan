@@ -1,3 +1,9 @@
+/**
+ * Task: Game
+ * File: MainHUD.java
+ *
+ *  @author Max Mormil
+ */
 package labirinthan.GUI;
 
 import com.jme3.asset.AssetManager;
@@ -39,6 +45,12 @@ public class MainHUD {
     public static final String PUZZLE_INTERACTION_TEXT = "solve a mystery  ";
     public static final String INSTRUCTION_TEXT = "\n\n\n  Your fate is endless puzzle solving  \n\n  Find puzzle books in my labyrinth  \n  Use 'WASD' to move  \n  Press 'SPACE' to jump  \n  Press 'E' to interact with objects  \n\n  Good Luck, Cursed, try not to die too soon...  \n\n\n";
 
+    /**
+     * Main HUD constructor
+     * @param guiNode - gui node
+     * @param settings - settings
+     * @param assetManager - asset manager
+     */
     public MainHUD(Node guiNode, AppSettings settings, AssetManager assetManager) {
         this.guiNode = guiNode;
         this.settings = settings;
@@ -49,6 +61,9 @@ public class MainHUD {
         mainFont = this.assetManager.loadFont("Interface/demi.fnt");
     }
 
+    /**
+     * Creating main HUD
+     */
     public void createMainHUD() {
         //guiNode.detachAllChildren();
 
@@ -106,6 +121,10 @@ public class MainHUD {
         guiNode.attachChild(mainHUDNode);
     }
 
+    /**
+     * Creating LidOverlay
+     * @return - LidOverlay
+     */
     private Geometry createLidOverlay() {
         Quad quad = new Quad(settings.getWidth(), settings.getHeight());
         Geometry geom = new Geometry("LidOverlay", quad);
@@ -117,6 +136,10 @@ public class MainHUD {
         return geom;
     }
 
+    /**
+     * Updating LidOverlay
+     * @param progress - LidOverlay progress
+     */
     public void updateLidOverlay(float progress) {
         float lidPosition = settings.getHeight() * (1 - 2.5f * progress);
         topLid.setLocalTranslation(0, lidPosition, 3);
@@ -124,20 +147,35 @@ public class MainHUD {
         deathText.setAlpha(1.25f * progress);
     }
 
+    /**
+     * Detaching everything except lids
+     */
     public void detachAllExceptLids() {
         guiNode.detachChild(interactionPanel);
         guiNode.detachChild(torchBar);
         guiNode.detachChild(hpBar);
     }
 
+    /**
+     * Update health percentage
+     * @param healthPercent - new health percentage
+     */
     public void updateHealthPercent(float healthPercent) {
         hpBar.setProgressPercent(healthPercent);
     }
 
+    /**
+     * Update torch percentage
+     * @param progress - torch lighting progress
+     */
     public void updateTorchPercent(float progress) {
         torchBar.setProgressPercent(progress);
     }
 
+    /**
+     * Showing torch progress
+     * @param show - if showing is needed
+     */
     public void showTorchProgress(boolean show) {
         if (show) {
             torchBar.setCullHint(Spatial.CullHint.Never);
@@ -146,6 +184,11 @@ public class MainHUD {
         }
     }
 
+    /**
+     * Show interaction sign
+     * @param show - if showing is needed
+     * @param text - text
+     */
     public void showInteractionSign(boolean show, String text) {
         if(!instructionsShowing) {
             if (show) {
@@ -171,6 +214,10 @@ public class MainHUD {
         }
     }
 
+    /**
+     * Show instructions
+     * @param show - if showing is needed
+     */
     public void showInstructionSign(boolean show) {
         if (show) {
             instructionsShowing = true;

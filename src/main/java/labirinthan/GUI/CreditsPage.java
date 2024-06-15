@@ -1,3 +1,9 @@
+/**
+ * Task: Game
+ * File: CreditsPage.java
+ *
+ *  @author Max Mormil
+ */
 package labirinthan.GUI;
 
 import com.jme3.font.BitmapFont;
@@ -5,7 +11,9 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
-import com.simsilica.lemur.*;
+import com.simsilica.lemur.Button;
+import com.simsilica.lemur.HAlignment;
+import com.simsilica.lemur.Label;
 
 public class CreditsPage {
 
@@ -15,6 +23,13 @@ public class CreditsPage {
     private final MainMenu mainMenu;
     private final BitmapFont mainFont;
 
+    /**
+     * Credits page construction
+     * @param guiNode - gui node
+     * @param settings - settings
+     * @param mainMenu - main menu
+     * @param mainFont - main font
+     */
     public CreditsPage(Node guiNode, AppSettings settings, MainMenu mainMenu, BitmapFont mainFont){
         this.guiNode = guiNode;
         this.settings = settings;
@@ -26,9 +41,11 @@ public class CreditsPage {
         createCreditsPage();
     }
 
+    /**
+     * Creating credits page screen
+     */
     private void createCreditsPage() {
         guiNode.detachAllChildren();
-
 
 
         // Create a "Created by" label

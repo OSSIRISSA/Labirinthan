@@ -1,3 +1,9 @@
+/**
+ * Task: Game
+ * File: Decoration.java
+ *
+ *  @author Iryna Hryshchenko
+ */
 package labirinthan.levels.parts;
 
 import com.jme3.asset.AssetManager;
@@ -10,8 +16,21 @@ import com.jme3.scene.Spatial;
 
 import java.util.Random;
 
+/**
+ * Decoration constructor
+ */
 public class Decoration extends Mesh {
 
+    /**
+     * Decoration constructor
+     * @param direction - face direction
+     * @param assetManager - asset manager
+     * @param localRootNode - localRootNode
+     * @param px - x
+     * @param py - y
+     * @param pz - z
+     * @param bulletAppState - bulletAppState
+     */
     public Decoration(float direction, AssetManager assetManager, Node localRootNode, float px, float py, float pz, BulletAppState bulletAppState) {
         Random random = new Random();
         Spatial decoration = null;
@@ -32,15 +51,9 @@ public class Decoration extends Mesh {
                 if(random.nextInt(2)!=0){
                     decoration = assetManager.loadModel("Models/Compositions/candle_holder.glb");
                     switch ((int) direction) {
-                        case 1 -> {
-                            decoration.setLocalTranslation(px+0.7f, 0.57f, pz-1.5f);
-                        }
-                        case 2 -> {
-                            decoration.setLocalTranslation(px+1.5f, 0.57f, pz+0.7f);
-                        }
-                        case 3 -> {
-                            decoration.setLocalTranslation(px-0.7f, 0.57f, pz+1.5f);
-                        }
+                        case 1 -> decoration.setLocalTranslation(px+0.7f, 0.57f, pz-1.5f);
+                        case 2 -> decoration.setLocalTranslation(px+1.5f, 0.57f, pz+0.7f);
+                        case 3 -> decoration.setLocalTranslation(px-0.7f, 0.57f, pz+1.5f);
                         default -> decoration.setLocalTranslation(px-1.5f, 0.57f, pz-0.7f);
                     }
                     decoration.rotate(0, FastMath.QUARTER_PI, 0);
@@ -52,15 +65,9 @@ public class Decoration extends Mesh {
 
                 decoration = assetManager.loadModel("Models/Decorations/baphomet_statue.glb");
                 switch ((int) direction) {
-                    case 1 -> {
-                        decoration.setLocalTranslation(px - 2, 1.8f, pz);
-                    }
-                    case 2 -> {
-                        decoration.setLocalTranslation(px, 1.8f, pz - 2);
-                    }
-                    case 3 -> {
-                        decoration.setLocalTranslation(px + 2, 1.8f, pz);
-                    }
+                    case 1 -> decoration.setLocalTranslation(px - 2, 1.8f, pz);
+                    case 2 -> decoration.setLocalTranslation(px, 1.8f, pz - 2);
+                    case 3 -> decoration.setLocalTranslation(px + 2, 1.8f, pz);
                     default -> decoration.setLocalTranslation(px, 1.8f, pz + 2);
                 }
                 decoration.rotate(0, FastMath.PI, 0);
@@ -80,9 +87,7 @@ public class Decoration extends Mesh {
                             decoration.setLocalTranslation(px + 1.15f, 0, pz - 1);
                             decoration.rotate(0, FastMath.HALF_PI, 0);
                         }
-                        case 2 -> {
-                            decoration.setLocalTranslation(px + 1, 0, pz + 1.15f);
-                        }
+                        case 2 -> decoration.setLocalTranslation(px + 1, 0, pz + 1.15f);
                         case 3 -> {
                             decoration.setLocalTranslation(px - 1.15f, 0, pz + 1);
                             decoration.rotate(0, -FastMath.HALF_PI, 0);
@@ -113,9 +118,7 @@ public class Decoration extends Mesh {
                             decoration.setLocalTranslation(px + 1.5f, 0, pz);
                             decoration.rotate(0, FastMath.HALF_PI, 0);
                         }
-                        default -> {
-                            decoration.setLocalTranslation(px, 0, pz + 1.5f);
-                        }
+                        default -> decoration.setLocalTranslation(px, 0, pz + 1.5f);
                     }
                     decoration.scale(0.0015f);
                     decoration.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
@@ -168,15 +171,9 @@ public class Decoration extends Mesh {
             case 6 -> {
                 decoration = assetManager.loadModel("Models/Decorations/monsters_skull_with_gold_backdrop.glb");
                 switch ((int) direction) {
-                    case 1 -> {
-                        decoration.setLocalTranslation(px, 2.5f, pz+1.95f);
-                    }
-                    case 2 -> {
-                        decoration.setLocalTranslation(px-1.95f, 2.5f, pz);
-                    }
-                    case 3 -> {
-                        decoration.setLocalTranslation(px, 2.5f, pz-1.95f);
-                    }
+                    case 1 -> decoration.setLocalTranslation(px, 2.5f, pz+1.95f);
+                    case 2 -> decoration.setLocalTranslation(px-1.95f, 2.5f, pz);
+                    case 3 -> decoration.setLocalTranslation(px, 2.5f, pz-1.95f);
                     default -> decoration.setLocalTranslation(px+1.95f, 2.5f, pz);
                 }
                 decoration.rotate(0, -FastMath.HALF_PI, 0);
@@ -185,15 +182,9 @@ public class Decoration extends Mesh {
             case 7 -> {
                 decoration = assetManager.loadModel("Models/Decorations/occult_books.glb");
                 switch ((int) direction) {
-                    case 1 -> {
-                        decoration.setLocalTranslation(px+0.2f, 0, pz);
-                    }
-                    case 2 -> {
-                        decoration.setLocalTranslation(px, 0, pz+0.2f);
-                    }
-                    case 3 -> {
-                        decoration.setLocalTranslation(px-0.2f, 0, pz);
-                    }
+                    case 1 -> decoration.setLocalTranslation(px+0.2f, 0, pz);
+                    case 2 -> decoration.setLocalTranslation(px, 0, pz+0.2f);
+                    case 3 -> decoration.setLocalTranslation(px-0.2f, 0, pz);
                     default -> decoration.setLocalTranslation(px, 0, pz-0.2f);
                 }
                 decoration.rotate(0, FastMath.PI, 0);
@@ -207,15 +198,9 @@ public class Decoration extends Mesh {
             case 9 -> {
                 decoration = assetManager.loadModel("Models/Decorations/pirate_props_rum_and_barrels.glb");
                 switch ((int) direction) {
-                    case 1 -> {
-                        decoration.setLocalTranslation(px-0.2f, 0.01f, pz);
-                    }
-                    case 2 -> {
-                        decoration.setLocalTranslation(px, 0.01f, pz-0.2f);
-                    }
-                    case 3 -> {
-                        decoration.setLocalTranslation(px+0.2f, 0.01f, pz);
-                    }
+                    case 1 -> decoration.setLocalTranslation(px-0.2f, 0.01f, pz);
+                    case 2 -> decoration.setLocalTranslation(px, 0.01f, pz-0.2f);
+                    case 3 -> decoration.setLocalTranslation(px+0.2f, 0.01f, pz);
                     default -> decoration.setLocalTranslation(px, 0.01f, pz+0.2f);
                 }
                 decoration.scale(0.7f);
@@ -342,9 +327,7 @@ public class Decoration extends Mesh {
                         decoration.setLocalTranslation(px+1.15f, 0, pz-1);
                         decoration.rotate(0, FastMath.HALF_PI, 0);
                     }
-                    case 2 -> {
-                        decoration.setLocalTranslation(px+1, 0, pz+1.15f);
-                    }
+                    case 2 -> decoration.setLocalTranslation(px+1, 0, pz+1.15f);
                     case 3 -> {
                         decoration.setLocalTranslation(px-1.15f, 0, pz+1);
                         decoration.rotate(0, -FastMath.HALF_PI, 0);
@@ -373,10 +356,7 @@ public class Decoration extends Mesh {
                         decoration.setLocalTranslation(px-1.15f, 0, pz+1);
                         decoration.rotate(0, +FastMath.HALF_PI, 0);
                     }
-                    default -> {
-                        decoration.setLocalTranslation(px-1, 0, pz-1.15f);
-
-                    }
+                    default -> decoration.setLocalTranslation(px-1, 0, pz-1.15f);
                 }
                 decoration.scale(0.0015f);
                 decoration.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
@@ -385,18 +365,10 @@ public class Decoration extends Mesh {
 
                 decoration = assetManager.loadModel("Models/Compositions/hurdy-gurdy.glb");
                 switch ((int) direction) {
-                    case 1 -> {
-                        decoration.setLocalTranslation(px-1.5f, 0.3f, pz-1.8f);
-                    }
-                    case 2 -> {
-                        decoration.setLocalTranslation(px+1.8f, 0.3f, pz-1.5f);
-                    }
-                    case 3 -> {
-                        decoration.setLocalTranslation(px+1.5f, 0.3f, pz+1.8f);
-                    }
-                    default -> {
-                        decoration.setLocalTranslation(px-1.8f, 0.3f, pz+1.5f);
-                    }
+                    case 1 -> decoration.setLocalTranslation(px-1.5f, 0.3f, pz-1.8f);
+                    case 2 -> decoration.setLocalTranslation(px+1.8f, 0.3f, pz-1.5f);
+                    case 3 -> decoration.setLocalTranslation(px+1.5f, 0.3f, pz+1.8f);
+                    default -> decoration.setLocalTranslation(px-1.8f, 0.3f, pz+1.5f);
                 }
                 decoration.scale(0.0042f);
             }
@@ -426,15 +398,9 @@ public class Decoration extends Mesh {
 
                 decoration = assetManager.loadModel("Models/Compositions/candle_holder.glb");
                 switch ((int) direction) {
-                    case 1 -> {
-                        decoration.setLocalTranslation(px-0.7f, 0.75f, pz+1);
-                    }
-                    case 2 -> {
-                        decoration.setLocalTranslation(px-1, 0.75f, pz-0.7f);
-                    }
-                    case 3 -> {
-                        decoration.setLocalTranslation(px+0.7f, 0.75f, pz-1);
-                    }
+                    case 1 -> decoration.setLocalTranslation(px-0.7f, 0.75f, pz+1);
+                    case 2 -> decoration.setLocalTranslation(px-1, 0.75f, pz-0.7f);
+                    case 3 -> decoration.setLocalTranslation(px+0.7f, 0.75f, pz-1);
                     default -> decoration.setLocalTranslation(px+1, 0.75f, pz+0.7f);
                 }
                 decoration.rotate(0, FastMath.PI, 0);
@@ -470,18 +436,10 @@ public class Decoration extends Mesh {
                 decoration = assetManager.loadModel("Models/Decorations/lounging_mermaid.glb");
                 decoration.setLocalTranslation(px, 0.3f, pz);
                 switch ((int) direction) {
-                    case 1 -> {
-                        decoration.setLocalTranslation(px-1.3f, -0.08f, pz-9);
-                    }
-                    case 2 -> {
-                        decoration.setLocalTranslation(px+9, -0.08f, pz-1.3f);
-                    }
-                    case 3 -> {
-                        decoration.setLocalTranslation(px+1.3f, -0.08f, pz+9);
-                    }
-                    default -> {
-                        decoration.setLocalTranslation(px-9, -0.08f, pz+1.3f);
-                    }
+                    case 1 -> decoration.setLocalTranslation(px-1.3f, -0.08f, pz-9);
+                    case 2 -> decoration.setLocalTranslation(px+9, -0.08f, pz-1.3f);
+                    case 3 -> decoration.setLocalTranslation(px+1.3f, -0.08f, pz+9);
+                    default -> decoration.setLocalTranslation(px-9, -0.08f, pz+1.3f);
                 }
                 decoration.rotate(0, FastMath.PI, 0);
                 decoration.scale(11);
@@ -500,17 +458,9 @@ public class Decoration extends Mesh {
             case 3 -> decoration.rotate(0, FastMath.HALF_PI, 0);
         }
 
-
-        /*decoration = assetManager.loadModel("Models/Decorations/bacchante_a_lamour_c._1892_ce.glb");
-        decoration.setLocalTranslation(px+2.5f,-4.65f,pz+9);
-        decoration.scale(4);*/
-
         decoration.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         decoration.setShadowMode(RenderQueue.ShadowMode.Receive);
         localRootNode.attachChild(decoration);
 
-        /*RigidBodyControl floorPhysics = new RigidBodyControl(0.0f);
-        skeletonMesh.addControl(floorPhysics);
-        bulletAppState.getPhysicsSpace().add(floorPhysics);*/
     }
 }

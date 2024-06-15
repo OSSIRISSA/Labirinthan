@@ -1,3 +1,9 @@
+/**
+ * Task: Game
+ * File: Torch.java
+ *
+ *  @author Max Mormil
+ */
 package labirinthan.props;
 
 import com.jme3.asset.AssetManager;
@@ -23,6 +29,11 @@ public class Torch {
     final static float TORCH_MESH_ROTATION_Y = (FastMath.PI/2)/90*-42;
     final Vector3f FIRE_LOCATION = new Vector3f(-0.25f, 0.7f, 0);
 
+    /**
+     * Torch constructor
+     * @param assetManager - assetManager
+     * @param torchNode - torchNode
+     */
     public Torch(AssetManager assetManager, Node torchNode){
         this.assetManager = assetManager;
         this.torchMesh = assetManager.loadModel("Models/Torch/wooden_handle_torch.glb");
@@ -40,6 +51,10 @@ public class Torch {
         torchNode.attachChild(fireNode);
     }
 
+    /**
+     * Creating fire
+     * @return - ParticleEmitter
+     */
     private ParticleEmitter createFire(){
         ParticleEmitter fire = new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 13);
         Material matRed = new Material(assetManager, "Common/MatDefs/Misc/Particle.j3md");
