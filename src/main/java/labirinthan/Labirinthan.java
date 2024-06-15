@@ -4,12 +4,11 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.StatsAppState;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.input.FlyByCamera;
 import com.jme3.math.ColorRGBA;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.FogFilter;
-import com.jme3.renderer.Camera;
 import com.jme3.system.AppSettings;
+import labirinthan.GUI.FinalScreen;
 import labirinthan.GUI.MainHUD;
 import labirinthan.GUI.MainMenu;
 import labirinthan.character.MainCharacter;
@@ -23,6 +22,8 @@ public class Labirinthan extends SimpleApplication {
     public BulletAppState bulletAppState;
     public MainCharacter character;
     private MainHUD mainHUD;
+    public MainMenu mainMenu;
+    public FinalScreen finalScreen;
     public FilterPostProcessor filterPostProcessor;
     private FogFilter fog;
 
@@ -54,7 +55,7 @@ public class Labirinthan extends SimpleApplication {
         assetManager.registerLocator("assets/", FileLocator.class);
 
         // Initialize Main Menu GUI
-        MainMenu mainMenu = new MainMenu(this, guiNode, settings, assetManager);
+        mainMenu = new MainMenu(this, guiNode, settings, assetManager);
         mainMenu.createHomeScreen();
 
         //COMMENT THIS IF YOU WANT TO INTERACT WITH MAIN MENU
@@ -98,6 +99,7 @@ public class Labirinthan extends SimpleApplication {
 
             levelPreparation(false);
             MainMenu.LoadingScreen.hide(guiNode);
+            character.hud.showInstructionSign(true);
             return null;
         });
     }
@@ -167,5 +169,15 @@ public class Labirinthan extends SimpleApplication {
             MainMenu.LoadingScreen.hide(guiNode);
             return null;
         });
+    }
+    public void gameFinal() {
+        stateManager.detach(character);
+        level.removeLight();
+        stateManager.detach(level);
+        bulletAppState.cleanup();
+        stateManager.detach(bulletAppState);
+        finalScreen = new FinalScreen(this, guiNode, settings, assetManager);
+        finalScreen.createHomeScreen();
+        finalScreen.playDeathSound();
     }
 }

@@ -201,7 +201,7 @@ public class PuzzleSudoku implements ActionListener {
         if(codeSquares.contains(chosenSquare)){
             if((codeSquares.get(0).getText().equals("1"))&&(codeSquares.get(1).getText().equals("4"))&&(codeSquares.get(2).getText().equals("2"))&&(codeSquares.get(3).getText().equals("9"))){
                 guiNode.detachAllChildren();
-                app.startLevel1();
+                app.gameFinal();
             }
         }
     }

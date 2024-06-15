@@ -36,7 +36,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
     private Object interactionObject;
     public static Node characterNode;
     public Node cameraNode;
-    private final MainHUD hud;
+    public final MainHUD hud;
     private PointLight light;
 
     private final Vector3f walkDirection = new Vector3f();
@@ -100,7 +100,6 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
             initKeys();
             isKeyInitialized = true;
         }
-        hud.showInstructionSign(true);
     }
 
     private void initKeys() {

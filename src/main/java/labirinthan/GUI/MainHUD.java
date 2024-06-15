@@ -37,7 +37,7 @@ public class MainHUD {
     private static final String DEFAULT_INTERACTION_TEXT = "  Press 'E' to ";
     public static final String TORCH_INTERACTION_TEXT = "take a torch  ";
     public static final String PUZZLE_INTERACTION_TEXT = "solve a mystery  ";
-    public static final String INSTRUCTION_TEXT = "\n\n\n  Use 'WASD' to move  \n  Press 'SPACE' to jump  \n  Press 'E' to interact with objects  \n\n  Good Luck, Cursed, try not to die too soon...  \n\n\n";
+    public static final String INSTRUCTION_TEXT = "\n\n\n  Your fate is endless puzzle solving  \n\n  Find puzzle books in my labyrinth  \n  Use 'WASD' to move  \n  Press 'SPACE' to jump  \n  Press 'E' to interact with objects  \n\n  Good Luck, Cursed, try not to die too soon...  \n\n\n";
 
     public MainHUD(Node guiNode, AppSettings settings, AssetManager assetManager) {
         this.guiNode = guiNode;
@@ -191,7 +191,7 @@ public class MainHUD {
         );
         interactionPanel.setLocalTranslation(
                 (settings.getWidth() / 2f) - (interactionPanel.getPreferredSize().x / 2),
-                interactionPanel.getPreferredSize().y * 1.3f,
+                interactionPanel.getPreferredSize().y * 1.1f,
                 0
         );
     }

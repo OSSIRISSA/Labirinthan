@@ -6,9 +6,9 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 import labirinthan.Labirinthan;
-import labirinthan.props.TorchHolder;
 import labirinthan.levels.puzzles.PuzzleCabinet;
 import labirinthan.levels.puzzles.PuzzleType;
+import labirinthan.props.TorchHolder;
 
 import java.util.ArrayList;
 
@@ -36,7 +36,7 @@ public class Level0 extends Level {
         //floor = new Floor(wallWidth * 6 + passageWidth * 5, 0.1f, wallWidth * 6 + passageWidth * 5, assetManager, localRootNode, (wallWidth * 6 + passageWidth * 5)/2, -0.05f, (wallWidth * 6 + passageWidth * 5)/2, bulletAppState);
 
         //ceiling = new Ceiling(wallWidth * 6 + passageWidth * 5, 0.1f, wallWidth * 6 + passageWidth * 5, assetManager, localRootNode, (wallWidth * 6 + passageWidth * 5)/2, wallHeight-0.05f, (wallWidth * 6 + passageWidth * 5)/2, bulletAppState);
-        cross = new PuzzleCabinet((Labirinthan) application, assetManager, localRootNode, blocksInfo.get(0).get(0), -0.05f, blocksInfo.get(0).get(1), PuzzleType.SUDOKU, blocksInfo.get(0).get(2));
+        cross = new PuzzleCabinet((Labirinthan) application, assetManager, localRootNode, blocksInfo.get(0).get(0), -0.05f, blocksInfo.get(0).get(1), PuzzleType.ENCRYPTION, blocksInfo.get(0).get(2));
 
 
         //Closing extras
