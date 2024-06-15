@@ -47,7 +47,6 @@ public class CameraControl extends AbstractControl {
                 MainCharacter.isDead = false;
                 spatial.removeControl(this);
                 game.stop();
-
             }
         }
     }

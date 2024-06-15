@@ -100,6 +100,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
             initKeys();
             isKeyInitialized = true;
         }
+        hud.showInstructionSign(true);
     }
 
     private void initKeys() {
@@ -193,6 +194,9 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         Vector3f camDir = this.app.getCamera().getDirection().clone().setY(0).normalizeLocal().multLocal(CHARACTER_SPEED);
         Vector3f camLeft = this.app.getCamera().getLeft().clone().setY(0).normalizeLocal().multLocal(CHARACTER_SPEED);
         walkDirection.set(0, 0, 0);
+        if(left||right||forward||backward){
+            hud.showInstructionSign(false);
+        }
         if (left)
             walkDirection.addLocal(camLeft);
         if (right)

@@ -2,6 +2,7 @@ package labirinthan.GUI;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.font.BitmapFont;
+import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
@@ -11,9 +12,11 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Quad;
 import com.jme3.system.AppSettings;
-import com.jme3.material.Material;
 import com.jme3.texture.Texture;
-import com.simsilica.lemur.*;
+import com.simsilica.lemur.GuiGlobals;
+import com.simsilica.lemur.Label;
+import com.simsilica.lemur.Panel;
+import com.simsilica.lemur.ProgressBar;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
 
 public class MainHUD {
@@ -29,10 +32,12 @@ public class MainHUD {
     private Geometry bottomLid;
     private Label deathText;
     private final Node mainHUDNode = new Node("Main HUD");
+    private boolean instructionsShowing = false;
 
     private static final String DEFAULT_INTERACTION_TEXT = "  Press 'E' to ";
     public static final String TORCH_INTERACTION_TEXT = "take a torch  ";
     public static final String PUZZLE_INTERACTION_TEXT = "solve a mystery  ";
+    public static final String INSTRUCTION_TEXT = "\n\n\n  Use 'WASD' to move  \n  Press 'SPACE' to jump  \n  Press 'E' to interact with objects  \n\n  Good Luck, Cursed, try not to die too soon...  \n\n\n";
 
     public MainHUD(Node guiNode, AppSettings settings, AssetManager assetManager) {
         this.guiNode = guiNode;
@@ -80,10 +85,11 @@ public class MainHUD {
         interactionSign.setCullHint(Spatial.CullHint.Always);
         interactionPanel.attachChild(interactionSign);
 
+
         // Eyelid overlays
         topLid = createLidOverlay();
         bottomLid = createLidOverlay();
-        bottomLid.rotate(0,0,FastMath.PI);
+        bottomLid.rotate(0, 0, FastMath.PI);
         topLid.setLocalTranslation(0, settings.getHeight(), 3);
         bottomLid.setLocalTranslation(settings.getWidth(), 0, 3);
         mainHUDNode.attachChild(topLid);
@@ -112,13 +118,13 @@ public class MainHUD {
     }
 
     public void updateLidOverlay(float progress) {
-        float lidPosition = settings.getHeight() * (1 - 2.5f*progress);
+        float lidPosition = settings.getHeight() * (1 - 2.5f * progress);
         topLid.setLocalTranslation(0, lidPosition, 3);
-        bottomLid.setLocalTranslation(settings.getWidth(), settings.getHeight()-lidPosition, 3);
-        deathText.setAlpha(1.25f*progress);
+        bottomLid.setLocalTranslation(settings.getWidth(), settings.getHeight() - lidPosition, 3);
+        deathText.setAlpha(1.25f * progress);
     }
 
-    public void detachAllExceptLids(){
+    public void detachAllExceptLids() {
         guiNode.detachChild(interactionPanel);
         guiNode.detachChild(torchBar);
         guiNode.detachChild(hpBar);
@@ -141,11 +147,38 @@ public class MainHUD {
     }
 
     public void showInteractionSign(boolean show, String text) {
+        if(!instructionsShowing) {
+            if (show) {
+                interactionSign.setCullHint(Spatial.CullHint.Never);
+                interactionPanel.setCullHint(Spatial.CullHint.Never);
+                interactionSign.setText(DEFAULT_INTERACTION_TEXT + text);
+            } else {
+                interactionSign.setCullHint(Spatial.CullHint.Always);
+                interactionPanel.setCullHint(Spatial.CullHint.Always);
+            }
+            // Update the size of the background panel to match the text
+            interactionPanel.setPreferredSize(new Vector3f(interactionSign.getPreferredSize().x + 20, interactionSign.getPreferredSize().y + 20, 0));
+            interactionSign.setLocalTranslation(
+                    (interactionPanel.getPreferredSize().x / 2f) - (interactionSign.getPreferredSize().x / 2),
+                    (interactionPanel.getPreferredSize().y / 2f) - (interactionSign.getPreferredSize().y / 2) - 20,
+                    1
+            );
+            interactionPanel.setLocalTranslation(
+                    (settings.getWidth() / 2f) - (interactionPanel.getPreferredSize().x / 2),
+                    interactionPanel.getPreferredSize().y * 2f,
+                    0
+            );
+        }
+    }
+
+    public void showInstructionSign(boolean show) {
         if (show) {
+            instructionsShowing = true;
             interactionSign.setCullHint(Spatial.CullHint.Never);
             interactionPanel.setCullHint(Spatial.CullHint.Never);
-            interactionSign.setText(DEFAULT_INTERACTION_TEXT + text);
+            interactionSign.setText(INSTRUCTION_TEXT);
         } else {
+            instructionsShowing = false;
             interactionSign.setCullHint(Spatial.CullHint.Always);
             interactionPanel.setCullHint(Spatial.CullHint.Always);
         }
@@ -158,7 +191,7 @@ public class MainHUD {
         );
         interactionPanel.setLocalTranslation(
                 (settings.getWidth() / 2f) - (interactionPanel.getPreferredSize().x / 2),
-                interactionPanel.getPreferredSize().y * 2f,
+                interactionPanel.getPreferredSize().y * 1.3f,
                 0
         );
     }
