@@ -26,6 +26,15 @@ public class CameraControl extends AbstractControl {
 
     private boolean stopped = false;
 
+    /**
+     * CameraControl init
+     * @param game - Labirinthan app
+     * @param camera - cam
+     * @param targetPosition - demanded position
+     * @param targetRotation - demanded rotation
+     * @param duration - duration
+     * @param hud - current hud
+     */
     public CameraControl(Labirinthan game, MainCharacter character, Camera camera, Vector3f targetPosition, Quaternion targetRotation, float duration, MainHUD hud) {
         this.game = game;
         this.character = character;
