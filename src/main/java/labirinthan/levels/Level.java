@@ -547,7 +547,7 @@ public class Level extends AbstractAppState {
 
     public void playCreepySound(Node characterNode) {
         Random rand = new Random();
-        if (rand.nextInt(250) == 0) {
+        if (rand.nextInt(500) == 0) {
             creepySound = new AudioNode(assetManager, "Sounds/LevelSounds/" + rand.nextInt(1, 6) + ".wav", AudioData.DataType.Buffer);
             creepySound.setPositional(false); // Use true for 3D sounds
             creepySound.setLooping(false); // Set to true if you want the sound to loop
