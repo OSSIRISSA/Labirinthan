@@ -46,12 +46,10 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
     private PointLight light;
 
     private final Vector3f walkDirection = new Vector3f();
-    private static Quaternion defaultCameraRotation;
-    private boolean left = false, right = false, forward = false, backward = false;
+    private boolean left, right, forward, backward;
     public boolean isCarryingTorch = false;
     public boolean isPuzzleFound = false;
-    public static boolean isDead = false;
-    private static boolean isKeyInitialized = false;
+    public boolean isDead = false;
 
     private InteractionType interactType = InteractionType.NONE;
 
@@ -98,18 +96,14 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         this.app.getCamera().setFrustumNear(0.1f);
         float aspect = (float) this.app.getCamera().getWidth() / this.app.getCamera().getHeight();
         this.app.getCamera().setFrustumPerspective(45f, aspect, 0.1f, 1000f);
-
-        if (defaultCameraRotation==null){
-            defaultCameraRotation = this.app.getCamera().getRotation();
-        } else this.app.getCamera().setRotation(defaultCameraRotation);
-
-        //this.app.getCamera().setRotation(new Quaternion().fromAngleAxis(FastMath.HALF_PI, Vector3f.UNIT_Z));
+        this.app.getCamera().setRotation(new Quaternion(0,1,0,0));
+        isDead = false;
 
         addCollisionListener();
 
-        if (!isKeyInitialized) {
+        if (!Labirinthan.isKeyInitialized) {
             initKeys();
-            isKeyInitialized = true;
+            Labirinthan.isKeyInitialized = true;
         }
     }
 
@@ -179,27 +173,27 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         if (!isPuzzleFound && !isDead) {
             switch (binding) {
                 case "Left":
-                    left = isPressed;
+                    this.left = isPressed;
                     break;
                 case "Right":
-                    right = isPressed;
+                    this.right = isPressed;
                     break;
                 case "Forward":
-                    forward = isPressed;
+                    this.forward = isPressed;
                     break;
                 case "Backward":
-                    backward = isPressed;
+                    this.backward = isPressed;
                     break;
                 case "Jump":
-                    if (isPressed && characterControl.isOnGround())
-                        characterControl.jump();
+                    if (isPressed && this.characterControl.isOnGround())
+                        this.characterControl.jump();
                     break;
                 case "Interact":
-                    if (isPressed && (interactType != InteractionType.NONE))
+                    if (isPressed && (this.interactType != InteractionType.NONE))
                         interact();
                     break;
                 case "DropTorch":
-                    if (isPressed && isCarryingTorch)
+                    if (isPressed && this.isCarryingTorch)
                         dequipTorch();
                     break;
             }
@@ -208,21 +202,20 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
 
     @Override
     public void update(float tpf) {
-        super.update(tpf);
-
         Vector3f camDir = this.app.getCamera().getDirection().clone().setY(0).normalizeLocal().multLocal(CHARACTER_SPEED);
         Vector3f camLeft = this.app.getCamera().getLeft().clone().setY(0).normalizeLocal().multLocal(CHARACTER_SPEED);
         walkDirection.set(0, 0, 0);
-        if(left||right||forward||backward){
+        if(this.left||this.right||this.forward||this.backward){
             hud.showInstructionSign(false);
         }
-        if (left)
+        if (this.left)
             walkDirection.addLocal(camLeft);
-        if (right)
+        if (this.right){
             walkDirection.addLocal(camLeft.negate());
-        if (forward)
+        }
+        if (this.forward)
             walkDirection.addLocal(camDir);
-        if (backward)
+        if (this.backward)
             walkDirection.addLocal(camDir.negate());
         characterControl.setWalkDirection(walkDirection);
 
@@ -295,7 +288,7 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         dequipTorch();
         isDead = true;
 
-        CameraControl cameraControl = new CameraControl(app, this.app.getCamera(), characterNode.getLocalTranslation().add(0, 0.2f, 0), new Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X).fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_Z), 15.0f, hud);
+        CameraControl cameraControl = new CameraControl(app, this, this.app.getCamera(), characterNode.getLocalTranslation().add(0, 0.2f, 0), new Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X).fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_Z), 15.0f, hud);
         cameraNode.addControl(cameraControl);
 
         app.getInputManager().setCursorVisible(false);

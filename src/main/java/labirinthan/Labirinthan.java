@@ -26,7 +26,7 @@ import labirinthan.levels.Level2;
 public class Labirinthan extends SimpleApplication {
 
     public BulletAppState bulletAppState;
-    public MainCharacter character;
+    public static MainCharacter character;
     private MainHUD mainHUD;
     public MainMenu mainMenu;
     public FinalScreen finalScreen;
@@ -38,6 +38,7 @@ public class Labirinthan extends SimpleApplication {
     public static final float Z = Level.wallWidth * 3 + Level.passageWidth * 2.5f;
     public static Level level;
 
+    public static boolean isKeyInitialized = false;
     public static boolean isFlying = false;
 
     /**
@@ -87,9 +88,11 @@ public class Labirinthan extends SimpleApplication {
             }
             if (level != null) {
                 level.removeLight();
+                level.cleanup();
                 stateManager.detach(level);
             }
             if (character != null) {
+                character.cleanup();
                 stateManager.detach(character);
             }
 
@@ -99,7 +102,7 @@ public class Labirinthan extends SimpleApplication {
             }
             bulletAppState = new BulletAppState();
             stateManager.attach(bulletAppState);
-            bulletAppState.setDebugEnabled(false);
+            bulletAppState.setDebugEnabled(true);
             level = new Level0(this, bulletAppState, guiNode, settings);
             stateManager.attach(level);
             addFog();

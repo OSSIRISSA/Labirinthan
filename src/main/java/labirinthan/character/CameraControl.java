@@ -16,6 +16,7 @@ import labirinthan.Labirinthan;
 public class CameraControl extends AbstractControl {
 
     private final Labirinthan game;
+    private final MainCharacter character;
     private final Camera camera;
     private final Vector3f targetPosition;
     private final Quaternion targetRotation;
@@ -23,17 +24,11 @@ public class CameraControl extends AbstractControl {
     private final MainHUD hud;
     private float elapsedTime = 0f;
 
-    /**
-     * CameraControl init
-     * @param game - Labirinthan app
-     * @param camera - cam
-     * @param targetPosition - demanded position
-     * @param targetRotation - demanded rotation
-     * @param duration - duration
-     * @param hud - current hud
-     */
-    public CameraControl(Labirinthan game, Camera camera, Vector3f targetPosition, Quaternion targetRotation, float duration, MainHUD hud) {
+    private boolean stopped = false;
+
+    public CameraControl(Labirinthan game, MainCharacter character, Camera camera, Vector3f targetPosition, Quaternion targetRotation, float duration, MainHUD hud) {
         this.game = game;
+        this.character = character;
         this.camera = camera;
         this.targetPosition = targetPosition;
         this.targetRotation = targetRotation;
@@ -45,6 +40,7 @@ public class CameraControl extends AbstractControl {
 
     @Override
     protected void controlUpdate(float tpf) {
+        if(stopped) return;
         if (elapsedTime < duration) {
             elapsedTime += tpf;
             float progress = elapsedTime / duration;
@@ -59,9 +55,10 @@ public class CameraControl extends AbstractControl {
 
             if (progress<0.4f) hud.updateLidOverlay(progress);
             if (progress>0.8f){
-                MainCharacter.isDead = false;
-                spatial.removeControl(this);
-                game.stop();
+
+                character.isDead = false;
+                game.startGame();
+                stopped=true;
             }
         }
     }
