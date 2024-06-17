@@ -14,7 +14,6 @@ import labirinthan.GUI.MainHUD;
 import labirinthan.Labirinthan;
 
 public class CameraControl extends AbstractControl {
-
     private final Labirinthan game;
     private final MainCharacter character;
     private final Camera camera;
@@ -57,14 +56,12 @@ public class CameraControl extends AbstractControl {
             // Interpolate position
             Vector3f newPosition = camera.getLocation().interpolateLocal(targetPosition, progress);
             camera.setLocation(newPosition);
-
             // Interpolate rotation
             Quaternion newRotation = new Quaternion().slerp(camera.getRotation(), targetRotation, progress);
             camera.setRotation(newRotation);
 
             if (progress<0.4f) hud.updateLidOverlay(progress);
             if (progress>0.8f){
-
                 character.isDead = false;
                 game.startGame();
                 stopped=true;

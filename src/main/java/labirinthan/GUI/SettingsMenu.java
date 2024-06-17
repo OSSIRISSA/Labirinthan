@@ -6,7 +6,6 @@
 */
 package labirinthan.GUI;
 
-import com.jme3.asset.AssetManager;
 import com.jme3.font.BitmapFont;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -22,10 +21,6 @@ public class SettingsMenu {
     private final AppSettings settings;
     private final MainMenu mainMenu;
 
-    private Container graphicsTab;
-    private Container audioTab;
-    private Container controlsTab;
-
     private final BitmapFont mainFont;
     private TextField widthField;
     private TextField heightField;
@@ -40,17 +35,15 @@ public class SettingsMenu {
      * @param mainApp - mainApp
      * @param guiNode - gui node
      * @param settings - settings
-     * @param assetManager - asset manager
      * @param mainMenu - main menu
      * @param font - font
      */
-    public SettingsMenu(Labirinthan mainApp, Node guiNode, AppSettings settings, AssetManager assetManager, MainMenu mainMenu, BitmapFont font){
+    public SettingsMenu(Labirinthan mainApp, Node guiNode, AppSettings settings, MainMenu mainMenu, BitmapFont font){
         this.app = mainApp;
         this.guiNode = guiNode;
         this.settings = settings;
         this.mainMenu = mainMenu;
         this.mainFont = font;
-
         createSettingsScreen();
     }
 
@@ -101,29 +94,19 @@ public class SettingsMenu {
         tabsContainer.addChild(tabs);
 
         // Graphics Tab
-        graphicsTab = new Container(new SpringGridLayout(Axis.Y, Axis.X, FillMode.None, FillMode.Even));
+        Container graphicsTab = new Container(new SpringGridLayout(Axis.Y, Axis.X, FillMode.None, FillMode.Even));
         createGraphicsSettings(graphicsTab);
         tabs.addTab("Graphics", graphicsTab);
 
         // Audio Tab
-        audioTab = new Container(new SpringGridLayout(Axis.Y, Axis.X, FillMode.None, FillMode.Even));
+        Container audioTab = new Container(new SpringGridLayout(Axis.Y, Axis.X, FillMode.None, FillMode.Even));
         createAudioSettings(audioTab);
         tabs.addTab("Audio", audioTab);
 
         // Controls Tab
-        controlsTab = new Container(new SpringGridLayout(Axis.Y, Axis.X, FillMode.None, FillMode.Even));
+        Container controlsTab = new Container(new SpringGridLayout(Axis.Y, Axis.X, FillMode.None, FillMode.Even));
         createControlsSettings(controlsTab);
         tabs.addTab("Controls", controlsTab);
-    }
-
-    private void redrawSettings(){
-        graphicsTab.detachAllChildren();
-        audioTab.detachAllChildren();
-        controlsTab.detachAllChildren();
-
-        createGraphicsSettings(graphicsTab);
-        createAudioSettings(audioTab);
-        createControlsSettings(controlsTab);
     }
 
     /**

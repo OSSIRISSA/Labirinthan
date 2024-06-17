@@ -18,8 +18,6 @@ import com.jme3.shadow.PointLightShadowFilter;
 import com.jme3.shadow.PointLightShadowRenderer;
 import labirinthan.Labirinthan;
 
-import java.util.ArrayList;
-
 public class TorchHolder extends Node {
     public final Spatial torchHolderMesh;
     private final Labirinthan app;
@@ -33,6 +31,7 @@ public class TorchHolder extends Node {
     private PointLightShadowRenderer plsr;
     private final TorchInteractionArea interactionArea;
     public boolean isFirst;
+    private final int roomNumber;
 
     int SHADOW_MAP = 256;
 
@@ -42,13 +41,12 @@ public class TorchHolder extends Node {
      * @param assetManager - assetManager
      * @param rootNode - rootNode
      * @param isFirst - if this TorchHolder is first
-     * @param roomsNumber - number of rooms
-     * @param allTorches - array of all torches
      */
-    public TorchHolder(Labirinthan application, AssetManager assetManager, Node rootNode, boolean isFirst, int roomsNumber, ArrayList<TorchHolder> allTorches) {
+    public TorchHolder(Labirinthan application, AssetManager assetManager, Node rootNode, boolean isFirst, int roomNumber) {
         this.app = application;
         this.rootNode = rootNode;
         this.isFirst = isFirst;
+        this.roomNumber = roomNumber;
 
         torchNode = new Node("TorchNode");
         new Torch(assetManager, torchNode);
@@ -62,7 +60,6 @@ public class TorchHolder extends Node {
         this.attachChild(lightNode);
         lightNode.move(-0.5f, 1, 0);
         this.light = createLight(this.getWorldTranslation(), assetManager);
-
         updateLight();
 
         interactionAreaNode = new Node("InteractionArea");
@@ -79,7 +76,7 @@ public class TorchHolder extends Node {
     private void createShadowRenderer(AssetManager assetManager, int shadowMapSize) {
         plsr = new PointLightShadowRenderer(assetManager, shadowMapSize);
         plsr.setLight(light);
-        plsr.setShadowIntensity(0.1f/9);
+        plsr.setShadowIntensity(0.1f/roomNumber);
         app.getViewPort().addProcessor(plsr);
     }
 
@@ -108,9 +105,9 @@ public class TorchHolder extends Node {
 
     /**
      * Creating the light
-     * @param lightSourcePosition - light source position
-     * @param assetManager - assetManager
-     * @return - torchLight
+     * @param lightSourcePosition light source position
+     * @param assetManager assetManager
+     * @return torchLight
      */
     public PointLight createLight(Vector3f lightSourcePosition, AssetManager assetManager) {
         PointLight torchLight = new PointLight();
@@ -127,9 +124,9 @@ public class TorchHolder extends Node {
 
     /**
      * Rotating the torch
-     * @param x - x
-     * @param y - y
-     * @param z - z
+     * @param x x
+     * @param y y
+     * @param z z
      */
     public void rotateTorch(float x, float y, float z) {
         this.rotate(x, y, z);
@@ -139,9 +136,9 @@ public class TorchHolder extends Node {
 
     /**
      * Moving the torch
-     * @param x - x
-     * @param y - y
-     * @param z - z
+     * @param x x
+     * @param y y
+     * @param z z
      */
     public void moveTorch(float x, float y, float z) {
         this.move(x, y, z);
@@ -150,7 +147,7 @@ public class TorchHolder extends Node {
 
     /**
      * Updating status of the torch
-     * @param status - needed status of the torch
+     * @param status needed status of the torch
      */
     public void updateTorchStatus(boolean status) {
         if (status && !this.torchEnabled) {

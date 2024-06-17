@@ -26,7 +26,6 @@ public class FinalScreen {
     private final Labirinthan app;
     private final Node guiNode;
     private final AppSettings settings;
-    private final AssetManager assetManager;
     private final BitmapFont mainFont;
     public static AudioNode click;
     public static AudioNode hover;
@@ -42,7 +41,6 @@ public class FinalScreen {
         this.app = mainApp;
         this.guiNode = guiNode;
         this.settings = settings;
-        this.assetManager = assetManager;
 
         GuiGlobals.initialize(mainApp);
         BaseStyles.loadGlassStyle();
@@ -52,7 +50,7 @@ public class FinalScreen {
         this.settings.putFloat("Music Volume", 0.5f);
         this.settings.putFloat("Sound Volume", 0.5f);
 
-        mainFont = this.assetManager.loadFont("Interface/demi.fnt");
+        mainFont = assetManager.loadFont("Interface/demi.fnt");
 
         click = new AudioNode(assetManager, "Sounds/button-click.wav", AudioData.DataType.Buffer);
         click.setPositional(false);
@@ -94,7 +92,6 @@ public class FinalScreen {
             app.mainMenu.createHomeScreen();
         });
         guiNode.attachChild(playButton);
-
     }
 
     /**
@@ -103,17 +100,5 @@ public class FinalScreen {
     static void playClickSound(){
         click.stop();
         click.play();
-    }
-
-    /**
-     * Playing death sound
-     */
-    public void playDeathSound() {
-        AudioNode deathSound = new AudioNode(assetManager, "Sounds/player-death.wav", AudioData.DataType.Buffer);
-        deathSound.setPositional(false); // Use true for 3D sounds
-        deathSound.setLooping(false); // Set to true if you want the sound to loop
-        deathSound.setVolume(10*4*settings.getFloat("Master Volume")*settings.getFloat("Sound Volume")); // Set the volume (1 is default, 0 is silent)
-        guiNode.attachChild(deathSound);
-        deathSound.play();
     }
 }

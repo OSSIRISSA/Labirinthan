@@ -17,10 +17,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Quad;
 import com.jme3.system.AppSettings;
-import com.simsilica.lemur.Button;
-import com.simsilica.lemur.GuiGlobals;
-import com.simsilica.lemur.HAlignment;
-import com.simsilica.lemur.Label;
+import com.simsilica.lemur.*;
 import com.simsilica.lemur.style.BaseStyles;
 import labirinthan.Labirinthan;
 
@@ -29,7 +26,6 @@ public class MainMenu {
     private final Labirinthan app;
     private final Node guiNode;
     private final AppSettings settings;
-    private final AssetManager assetManager;
     private final BitmapFont mainFont;
     public static AudioNode click;
     public static AudioNode hover;
@@ -45,7 +41,6 @@ public class MainMenu {
         this.app = mainApp;
         this.guiNode = guiNode;
         this.settings = settings;
-        this.assetManager = assetManager;
 
         GuiGlobals.initialize(mainApp);
         BaseStyles.loadGlassStyle();
@@ -55,7 +50,7 @@ public class MainMenu {
         this.settings.putFloat("Music Volume", 0.5f);
         this.settings.putFloat("Sound Volume", 0.5f);
 
-        mainFont = this.assetManager.loadFont("Interface/demi.fnt");
+        mainFont = assetManager.loadFont("Interface/demi.fnt");
 
         click = new AudioNode(assetManager, "Sounds/button-click.wav", AudioData.DataType.Buffer);
         click.setPositional(false);
@@ -136,7 +131,7 @@ public class MainMenu {
      */
     private void openSettingsMenu() {
         guiNode.detachAllChildren();
-        new SettingsMenu(app, guiNode, settings, assetManager, this, mainFont);
+        new SettingsMenu(app, guiNode, settings, this, mainFont);
     }
 
     /**

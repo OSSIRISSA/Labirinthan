@@ -14,17 +14,11 @@ import com.jme3.scene.Spatial;
 import labirinthan.Labirinthan;
 
 public class PuzzleCabinet extends Node {
-
-    private final Spatial lecternMesh;
     private Spatial bookMesh;
     private final Labirinthan app;
-    private final Node rootNode;
-    private final Node interactionAreaNode;
     private final PuzzleInteractionArea interactionArea;
     public PuzzleType puzzleType;
-
     private float animationTime = 0;
-    private boolean movingUp = true;
 
     /**
      * PuzzleCabinet constructor
@@ -39,13 +33,12 @@ public class PuzzleCabinet extends Node {
      */
     public PuzzleCabinet(Labirinthan application, AssetManager assetManager, Node localRootNode, float px, float py, float pz, PuzzleType puzzleType, float direction) {
         this.app = application;
-        this.rootNode = localRootNode;
         this.puzzleType = puzzleType;
 
         localRootNode.attachChild(this);
         this.setLocalTranslation(px, py + 1.2f, pz);
 
-        this.lecternMesh = assetManager.loadModel("Models/Books/lectern.glb");
+        Spatial lecternMesh = assetManager.loadModel("Models/Books/lectern.glb");
         lecternMesh.scale(0.03f);
         lecternMesh.move(0, -1.2f, 0);
         this.attachChild(lecternMesh);
@@ -78,7 +71,7 @@ public class PuzzleCabinet extends Node {
             case 3 -> this.rotate(0, FastMath.HALF_PI, 0);
         }
 
-        interactionAreaNode = new Node("InteractionArea");
+        Node interactionAreaNode = new Node("InteractionArea");
         this.attachChild(interactionAreaNode);
         interactionArea = new PuzzleInteractionArea(this, new Vector3f(2f, 1.2f, 2f));
         interactionArea.setPosition(this.getWorldTranslation());

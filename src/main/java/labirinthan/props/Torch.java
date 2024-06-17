@@ -41,7 +41,6 @@ public class Torch {
 
         this.torchMesh.setLocalTranslation(TORCH_MESH_LOCATION);
         this.torchMesh.rotate(TORCH_MESH_ROTATION_X, TORCH_MESH_ROTATION_Y, 0);
-
         torchNode.attachChild(this.torchMesh);
 
         fireNode = new Node("Fire");
@@ -72,7 +71,6 @@ public class Torch {
         fire.setHighLife(3f);
         fire.getParticleInfluencer().setVelocityVariation(0.1f);
         fire.setShadowMode(RenderQueue.ShadowMode.Off);
-
         return fire;
     }
 }

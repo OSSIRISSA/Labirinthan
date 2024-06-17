@@ -2,11 +2,10 @@
  * Task: Game
  * File: PuzzlePyramid.java
  *
- *  @author Iryna Hryshchenko
+ * @author Iryna Hryshchenko
  */
 package labirinthan.GUI;
 
-import com.jme3.asset.AssetManager;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -20,9 +19,7 @@ import labirinthan.Labirinthan;
 
 import java.util.ArrayList;
 
-
 public class PuzzlePyramid {
-
     private final Labirinthan app;
     private final Node guiNode;
     private final AppSettings settings;
@@ -35,15 +32,13 @@ public class PuzzlePyramid {
     public ColorRGBA defaultColor = ColorRGBA.fromRGBA255(126, 117, 108, 255);
     public ColorRGBA drawColor = ColorRGBA.fromRGBA255(25, 72, 72, 255);
 
-
     /**
      * PuzzlePyramid constructor
      * @param application - app
      * @param guiNode - gui node
      * @param settings - settings
-     * @param assetManager - asset manager
      */
-    public PuzzlePyramid(Labirinthan application, Node guiNode, AppSettings settings, AssetManager assetManager) {
+    public PuzzlePyramid(Labirinthan application, Node guiNode, AppSettings settings) {
         this.app = application;
         this.guiNode = guiNode;
         this.settings = settings;
@@ -58,7 +53,6 @@ public class PuzzlePyramid {
      * Creating puzzle screen
      */
     public void createScreen() {
-
         float startPosX = settings.getWidth() / 2f - size * 11.5f;
         float startPosY = settings.getHeight() / 2f - size * 11.5f;
 
@@ -72,66 +66,49 @@ public class PuzzlePyramid {
                     square.setBackground(new QuadBackgroundComponent(defaultColor));
                     switch (a) {
                         case 0 -> {
-                            if ((i > 0) && (j == 3) && (i < 6)) {
+                            if ((i > 0) && (j == 3) && (i < 6))
                                 square.setBackground(new QuadBackgroundComponent(drawColor));
-                            }
-                            if ((i > 2) && (j == 1) && (i < 6)) {
+                            if ((i > 2) && (j == 1) && (i < 6))
                                 square.setBackground(new QuadBackgroundComponent(drawColor));
-                            }
-                            if ((i > 2) && (j == 5) && (i < 6)) {
+                            if ((i > 2) && (j == 5) && (i < 6))
                                 square.setBackground(new QuadBackgroundComponent(drawColor));
-                            }
-                            if ((i == 3) && ((j == 2)||(j == 4))) {
+                            if ((i == 3) && ((j == 2) || (j == 4)))
                                 square.setBackground(new QuadBackgroundComponent(drawColor));
-                            }
-
                         }
                         case 1 -> {
-                            if (((i ==5)||(i==3)||(i==1))&&(j>0)&&(j<6)) {
+                            if (((i == 5) || (i == 3) || (i == 1)) && (j > 0) && (j < 6))
                                 square.setBackground(new QuadBackgroundComponent(drawColor));
-                            }
-                            if (((j == 1)||(j==5)) && ((i == 2)||(i == 4))) {
+                            if (((j == 1) || (j == 5)) && ((i == 2) || (i == 4)))
                                 square.setBackground(new QuadBackgroundComponent(drawColor));
-                            }
-                            if ((j == 3) && (i == 2)) {
+                            if ((j == 3) && (i == 2))
                                 square.setBackground(new QuadBackgroundComponent(drawColor));
-                            }
                         }
                         case 2 -> {
                             square.addClickCommands(this::choose);
-                            if (((i ==5)||(i==3)||(i==1))&&(j>0)&&(j<6)) {
+                            if (((i == 5) || (i == 3) || (i == 1)) && (j > 0) && (j < 6))
                                 answerSquares.add(square);
-                            }
-                            if ((i==4) && ((j == 3)||(j == 5)||(j == 1))) {
+                            if ((i == 4) && ((j == 3) || (j == 5) || (j == 1)))
                                 answerSquares.add(square);
-                            }
-                            if ((i==2) && (j == 3)) {
+                            if ((i == 2) && (j == 3))
                                 answerSquares.add(square);
-                            }
                         }
                         case 3 -> {
-                            if (((i ==5)||(i==3)||(i==1))&&(j>0)&&(j<6)) {
+                            if (((i == 5) || (i == 3) || (i == 1)) && (j > 0) && (j < 6))
                                 square.setBackground(new QuadBackgroundComponent(drawColor));
-                            }
-                            if ((i ==4) && (j == 3)) {
+                            if ((i == 4) && (j == 3))
                                 square.setBackground(new QuadBackgroundComponent(drawColor));
-                            }
-                            if ((i == 2) && ((j == 1)||(j == 5))) {
+                            if ((i == 2) && ((j == 1) || (j == 5)))
                                 square.setBackground(new QuadBackgroundComponent(drawColor));
-                            }
                         }
                         case 4 -> {
-                            if (((i ==5)||(i==3)||(i==1))&&(j>0)&&(j<6)) {
+                            if (((i == 5) || (i == 3) || (i == 1)) && (j > 0) && (j < 6))
                                 square.setBackground(new QuadBackgroundComponent(drawColor));
-                            }
-                            if (((i == 2)||(i==4)) && (j == 3)) {
+                            if (((i == 2) || (i == 4)) && (j == 3))
                                 square.setBackground(new QuadBackgroundComponent(drawColor));
-                            }
                         }
                         case 5 -> {
-                            if ((j == 3) && (i >0)&&(i <6)) {
+                            if ((j == 3) && (i > 0) && (i < 6))
                                 square.setBackground(new QuadBackgroundComponent(drawColor));
-                            }
                         }
                     }
                     square.setTextHAlignment(HAlignment.Center);
@@ -155,7 +132,6 @@ public class PuzzlePyramid {
                 }
             }
         }
-
     }
 
     /**
@@ -163,19 +139,19 @@ public class PuzzlePyramid {
      */
     public void check() {
         boolean win = true;
-        for(Button s:chosenSquares){
-            if (!answerSquares.contains(s)){
+        for (Button s : chosenSquares) {
+            if (!answerSquares.contains(s)) {
                 win = false;
                 break;
             }
         }
-        for(Button s:answerSquares){
-            if (!chosenSquares.contains(s)){
+        for (Button s : answerSquares) {
+            if (!chosenSquares.contains(s)) {
                 win = false;
                 break;
             }
         }
-        if(win){
+        if (win) {
             guiNode.detachAllChildren();
             app.startLevel2();
         }
@@ -195,5 +171,4 @@ public class PuzzlePyramid {
         }
         check();
     }
-
 }

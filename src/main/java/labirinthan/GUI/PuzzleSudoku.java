@@ -6,7 +6,6 @@
  */
 package labirinthan.GUI;
 
-import com.jme3.asset.AssetManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
@@ -24,13 +23,11 @@ import labirinthan.Labirinthan;
 
 import java.util.ArrayList;
 
-
 public class PuzzleSudoku implements ActionListener {
 
     private final Labirinthan app;
     private final Node guiNode;
     private final AppSettings settings;
-    private final AssetManager assetManager;
     public ArrayList<Button> sudokuSquares = new ArrayList<>();
     public ArrayList<Button> codeSquares = new ArrayList<>();
     public Button chosenSquare;
@@ -40,13 +37,11 @@ public class PuzzleSudoku implements ActionListener {
      * @param application - app
      * @param guiNode - gui node
      * @param settings - settings
-     * @param assetManager - asset manager
      */
-    public PuzzleSudoku(Labirinthan application, Node guiNode, AppSettings settings, AssetManager assetManager) {
+    public PuzzleSudoku(Labirinthan application, Node guiNode, AppSettings settings) {
         this.app = application;
         this.guiNode = guiNode;
         this.settings = settings;
-        this.assetManager = assetManager;
 
         GuiGlobals.initialize(application);
         BaseStyles.loadGlassStyle();
@@ -62,7 +57,6 @@ public class PuzzleSudoku implements ActionListener {
         float startPosY = settings.getHeight() * 0.75f;
 
         Button square = new Button(" ");
-
 
         Panel line = new Panel(5,190*3);
         line.setLocalTranslation(startPosX+190, startPosY, 1);
@@ -187,8 +181,6 @@ public class PuzzleSudoku implements ActionListener {
             codeSquares.add(square);
             guiNode.attachChild(square);
         }
-
-
         initKeys();
     }
 
@@ -208,7 +200,6 @@ public class PuzzleSudoku implements ActionListener {
 
         this.app.getInputManager().addListener(this, "1", "2", "3", "4", "5", "6", "7", "8", "9");
     }
-
 
     @Override
     public void onAction(String number, boolean isPressed, float tpf) {
@@ -240,6 +231,4 @@ public class PuzzleSudoku implements ActionListener {
             chosenSquare.setBackground(new QuadBackgroundComponent(ColorRGBA.DarkGray));
         }
     }
-
-
 }

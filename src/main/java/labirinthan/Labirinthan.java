@@ -47,7 +47,6 @@ public class Labirinthan extends SimpleApplication {
      */
     public static void main(String[] args) {
         Labirinthan app = new Labirinthan();
-        // Set the game to fullscreen
         AppSettings settings = new AppSettings(true);
         settings.setFullscreen(true);
         settings.setResolution(1920, 1080);
@@ -60,7 +59,6 @@ public class Labirinthan extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         filterPostProcessor = new FilterPostProcessor(assetManager);
-        //init main folder for assets
         stateManager.detach(stateManager.getState(StatsAppState.class));
         assetManager.registerLocator("assets/", FileLocator.class);
 
@@ -68,11 +66,11 @@ public class Labirinthan extends SimpleApplication {
         mainMenu = new MainMenu(this, guiNode, settings, assetManager);
         mainMenu.createHomeScreen();
 
+        flyCam.setMoveSpeed(10);
+
         //COMMENT THIS IF YOU WANT TO INTERACT WITH MAIN MENU
         //startGame();
         //THIS
-
-        flyCam.setMoveSpeed(10);
     }
 
     /**
@@ -95,14 +93,12 @@ public class Labirinthan extends SimpleApplication {
                 character.cleanup();
                 stateManager.detach(character);
             }
-
             if (bulletAppState != null) {
                 bulletAppState.cleanup();
                 stateManager.detach(bulletAppState);
             }
             bulletAppState = new BulletAppState();
             stateManager.attach(bulletAppState);
-            bulletAppState.setDebugEnabled(true);
             level = new Level0(this, bulletAppState, guiNode, settings);
             stateManager.attach(level);
             addFog();
@@ -111,7 +107,8 @@ public class Labirinthan extends SimpleApplication {
             mainHUD.createMainHUD();
             if(character==null){
                 character = new MainCharacter(mainHUD, settings);
-            }
+            } else character.updatePreviousCharacter(mainHUD);
+
             stateManager.attach(character);
             levelPreparation(false);
             MainMenu.LoadingScreen.hide(guiNode);
@@ -130,7 +127,7 @@ public class Labirinthan extends SimpleApplication {
     }
 
     /**
-     * Adding for to a level
+     * Adding fog to a level
      */
     private void addFog() {
         fog = new FogFilter();
@@ -145,7 +142,6 @@ public class Labirinthan extends SimpleApplication {
      * Starting Level 1
      */
     public void startLevel1() {
-        //guiNode.attachChild(level.localPuzzleNode);
         MainMenu.LoadingScreen.show(guiNode, assetManager, settings);
         enqueue(() -> {
             stateManager.detach(character);
@@ -156,13 +152,11 @@ public class Labirinthan extends SimpleApplication {
 
             bulletAppState = new BulletAppState();
             stateManager.attach(bulletAppState);
-            //bulletAppState.setDebugEnabled(true);
 
             level = new Level1(this, bulletAppState, guiNode, settings);
             stateManager.attach(level);
             stateManager.attach(character);
             character.newLevelHPActions();
-
 
             levelPreparation(false);
             character.isPuzzleFound = false;
@@ -175,7 +169,6 @@ public class Labirinthan extends SimpleApplication {
      * Starting Level 2
      */
     public void startLevel2() {
-        //guiNode.attachChild(level.localPuzzleNode);
         MainMenu.LoadingScreen.show(guiNode, assetManager, settings);
         enqueue(() -> {
             stateManager.detach(character);
@@ -186,7 +179,6 @@ public class Labirinthan extends SimpleApplication {
 
             bulletAppState = new BulletAppState();
             stateManager.attach(bulletAppState);
-            //bulletAppState.setDebugEnabled(true);
 
             level = new Level2(this, bulletAppState, guiNode, settings);
             stateManager.attach(level);
@@ -211,6 +203,6 @@ public class Labirinthan extends SimpleApplication {
         stateManager.detach(bulletAppState);
         finalScreen = new FinalScreen(this, guiNode, settings, assetManager);
         finalScreen.createHomeScreen();
-        finalScreen.playDeathSound();
+        level.playDeathSound();
     }
 }

@@ -22,7 +22,6 @@ import labirinthan.Labirinthan;
 
 import java.util.ArrayList;
 
-
 public class PuzzleSquareEncryption implements ActionListener {
 
     private final Labirinthan app;
@@ -60,12 +59,10 @@ public class PuzzleSquareEncryption implements ActionListener {
      * Creating puzzle screen
      */
     public void createScreen() {
-
         startPosX = settings.getWidth() * 0.5f - 150;
         startPosY = settings.getHeight() * 0.9f;
 
-        Button square = new Button(" ");
-
+        Button square;
 
         Panel line = new Panel(5, 100 * 3);
         line.setLocalTranslation(startPosX + 100, startPosY, 1);
@@ -103,7 +100,6 @@ public class PuzzleSquareEncryption implements ActionListener {
         alphabet.setLocalTranslation(startPosX, startPosY - 200 - 10 - 15, 1);
         guiNode.attachChild(alphabet);
 
-
         for (int i = 0; i < 3; i++) {
             square = new Button("?");
             square.setColor(ColorRGBA.Black);
@@ -125,269 +121,62 @@ public class PuzzleSquareEncryption implements ActionListener {
         startPosY = settings.getHeight() * 0.5f;
 
         //four
-        bottomLine();
-        leftLine();
-        rightLine();
-        dots();
-        next();
-
-        topLine();
-        bottomLine();
-        leftLine();
-        rightLine();
-        dots();
-        next();
-
-        topLine();
-        rightLine();
-        dots();
-        next();
-
-        topLine();
-        bottomLine();
-        leftLine();
-        dots();
-        space();
-
+        bottomLine();        leftLine();        rightLine();        dots();        next();
+        topLine();        bottomLine();        leftLine();        rightLine();        dots();        next();
+        topLine();        rightLine();        dots();        next();
+        topLine();        bottomLine();        leftLine();        dots();        space();
         //divided
-        bottomLine();
-        leftLine();
-        rightLine();
-        next();
-
-        bottomLine();
-        leftLine();
-        dots();
-        next();
-
-        topLine();
-        leftLine();
-        rightLine();
-        next();
-
-        bottomLine();
-        leftLine();
-        dots();
-        next();
-
-        bottomLine();
-        leftLine();
-        rightLine();
-        next();
-
-        bottomLine();
-        leftLine();
-        rightLine();
-        dot();
-        next();
-
-        bottomLine();
-        leftLine();
-        rightLine();
-        space();
-
+        bottomLine();        leftLine();        rightLine();        next();
+        bottomLine();        leftLine();        dots();        next();
+        topLine();        leftLine();        rightLine();        next();
+        bottomLine();        leftLine();        dots();        next();
+        bottomLine();        leftLine();        rightLine();        next();
+        bottomLine();        leftLine();        rightLine();        dot();        next();
+        bottomLine();        leftLine();        rightLine();        space();
         //by
-        bottomLine();
-        rightLine();
-        dot();
-        next();
-
-        topLine();
-        leftLine();
-        space();
-
+        bottomLine();        rightLine();        dot();        next();
+        topLine();        leftLine();        space();
         //two
-        topLine();
-        rightLine();
-        dot();
-        next();
-
-        topLine();
-        rightLine();
-        leftLine();
-        dot();
-        next();
-
-        topLine();
-        bottomLine();
-        leftLine();
-        rightLine();
-        dots();
-        enter();
-
+        topLine();        rightLine();        dot();        next();
+        topLine();        rightLine();        leftLine();        dot();        next();
+        topLine();        bottomLine();        leftLine();        rightLine();        dots();        enter();
         //seven
-        topLine();
-        rightLine();
-        next();
-
-        bottomLine();
-        leftLine();
-        rightLine();
-        dot();
-        next();
-
-        topLine();
-        leftLine();
-        rightLine();
-        next();
-
-        bottomLine();
-        leftLine();
-        rightLine();
-        dot();
-        next();
-
-        topLine();
-        bottomLine();
-        rightLine();
-        leftLine();
-        dot();
-        space();
-
+        topLine();        rightLine();        next();
+        bottomLine();        leftLine();        rightLine();        dot();        next();
+        topLine();        leftLine();        rightLine();        next();
+        bottomLine();        leftLine();        rightLine();        dot();        next();
+        topLine();        bottomLine();        rightLine();        leftLine();        dot();        space();
         //plus
-        topLine();
-        bottomLine();
-        leftLine();
-        next();
-
-        topLine();
-        bottomLine();
-        rightLine();
-        dots();
-        next();
-
-        topLine();
-        rightLine();
-        dots();
-        next();
-
-        topLine();
-        rightLine();
-        space();
-
+        topLine();        bottomLine();        leftLine();        next();
+        topLine();        bottomLine();        rightLine();        dots();        next();
+        topLine();        rightLine();        dots();        next();
+        topLine();        rightLine();        space();
         //one
-        topLine();
-        bottomLine();
-        leftLine();
-        rightLine();
-        dots();
-        next();
-
-        topLine();
-        bottomLine();
-        rightLine();
-        leftLine();
-        dot();
-        next();
-
-        bottomLine();
-        rightLine();
-        leftLine();
-        dot();
-        enter();
-
+        topLine();        bottomLine();        leftLine();        rightLine();        dots();        next();
+        topLine();        bottomLine();        rightLine();        leftLine();        dot();        next();
+        bottomLine();        rightLine();        leftLine();        dot();        enter();
         //your
-        topLine();
-        leftLine();
-        next();
-
-        topLine();
-        bottomLine();
-        leftLine();
-        rightLine();
-        dots();
-        next();
-
-        topLine();
-        rightLine();
-        dots();
-        next();
-
-        topLine();
-        bottomLine();
-        leftLine();
-        dots();
-        space();
-
+        topLine();        leftLine();        next();
+        topLine();        bottomLine();        leftLine();        rightLine();        dots();        next();
+        topLine();        rightLine();        dots();        next();
+        topLine();        bottomLine();        leftLine();        dots();        space();
         //toes
-        topLine();
-        rightLine();
-        dot();
-        next();
-
-        topLine();
-        bottomLine();
-        leftLine();
-        rightLine();
-        dots();
-        next();
-
-        bottomLine();
-        leftLine();
-        rightLine();
-        dot();
-        next();
-
-        topLine();
-        rightLine();
-        space();
-
+        topLine();        rightLine();        dot();        next();
+        topLine();        bottomLine();        leftLine();        rightLine();        dots();        next();
+        bottomLine();        leftLine();        rightLine();        dot();        next();
+        topLine();        rightLine();        space();
         //minus
-        topLine();
-        bottomLine();
-        leftLine();
-        rightLine();
-        next();
-
-        leftLine();
-        bottomLine();
-        dots();
-        next();
-
-        topLine();
-        bottomLine();
-        leftLine();
-        rightLine();
-        dot();
-        next();
-
-        topLine();
-        rightLine();
-        dots();
-        next();
-
-        topLine();
-        rightLine();
-        space();
-
+        topLine();        bottomLine();        leftLine();        rightLine();        next();
+        leftLine();        bottomLine();        dots();        next();
+        topLine();        bottomLine();        leftLine();        rightLine();        dot();        next();
+        topLine();        rightLine();        dots();        next();
+        topLine();        rightLine();        space();
         //three
-        topLine();
-        rightLine();
-        dot();
-        next();
-
-        bottomLine();
-        leftLine();
-        dot();
-        next();
-
-        topLine();
-        bottomLine();
-        leftLine();
-        dots();
-        next();
-
-        bottomLine();
-        leftLine();
-        rightLine();
-        dot();
-        next();
-
-        bottomLine();
-        leftLine();
-        rightLine();
-        dot();
-        next();
+        topLine();        rightLine();        dot();        next();
+        bottomLine();        leftLine();        dot();        next();
+        topLine();        bottomLine();        leftLine();        dots();        next();
+        bottomLine();        leftLine();        rightLine();        dot();        next();
+        bottomLine();        leftLine();        rightLine();        dot();        next();
     }
 
     /**
@@ -406,7 +195,6 @@ public class PuzzleSquareEncryption implements ActionListener {
 
         this.app.getInputManager().addListener(this, "1", "2", "3", "4", "5", "6", "7", "8", "9");
     }
-
 
     @Override
     public void onAction(String number, boolean isPressed, float tpf) {

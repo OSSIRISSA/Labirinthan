@@ -18,7 +18,6 @@ import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 
 public class Ceiling extends Box {
-
     /**
      * Ceiling constructor
      * @param x - size x

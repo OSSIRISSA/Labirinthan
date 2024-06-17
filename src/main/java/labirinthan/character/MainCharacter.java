@@ -35,18 +35,17 @@ import labirinthan.props.TorchHolder;
 import labirinthan.props.TorchInteractionArea;
 
 public class MainCharacter extends AbstractAppState implements ActionListener, PhysicsCollisionListener {
-
     private final AppSettings settings;
     private Labirinthan app;
     private BetterCharacterControl characterControl;
     private Object interactionObject;
     public static Node characterNode;
     public Node cameraNode;
-    public final MainHUD hud;
+    public MainHUD hud;
     private PointLight light;
 
     private final Vector3f walkDirection = new Vector3f();
-    private boolean left, right, forward, backward;
+    private boolean left=false, right=false, forward = false, backward = false;
     public boolean isCarryingTorch = false;
     public boolean isPuzzleFound = false;
     public boolean isDead = false;
@@ -73,6 +72,24 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
     public MainCharacter(MainHUD hud, AppSettings settings) {
         this.hud = hud;
         this.settings = settings;
+    }
+
+    /**
+     * Updates all fields after resurrection
+     * @param hud New MainHud ref
+     */
+    public void updatePreviousCharacter(MainHUD hud){
+        this.hud = hud;
+        right=false;
+        left=false;
+        forward=false;
+        backward=false;
+        this.health=1;
+        torchTimer=0;
+        isCarryingTorch=false;
+        isPuzzleFound=false;
+        isDead=false;
+        walkDirection.set(0,0,0);
     }
 
     @Override
@@ -337,9 +354,9 @@ public class MainCharacter extends AbstractAppState implements ActionListener, P
         app.levelPreparation(true);
         switch (puzzleCab.puzzleType) {
             case SUDOKU ->
-                    new PuzzleSudoku(app, Labirinthan.level.localPuzzleNode, settings, app.getAssetManager()).createScreen();
+                    new PuzzleSudoku(app, Labirinthan.level.localPuzzleNode, settings).createScreen();
             case PYRAMID ->
-                    new PuzzlePyramid(app, Labirinthan.level.localPuzzleNode, settings, app.getAssetManager()).createScreen();
+                    new PuzzlePyramid(app, Labirinthan.level.localPuzzleNode, settings).createScreen();
             case ENCRYPTION ->
                     new PuzzleSquareEncryption(app, Labirinthan.level.localPuzzleNode, settings, app.getAssetManager()).createScreen();
         }

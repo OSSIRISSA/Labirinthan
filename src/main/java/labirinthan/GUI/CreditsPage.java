@@ -16,7 +16,6 @@ import com.simsilica.lemur.HAlignment;
 import com.simsilica.lemur.Label;
 
 public class CreditsPage {
-
     private final Node guiNode;
     private final Node creditsNode;
     private final AppSettings settings;
@@ -35,7 +34,6 @@ public class CreditsPage {
         this.settings = settings;
         this.mainMenu = mainMenu;
         this.mainFont = mainFont;
-
         creditsNode = new Node("Credits");
 
         createCreditsPage();
@@ -46,7 +44,6 @@ public class CreditsPage {
      */
     private void createCreditsPage() {
         guiNode.detachAllChildren();
-
 
         // Create a "Created by" label
         Label createdByLabel = new Label("Created by");
@@ -79,7 +76,7 @@ public class CreditsPage {
         backButton.setPreferredSize(new Vector3f(createdByLabel.getPreferredSize().x/2.5f, backButton.getPreferredSize().y, 0));
         backButton.setLocalTranslation((settings.getWidth() - backButton.getPreferredSize().x)/2f, backButton.getPreferredSize().y*1.5f, 0);
         backButton.addClickCommands(source -> mainMenu.createHomeScreen());
-        backButton.addClickCommands(source -> mainMenu.playClickSound());
+        backButton.addClickCommands(source -> MainMenu.playClickSound());
         backButton.addCommands(Button.ButtonAction.HighlightOn, source -> MainMenu.hover.play());
         creditsNode.attachChild(backButton);
 

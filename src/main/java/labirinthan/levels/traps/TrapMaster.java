@@ -154,10 +154,10 @@ public class TrapMaster extends Node {
                 this.detachChild(trapMesh);
                 float mineDamage = MainCharacter.characterNode.getWorldTranslation().distance(this.getWorldTranslation()) - MINE_RADIUS;
                 if (mineDamage < 0) {
-                    app.character.hpActions(mineDamage * MINE_DAMAGE);
+                    Labirinthan.character.hpActions(mineDamage * MINE_DAMAGE);
                 }
             }
-            case SPIKE -> app.character.hpActions(-SPIKE_DAMAGE);
+            case SPIKE -> Labirinthan.character.hpActions(-SPIKE_DAMAGE);
         }
         removeInteractionZone();
     }
@@ -192,7 +192,7 @@ public class TrapMaster extends Node {
     }
 
     /**
-     * Createing explosion effect
+     * Creating explosion effect
      * @return - ParticleEmitter
      */
     private ParticleEmitter createExplosionEffect() {

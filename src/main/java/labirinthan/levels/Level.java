@@ -135,7 +135,7 @@ public class Level extends AbstractAppState {
      */
     private void loadTorch(float x, float z, int direction, int roomsNumber, ArrayList<TorchHolder> allTorches) {
         if (random.nextInt(10) != 0) {
-            TorchHolder torchHolder = new TorchHolder(application, assetManager, rootNode, isFirstTorch, roomsNumber, allTorches);
+            TorchHolder torchHolder = new TorchHolder(application, assetManager, rootNode, isFirstTorch, roomsNumber);
             isFirstTorch = false;
             currentNode.attachChild(torchHolder);
             switch (direction) {
@@ -666,7 +666,7 @@ public class Level extends AbstractAppState {
      * @param direction - face direction
      */
     public void createDecor(float x, float z, float direction) {
-        decoration = new Decoration(direction, assetManager, currentNode, x, -0.05f, z, bulletAppState);
+        decoration = new Decoration(direction, assetManager, currentNode, x, z);
     }
 
     /**
@@ -747,8 +747,5 @@ public class Level extends AbstractAppState {
                 }
             }
         }
-
     }
-
-
 }

@@ -7,7 +7,6 @@
 package labirinthan.levels.parts;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.bullet.BulletAppState;
 import com.jme3.math.FastMath;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Mesh;
@@ -27,11 +26,9 @@ public class Decoration extends Mesh {
      * @param assetManager - asset manager
      * @param localRootNode - localRootNode
      * @param px - x
-     * @param py - y
      * @param pz - z
-     * @param bulletAppState - bulletAppState
      */
-    public Decoration(float direction, AssetManager assetManager, Node localRootNode, float px, float py, float pz, BulletAppState bulletAppState) {
+    public Decoration(float direction, AssetManager assetManager, Node localRootNode, float px, float pz) {
         Random random = new Random();
         Spatial decoration = null;
         int decorOption = random.nextInt(17);

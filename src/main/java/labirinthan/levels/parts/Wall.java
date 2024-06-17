@@ -24,7 +24,6 @@ import com.jme3.util.BufferUtils;
 import java.nio.FloatBuffer;
 
 public class Wall extends Box {
-
     /**
      * Wall constructor
      * @param x - size x

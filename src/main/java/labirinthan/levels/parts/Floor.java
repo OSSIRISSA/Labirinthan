@@ -25,7 +25,6 @@ import com.jme3.util.BufferUtils;
 import java.nio.FloatBuffer;
 
 public class Floor extends Box {
-
     /**
      * Floor constructor
      * @param x - size x

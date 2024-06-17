@@ -18,8 +18,6 @@ import labirinthan.levels.puzzles.PuzzleType;
 import java.util.ArrayList;
 
 public class Level2 extends Level {
-
-
     /**
      * Level2 constructor
      * @param application - Labirinthan app
